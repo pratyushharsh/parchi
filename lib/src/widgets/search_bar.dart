@@ -91,9 +91,9 @@ class _SearchBarState extends State<SearchBar> {
         ),
         Container(
           padding: const EdgeInsets.all(7),
-          child: const Icon(Icons.filter_alt_outlined),
           decoration: BoxDecoration(
               border: Border.all(), borderRadius: BorderRadius.circular(4)),
+          child: const Icon(Icons.filter_alt_outlined),
         ),
       ],
     );
