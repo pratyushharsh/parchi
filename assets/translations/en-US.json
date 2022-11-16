@@ -1,0 +1,25 @@
+{
+    "settings" : {
+        "account": "Accounts",
+        "accountDescription": "Edit and manage your accounts",
+        "store": "Store Settings",
+        "storeDescription": "Edit and manage your store settings",
+        "settings": "Settings",
+        "settingsDescription": "Modify and manage your settings",
+        "help": "Help and Feedback",
+        "helpDescription": "Reach us with your feedback and question"
+    },
+    "taxConfiguration": "Tax Configuration",
+    "locale": "Change Language",
+    "en_US": "English",
+    "hi_IN": "हिन्दी",
+
+    "home": "Home",
+    "customer": "Customer",
+    "sale": "Sale",
+    "product": "Product",
+    "more": "More",
+    "loginHeader": "Enter your mobile number",
+    "loginHeaderDescription": "We will send you a confirmation code",
+    "termsOfService": "Terms of Service"
+}
