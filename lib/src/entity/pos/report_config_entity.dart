@@ -113,7 +113,7 @@ class ReportFieldConfigEntity {
   }
 
   ReportFieldConfigEntity(
-      {this.key, this.title, this.flex, this.align, this.defaultValue});
+      {this.key, this.title, this.flex = 1, this.align = ColumnAlignment.left, this.defaultValue});
 }
 
 enum ColumnAlignment {

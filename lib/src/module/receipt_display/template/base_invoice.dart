@@ -169,162 +169,26 @@ class BaseInvoice extends IInvoice with InvoiceUtil {
 
   @override
   Widget buildTaxSummary(Context context) {
-    var taxSummary = InvoiceConfigConstants.buildGstTaxSummary(order.lineItems);
 
-    final rows = <TableRow>[];
+    InvoiceTaxData data = InvoiceConfigConstants.buildTaxSummary(order.storeLocale, "taxGroup", order.lineItems);
 
-    final headerRow = <Widget>[];
+    List<ReportFieldConfigEntity> headers = data.header.map((e) => ReportFieldConfigEntity(key: e, title: e)).toList();
 
-    // Build Header Row
-    headerRow.add(
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Text(
-          'HSN Code',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-
-    headerRow.add(
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Text(
-          'Taxable Amount',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-
-    // Get all the unique tax values from the tax summary
-    Set<String> taxNames = {};
-    for (var taxRule in taxSummary.values) {
-      taxNames.addAll(taxRule.tax.keys);
-    }
-
-    List<String> taxColumns = taxNames.toList();
-
-    for (var i = 0; i < taxColumns.length; i++) {
-      final taxName = taxColumns[i];
-      headerRow.add(
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 3),
-          child: Text(
-            taxName,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      );
-    }
-
-    headerRow.add(
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Text(
-          'Taxable Amount',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-
-    rows.add(
-      TableRow(
-        children: headerRow,
-        repeat: true,
-        decoration: const BoxDecoration(
-          color: PdfColors.grey200,
-          border: Border.symmetric(
-            horizontal: BorderSide(
-              color: PdfColors.black,
-              width: 0.8,
-            ),
-          ),
-        ),
-      ),
-    );
-
-    // Build the rows
-    for (var i = 0; i < taxSummary.length; i++) {
-      final row = <Widget>[];
-      final taxRule = taxSummary.values.elementAt(i);
-      final hsnCode = taxSummary.keys.elementAt(i);
-      row.add(
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Text(
-            hsnCode,
-            textAlign: TextAlign.left,
-          ),
-        ),
-      );
-
-      row.add(
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Text(
-            taxRule.taxableAmount.toStringAsFixed(2),
-            textAlign: TextAlign.left,
-          ),
-        ),
-      );
-
-      for (var j = 0; j < taxColumns.length; j++) {
-        final taxName = taxColumns[j];
-        row.add(
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Text(
-              NumberFormat.simpleCurrency(
-                      locale: order.storeLocale, name: order.storeCurrency)
-                  .format(taxRule.tax[taxName] ?? 0.00),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        );
-      }
-
-      row.add(
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Text(
-            NumberFormat.simpleCurrency(
-                    locale: order.storeLocale, name: order.storeCurrency)
-                .format(taxRule.totalAmount),
-            textAlign: TextAlign.left,
-          ),
-        ),
-      );
-
-      rows.add(
-        TableRow(
-          children: row,
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: PdfColors.grey,
-                width: 0.5,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Table(
-      children: rows,
-      // columnWidths: columnWidths,
+    return buildTable(
+      columnConfig: headers,
+      data: data.body,
+      builder: (column, item) {
+        if (item is Map<String, dynamic>) {
+          var colData = item[column.key];
+          if (colData is double) {
+            return NumberFormat.simpleCurrency(
+                locale: order.storeLocale)
+                .format(colData);
+          }
+          return colData ?? '';
+        }
+        return '';
+      },
     );
   }
 

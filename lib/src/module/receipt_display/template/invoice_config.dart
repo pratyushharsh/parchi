@@ -121,7 +121,7 @@ class InvoiceConfigConstants {
       case 'date':
         return '${DateFormat.yMEd().format(line.beginDate!)} ${DateFormat.Hms().format(line.beginDate!)}';
       case 'amount':
-        return NumberFormat.compactCurrency(
+        return NumberFormat.simpleCurrency(
                 locale: entity.storeLocale, name: line.currencyId)
             .format(line.amount);
       case 'mode':
@@ -261,25 +261,11 @@ class InvoiceConfigConstants {
     return gstTaxSummary;
   }
 
-  static List<dynamic> buildTaxSummary(String type, List<TransactionLineItemEntity> entity) {
-
+  static InvoiceTaxData buildTaxSummary(String locale, String type, List<TransactionLineItemEntity> entity) {
     Map<String, List<TransactionLineItemTaxModifier>> taxSummary = {};
-
     switch(type) {
       case "taxGroup":
-        for (var item in entity) {
-          if (item.isVoid) {
-            continue;
-          }
-
-          for (var taxModifier in item.taxModifiers) {
-            if (!taxSummary.containsKey(taxModifier.taxGroupId)) {
-              taxSummary[taxModifier.taxGroupId ?? "Default"] = [];
-            }
-            taxSummary[taxModifier.taxGroupId]!.add(taxModifier);
-          }
-        }
-        break;
+        return buildDataForGroupByHsn(locale, entity);
         case "taxRule":
         for (var item in entity) {
           if (item.isVoid) {
@@ -295,15 +281,70 @@ class InvoiceConfigConstants {
         }
         break;
     }
-
-
     // Based on the data build the TaxSummary
 
     // Building tax summary header.
 
 
-    return [];
+    return InvoiceTaxData(header: [], body: []);
   }
+
+  static InvoiceTaxData buildDataForGroupByHsn(String locale, List<TransactionLineItemEntity> entity) {
+    Map<String, List<TransactionLineItemTaxModifier>> taxSummary = {};
+    Set<String> taxRuleIds = {};
+    for (var item in entity) {
+      if (item.isVoid) {
+        continue;
+      }
+
+      if (taxSummary[item.hsn] == null) {
+        taxSummary[item.hsn!] = [];
+      }
+
+      for (var taxModifier in item.taxModifiers) {
+        taxRuleIds.add(taxModifier.taxRuleId!);
+        taxSummary[item.hsn!]!.add(taxModifier);
+      }
+
+      // for (var taxModifier in item.taxModifiers) {
+      //   if (!taxSummary.containsKey(taxModifier.taxGroupId)) {
+      //     taxSummary[taxModifier.taxGroupId ?? "Default"] = [];
+      //   }
+      //   taxSummary[taxModifier.taxGroupId]!.add(taxModifier);
+      //   if(taxModifier.taxRuleId != null) {
+      //     taxRuleIds.add(taxModifier.taxRuleId!);
+      //   }
+      // }
+    }
+
+    List<String> taxRuleIdList = taxRuleIds.toList().map((e) => ['$e-rate', e]).expand((x) => x).toList();
+
+    // Build Header List First.
+    List<String> header = ["hsn", "taxableAmount", ...taxRuleIdList, "totalAmount"];
+
+    // For each taxSummary build the row.
+    List<Map<String, dynamic> > body = [];
+    for(var summary in taxSummary.keys) {
+      List<TransactionLineItemTaxModifier> taxLines = taxSummary[summary]!;
+      Map<String, dynamic> row = {};
+      row["hsn"] = summary;
+      row["taxableAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxableAmount ?? 0.0));
+      row["totalAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0));
+      for(var taxLine in taxLines) {
+        row["${taxLine.taxRuleId}-rate"] = NumberFormat.percentPattern(locale).format((taxLine.taxPercent ?? 0.0) / 100);
+        row["${taxLine.taxRuleId}"] = taxLine.taxAmount;
+      }
+      body.add(row);
+    }
+    return InvoiceTaxData(header: header, body: body);
+  }
+}
+
+class InvoiceTaxData {
+  final List<String> header;
+  final List<Map<String, dynamic>> body;
+
+  InvoiceTaxData({required this.header, required this.body});
 }
 
 class InvoiceColumnConfig {

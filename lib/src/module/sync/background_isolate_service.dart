@@ -15,6 +15,7 @@ import 'background_rptconfig_sync.dart';
 import 'background_sync.dart';
 import 'background_transaction_sync.dart';
 import 'background_taxgroup_sync.dart';
+import 'background_sequence_sync.dart';
 
 /// Syncing architecture information
 /// Pull the record from the last timestamp to the current timestamp
@@ -39,7 +40,8 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
     customerSync,
     productSync,
     taxGroupSync,
-    reportConfigSync
+    reportConfigSync,
+    // sequenceSync
   ];
 
   BackgroundTransactionSync bckTrnSync = BackgroundTransactionSync();
@@ -47,6 +49,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
   BackgroundProductSync bckProdSync = BackgroundProductSync();
   BackgroundTaxGroupSync bckTaxSync = BackgroundTaxGroupSync();
   BackgroundReportConfigSync bckRptSync = BackgroundReportConfigSync();
+  BackgroundSequenceSync bckSeqSync = BackgroundSequenceSync();
 
   BackgroundSyncServiceFromIso(
       {required this.storeId, required this.tmpDir, required this.imageDir});

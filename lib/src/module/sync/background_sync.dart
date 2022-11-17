@@ -8,6 +8,7 @@ const String customerSync = 'CUSTOMER';
 const String productSync = 'PRODUCT';
 const String taxGroupSync = 'TAX';
 const String reportConfigSync = 'INVOICE';
+const String sequenceSync = 'SEQUENCE';
 
 abstract class BackgroundEntitySync with DatabaseProvider {
   /// Type of the entity
