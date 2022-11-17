@@ -127,7 +127,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       // Fetch All the data from last sync.
       // Fetch Data from Server
       // Find the last sync time and proceed
-      var data = await getDataFromServer(minLastSyncTime);
+      var data = await getDataFromServer(minLastSyncTime + 1);
 
       // ***************** Import Transaction Start *****************
       if (data['transactions'] != null) {

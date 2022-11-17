@@ -14,7 +14,7 @@ class SequenceRepository with DatabaseProvider {
 
   Future<SequenceEntity> getNextSequence(SequenceType type) async {
     await db.writeTxn(() async {
-      var seq = await db.sequenceEntitys.get(type.index);
+      var seq = await db.sequenceEntitys.getByName(type);
       if (seq != null) {
         seq.nextSeq++;
         await db.sequenceEntitys.put(seq);
@@ -23,7 +23,7 @@ class SequenceRepository with DatabaseProvider {
       }
     });
     // Use the pattern to generate the sequence
-    var seq = await db.sequenceEntitys.get(type.index);
+    var seq = await db.sequenceEntitys.getByName(type);
     return seq!;
   }
 
