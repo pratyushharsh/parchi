@@ -31,7 +31,10 @@ class CreateEditSequenceBloc
 
   void _onSelectSequenceEntityEvent(SelectSequenceEntityEvent event,
       Emitter<CreateEditSequenceState> emit) async {
-    emit(state.copyWith(selectedSequence: event.sequenceEntity, status: CreateEditSequenceStatus.init));
+
+    String sampleSequence = generateSequence(event.sequenceEntity);
+
+    emit(state.copyWith(selectedSequence: event.sequenceEntity, sampleSequence: sampleSequence, status: CreateEditSequenceStatus.init));
   }
 
   void _onPatternChangeEvent(OnPatternChangeEvent event,

@@ -119,14 +119,14 @@ class _InvoiceSettingFormState extends State<InvoiceSettingForm> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColor.iconColor,
+                      color: AppColor.color8,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     height: 40,
                     width: 40,
                     child: Center(
                       child: FaIcon(
-                        _openSetting ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
+                        _openSetting ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.pen,
                         color: AppColor.primary,
                         size: 20,
                       ),

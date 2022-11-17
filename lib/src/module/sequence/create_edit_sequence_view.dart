@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../widgets/appbar_leading.dart';
 import 'bloc/create_edit_sequence_bloc.dart';
 import 'sequence_config_desktop_view.dart';
+import 'sequence_config_mobile_view.dart';
 
 class CreateEditSequenceView extends StatelessWidget {
   const CreateEditSequenceView({Key? key}) : super(key: key);
@@ -15,35 +18,34 @@ class CreateEditSequenceView extends StatelessWidget {
         sequenceRepository: context.read(),
       )..add(FetchAllSequence()),
       child: Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: Scaffold(
-            body: Stack(
-              fit: StackFit.expand,
-              children: [
-                const Positioned(
-                  top: 75,
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
-                  child: SequenceConfigView(),
-                ),
-                Positioned(
-                  top: 20,
-                  left: 16,
-                  child: AppBarLeading(
-                    heading: "Sequence Config",
-                    icon: Icons.arrow_back,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
+          color: Colors.white,
+          child: SafeArea(
+            child: Scaffold(
+              body: Stack(
+                fit: StackFit.expand,
+                children: [
+                  const Positioned(
+                    top: 75,
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                    child: SequenceConfigView(),
                   ),
-                ),
-              ],
+                  Positioned(
+                    top: 20,
+                    left: 16,
+                    child: AppBarLeading(
+                      heading: "Sequence Config",
+                      icon: Icons.arrow_back,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        )
-      ),
+          )),
     );
   }
 }
@@ -53,6 +55,10 @@ class SequenceConfigView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SequenceConfigDesktopView();
+    if (Platform.isIOS || Platform.isAndroid) {
+      return const SequenceConfigMobileView();
+    } else {
+      return const SequenceConfigDesktopView();
+    }
   }
 }

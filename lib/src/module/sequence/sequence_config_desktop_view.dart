@@ -55,9 +55,11 @@ class SequenceConfigDesktopView extends StatelessWidget {
               flex: 3,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: const Card(
+                child: Card(
                   elevation: 0,
-                  child: SequenceConfigForm(),
+                  child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: const SequenceConfigForm()),
                 ),
               ),
             )
@@ -77,8 +79,7 @@ class SequenceList extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            ...state.sequences.map((sequence) =>
-                Column(
+            ...state.sequences.map((sequence) => Column(
                   children: [
                     SequenceTile(
                         sequence: sequence,
@@ -128,7 +129,6 @@ class SequenceTile extends StatelessWidget {
   }
 }
 
-
 class SequenceConfigForm extends StatefulWidget {
   const SequenceConfigForm({Key? key}) : super(key: key);
 
@@ -144,7 +144,6 @@ class _SequenceConfigFormState extends State<SequenceConfigForm> {
     super.initState();
     _patternController = TextEditingController();
   }
-
 
   @override
   void dispose() {
@@ -166,36 +165,35 @@ class _SequenceConfigFormState extends State<SequenceConfigForm> {
           _patternController.text = state.selectedSequence?.pattern ?? "";
         }
 
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomTextField(
-                label: "Sequence Pattern",
-                controller: _patternController,
-                onValueChange: (value) {
-                  BlocProvider.of<CreateEditSequenceBloc>(context).add(
-                    OnPatternChangeEvent(value),
-                  );
-                },
-              ),
-              Text("Sample Sequence:\t\t ${state.sampleSequence}"),
-              const SizedBox(height: 100),
-              if (state.status == CreateEditSequenceStatus.saving)
-                const LinearProgressIndicator(),
-              if (state.status == CreateEditSequenceStatus.modified && state.selectedSequence != null)
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextField(
+              label: "Sequence Pattern",
+              controller: _patternController,
+              onValueChange: (value) {
+                BlocProvider.of<CreateEditSequenceBloc>(context).add(
+                  OnPatternChangeEvent(value),
+                );
+              },
+            ),
+            Text("Sample Sequence:\t\t ${state.sampleSequence}"),
+            const SizedBox(height: 100),
+            if (state.status == CreateEditSequenceStatus.saving)
+              const LinearProgressIndicator(),
+            if (state.status == CreateEditSequenceStatus.modified &&
+                state.selectedSequence != null)
               SizedBox(
                 width: min(400, MediaQuery.of(context).size.width * 0.8),
                 child: AcceptButton(
                   onPressed: () {
-                    BlocProvider.of<CreateEditSequenceBloc>(context).add(
-                        SaveSequenceConfigEvent(state.selectedSequence!));
-                  }, label: 'Save',
+                    BlocProvider.of<CreateEditSequenceBloc>(context)
+                        .add(SaveSequenceConfigEvent(state.selectedSequence!));
+                  },
+                  label: 'Save',
                 ),
               ),
-            ],
-          ),
+          ],
         );
       },
     );
