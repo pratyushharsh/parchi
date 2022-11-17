@@ -12,8 +12,13 @@ part 'sequence_entity.g.dart';
 
 enum SequenceType {
   item("ITEM"),
-  transaction("TRANS"),
-  customer("CUSTOMER");
+  customer("CUSTOMER"),
+  employee("EMPLOYEE"),
+  invoice("INVOICE"),
+  order("ORDER"),
+  reasonCode("REASON_CODE"),
+  transaction("TRANSACTION");
+
   const SequenceType(this.value);
   final String value;
 }

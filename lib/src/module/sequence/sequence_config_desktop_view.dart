@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/theme_settings.dart';
 import '../../entity/pos/entity.dart';
 import '../../widgets/cloud_sync_widget.dart';
+import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import 'bloc/create_edit_sequence_bloc.dart';
 
@@ -126,8 +129,28 @@ class SequenceTile extends StatelessWidget {
 }
 
 
-class SequenceConfigForm extends StatelessWidget {
+class SequenceConfigForm extends StatefulWidget {
   const SequenceConfigForm({Key? key}) : super(key: key);
+
+  @override
+  State<SequenceConfigForm> createState() => _SequenceConfigFormState();
+}
+
+class _SequenceConfigFormState extends State<SequenceConfigForm> {
+  late TextEditingController _patternController;
+
+  @override
+  void initState() {
+    super.initState();
+    _patternController = TextEditingController();
+  }
+
+
+  @override
+  void dispose() {
+    _patternController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +162,10 @@ class SequenceConfigForm extends StatelessWidget {
           );
         }
 
+        if (state.status == CreateEditSequenceStatus.init) {
+          _patternController.text = state.selectedSequence?.pattern ?? "";
+        }
+
         return Container(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -146,7 +173,7 @@ class SequenceConfigForm extends StatelessWidget {
             children: [
               CustomTextField(
                 label: "Sequence Pattern",
-                initialValue: state.selectedSequence!.pattern,
+                controller: _patternController,
                 onValueChange: (value) {
                   BlocProvider.of<CreateEditSequenceBloc>(context).add(
                     OnPatternChangeEvent(value),
@@ -154,6 +181,19 @@ class SequenceConfigForm extends StatelessWidget {
                 },
               ),
               Text("Sample Sequence:\t\t ${state.sampleSequence}"),
+              const SizedBox(height: 100),
+              if (state.status == CreateEditSequenceStatus.saving)
+                const LinearProgressIndicator(),
+              if (state.status == CreateEditSequenceStatus.modified && state.selectedSequence != null)
+              SizedBox(
+                width: min(400, MediaQuery.of(context).size.width * 0.8),
+                child: AcceptButton(
+                  onPressed: () {
+                    BlocProvider.of<CreateEditSequenceBloc>(context).add(
+                        SaveSequenceConfigEvent(state.selectedSequence!));
+                  }, label: 'Save',
+                ),
+              ),
             ],
           ),
         );

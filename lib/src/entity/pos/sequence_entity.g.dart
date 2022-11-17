@@ -207,13 +207,21 @@ P _sequenceEntityDeserializeProp<P>(
 
 const _SequenceEntitynameEnumValueMap = {
   r'item': r'item',
-  r'transaction': r'transaction',
   r'customer': r'customer',
+  r'employee': r'employee',
+  r'invoice': r'invoice',
+  r'order': r'order',
+  r'reasonCode': r'reasonCode',
+  r'transaction': r'transaction',
 };
 const _SequenceEntitynameValueEnumMap = {
   r'item': SequenceType.item,
-  r'transaction': SequenceType.transaction,
   r'customer': SequenceType.customer,
+  r'employee': SequenceType.employee,
+  r'invoice': SequenceType.invoice,
+  r'order': SequenceType.order,
+  r'reasonCode': SequenceType.reasonCode,
+  r'transaction': SequenceType.transaction,
 };
 
 Id _sequenceEntityGetId(SequenceEntity object) {

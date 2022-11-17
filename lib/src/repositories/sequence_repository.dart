@@ -36,6 +36,27 @@ class SequenceRepository with DatabaseProvider {
   }
 
   Future<List<SequenceEntity>> getAllSequences() async {
-    return await db.sequenceEntitys.where().findAll();
+    List<SequenceType> types = SequenceType.values;
+    List<SequenceEntity> sequences = [];
+    await db.writeTxn(() async {
+      var allSeq = await db.sequenceEntitys.where().findAll();
+      for (var type in types) {
+        bool exist = false;
+        for (var seq in allSeq) {
+          if (seq.name.value == type.value) {
+            sequences.add(seq);
+            exist = true;
+            break;
+          }
+        }
+        if (!exist) {
+          var tmp = SequenceEntity(name: type, nextSeq: 1, pattern: '', createAt: DateTime.now());
+          await db.sequenceEntitys.putByName(tmp);
+          sequences.add(tmp);
+        }
+      }
+    });
+
+    return sequences;
   }
 }

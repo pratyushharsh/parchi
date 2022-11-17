@@ -31,7 +31,7 @@ class CreateEditSequenceBloc
 
   void _onSelectSequenceEntityEvent(SelectSequenceEntityEvent event,
       Emitter<CreateEditSequenceState> emit) async {
-    emit(state.copyWith(selectedSequence: event.sequenceEntity));
+    emit(state.copyWith(selectedSequence: event.sequenceEntity, status: CreateEditSequenceStatus.init));
   }
 
   void _onPatternChangeEvent(OnPatternChangeEvent event,
@@ -47,7 +47,6 @@ class CreateEditSequenceBloc
   void _onSaveSequenceConfigEvent(SaveSequenceConfigEvent event,
       Emitter<CreateEditSequenceState> emit) async {
     emit(state.copyWith(status: CreateEditSequenceStatus.saving));
-    await Future.delayed(const Duration(seconds: 5));
     await sequenceRepository.saveSequence(event.sequenceEntity);
     emit(state.copyWith(selectedSequence: event.sequenceEntity, status: CreateEditSequenceStatus.saved));
   }
