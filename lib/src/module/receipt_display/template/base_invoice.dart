@@ -170,9 +170,20 @@ class BaseInvoice extends IInvoice with InvoiceUtil {
   @override
   Widget buildTaxSummary(Context context) {
 
-    InvoiceTaxData data = InvoiceConfigConstants.buildTaxSummary(order.storeLocale, "taxGroup", order.lineItems);
+    InvoiceTaxData data = InvoiceConfigConstants.buildTaxSummary(order.storeLocale, config.taxGroupType, order.lineItems);
 
-    List<ReportFieldConfigEntity> headers = data.header.map((e) => ReportFieldConfigEntity(key: e, title: e)).toList();
+    List<ReportFieldConfigEntity> headers = [];
+
+    if (config.taxFieldConfig.isEmpty) {
+      headers = data.header.map((e) => ReportFieldConfigEntity(key: e, title: e)).toList();
+    }
+
+    // for(var h in config.taxFieldConfig) {
+    //   if (data.header.contains(h.key)) {
+    //     headers.add(h);
+    //   }
+    // }
+    headers = config.taxFieldConfig;
 
     return buildTable(
       columnConfig: headers,

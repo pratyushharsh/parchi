@@ -44,6 +44,7 @@ class InvoiceSettingBloc
     on<AddNewConfigField>(_onAddNewConfigField);
     on<RemoveConfigField>(_onRemoveConfigField);
     on<OnReportFieldConfigUpdate>(_onReportFieldConfigUpdate);
+    on<ChangeTaxGroupType>(_onChangeTaxGroupType);
   }
 
   void _onInitialInvoiceSettingEvent(OnInitialInvoiceSettingEvent event,
@@ -55,9 +56,11 @@ class InvoiceSettingBloc
       billingAddressFields: config.billingAddFieldConfig,
       headerFields: config.headerFieldConfig,
       shippingAddressFields: config.shippingAddFieldConfig,
+      taxFields: config.taxFieldConfig,
       showTaxSummary: config.showTaxSummary,
       showPaymentDetails: config.showPaymentDetails,
       logo: config.logo,
+      taxGroupType: config.taxGroupType,
       showTermsAndCondition: config.showTermsAndCondition,
       termsAndCondition: config.termsAndCondition,
       showDeclaration: config.showDeclaration,
@@ -153,11 +156,15 @@ class InvoiceSettingBloc
           showPaymentDetails: state.showPaymentDetails,
           showTermsAndCondition: state.showTermsAndCondition,
           termsAndCondition: state.termsAndCondition,
+          taxGroupType: state.taxGroupType,
           showDeclaration: state.showDeclaration,
           declaration: state.declaration,
           headerFieldConfig: state.headerFields,
           shippingAddFieldConfig: state.shippingAddressFields,
-          billingAddFieldConfig: state.billingAddressFields));
+          billingAddFieldConfig: state.billingAddressFields,
+        taxFieldConfig: state.taxFields,
+      ),
+      );
     } catch (e) {
       log.severe(e);
     }
@@ -211,6 +218,9 @@ class InvoiceSettingBloc
       case FieldType.item:
         newColumns = List<ReportFieldConfigEntity>.from(state.columns);
         break;
+      case FieldType.tax:
+        newColumns = List<ReportFieldConfigEntity>.from(state.taxFields);
+        break;
     }
 
     for (var i = 0; i < newColumns.length; i++) {
@@ -250,6 +260,10 @@ class InvoiceSettingBloc
         emit(state.copyWith(
             columns: newColumns, status: InvoiceSettingStatus.modified));
         break;
+      case FieldType.tax:
+        emit(state.copyWith(
+            taxFields: newColumns, status: InvoiceSettingStatus.modified));
+        break;
     }
   }
 
@@ -274,6 +288,9 @@ class InvoiceSettingBloc
         break;
       case FieldType.item:
         newColumns = List<ReportFieldConfigEntity>.from(state.columns);
+        break;
+      case FieldType.tax:
+        newColumns = List<ReportFieldConfigEntity>.from(state.taxFields);
         break;
     }
 
@@ -308,6 +325,10 @@ class InvoiceSettingBloc
         emit(state.copyWith(
             columns: newColumns, status: InvoiceSettingStatus.modified));
         break;
+      case FieldType.tax:
+        emit(state.copyWith(
+            taxFields: newColumns, status: InvoiceSettingStatus.modified));
+        break;
     }
   }
 
@@ -332,6 +353,9 @@ class InvoiceSettingBloc
         break;
       case FieldType.item:
         newColumns = List<ReportFieldConfigEntity>.from(state.columns);
+        break;
+      case FieldType.tax:
+        newColumns = List<ReportFieldConfigEntity>.from(state.taxFields);
         break;
     }
 
@@ -360,6 +384,17 @@ class InvoiceSettingBloc
         emit(state.copyWith(
             columns: newColumns, status: InvoiceSettingStatus.modified));
         break;
+      case FieldType.tax:
+        emit(state.copyWith(
+            taxFields: newColumns, status: InvoiceSettingStatus.modified));
+        break;
     }
+  }
+
+  void _onChangeTaxGroupType(
+      ChangeTaxGroupType event, Emitter<InvoiceSettingState> emit) {
+    emit(state.copyWith(
+        taxGroupType: event.type,
+        status: InvoiceSettingStatus.modified));
   }
 }

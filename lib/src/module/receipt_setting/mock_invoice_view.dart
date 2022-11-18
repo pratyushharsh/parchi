@@ -40,6 +40,8 @@ class _MockInvoiceViewState extends State<MockInvoiceView> {
             headerFieldConfig: state.headerFields,
             billingAddFieldConfig: state.billingAddressFields,
             shippingAddFieldConfig: state.shippingAddressFields,
+            taxFieldConfig: state.taxFields,
+            taxGroupType: state.taxGroupType,
             paymentColumnConfig: state.paymentColumns,
             logo: state.logo,
             termsAndCondition: state.termsAndCondition,

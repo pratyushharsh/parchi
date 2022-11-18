@@ -2,6 +2,15 @@ import 'package:intl/intl.dart';
 import '../../../entity/pos/entity.dart';
 import 'package:pdf/widgets.dart';
 
+enum TaxGroupType {
+  groupId("GROUP_ID"),
+  hsn("HSN"),
+  taxRule("TAX_RULE");
+
+  const TaxGroupType(this.value);
+  final String value;
+}
+
 class InvoiceConfigConstants {
   static List<ReportFieldConfigEntity> columnConfig = [
     ReportFieldConfigEntity(
@@ -261,31 +270,16 @@ class InvoiceConfigConstants {
     return gstTaxSummary;
   }
 
-  static InvoiceTaxData buildTaxSummary(String locale, String type, List<TransactionLineItemEntity> entity) {
+  static InvoiceTaxData buildTaxSummary(String locale, TaxGroupType type, List<TransactionLineItemEntity> entity) {
     Map<String, List<TransactionLineItemTaxModifier>> taxSummary = {};
     switch(type) {
-      case "taxGroup":
+      case TaxGroupType.hsn:
         return buildDataForGroupByHsn(locale, entity);
-        case "taxRule":
-        for (var item in entity) {
-          if (item.isVoid) {
-            continue;
-          }
-
-          for (var taxModifier in item.taxModifiers) {
-            if (!taxSummary.containsKey(taxModifier.taxRuleId)) {
-              taxSummary[taxModifier.taxRuleId ?? "Default"] = [];
-            }
-            taxSummary[taxModifier.taxRuleId]!.add(taxModifier);
-          }
-        }
-        break;
+      case TaxGroupType.taxRule:
+        return buildDataForTaxGroupByRuleId(locale, entity);
+      case TaxGroupType.groupId:
+        return buildDataForTaxGroup(locale, entity);
     }
-    // Based on the data build the TaxSummary
-
-    // Building tax summary header.
-
-
     return InvoiceTaxData(header: [], body: []);
   }
 
@@ -305,22 +299,12 @@ class InvoiceConfigConstants {
         taxRuleIds.add(taxModifier.taxRuleId!);
         taxSummary[item.hsn!]!.add(taxModifier);
       }
-
-      // for (var taxModifier in item.taxModifiers) {
-      //   if (!taxSummary.containsKey(taxModifier.taxGroupId)) {
-      //     taxSummary[taxModifier.taxGroupId ?? "Default"] = [];
-      //   }
-      //   taxSummary[taxModifier.taxGroupId]!.add(taxModifier);
-      //   if(taxModifier.taxRuleId != null) {
-      //     taxRuleIds.add(taxModifier.taxRuleId!);
-      //   }
-      // }
     }
 
     List<String> taxRuleIdList = taxRuleIds.toList().map((e) => ['$e-rate', e]).expand((x) => x).toList();
 
     // Build Header List First.
-    List<String> header = ["hsn", "taxableAmount", ...taxRuleIdList, "totalAmount"];
+    List<String> header = ["hsn", "taxableAmount", ...taxRuleIdList, "taxAmount", "totalAmount"];
 
     // For each taxSummary build the row.
     List<Map<String, dynamic> > body = [];
@@ -329,13 +313,82 @@ class InvoiceConfigConstants {
       Map<String, dynamic> row = {};
       row["hsn"] = summary;
       row["taxableAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxableAmount ?? 0.0));
-      row["totalAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0));
+      row["taxAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0));
+      row["totalAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0) + (element.taxableAmount ?? 0.0));
       for(var taxLine in taxLines) {
         row["${taxLine.taxRuleId}-rate"] = NumberFormat.percentPattern(locale).format((taxLine.taxPercent ?? 0.0) / 100);
         row["${taxLine.taxRuleId}"] = taxLine.taxAmount;
       }
       body.add(row);
     }
+    return InvoiceTaxData(header: header, body: body);
+  }
+
+  static InvoiceTaxData buildDataForTaxGroup(String locale, List<TransactionLineItemEntity> entity) {
+    Map<String, List<TransactionLineItemTaxModifier>> taxSummary = {};
+
+    for (var item in entity) {
+      if (item.isVoid) {
+        continue;
+      }
+
+      for (var taxModifier in item.taxModifiers) {
+        if (!taxSummary.containsKey(taxModifier.taxGroupId)) {
+          taxSummary[taxModifier.taxGroupId ?? "Default"] = [];
+        }
+        taxSummary[taxModifier.taxGroupId]!.add(taxModifier);
+      }
+    }
+
+    // Build Header List First.
+    List<String> header = ["taxGroup", "taxableAmount", "taxAmount", "totalAmount"];
+
+    // For each taxSummary build the row.
+    List<Map<String, dynamic> > body = [];
+    for(var summary in taxSummary.keys) {
+      List<TransactionLineItemTaxModifier> taxLines = taxSummary[summary]!;
+      Map<String, dynamic> row = {};
+      row["taxGroup"] = summary;
+      row["taxableAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxableAmount ?? 0.0));
+      row["taxAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0));
+      row["totalAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0) + (element.taxableAmount ?? 0.0));
+      body.add(row);
+    }
+
+    return InvoiceTaxData(header: header, body: body);
+  }
+
+  static InvoiceTaxData buildDataForTaxGroupByRuleId(String locale, List<TransactionLineItemEntity> entity) {
+    Map<String, List<TransactionLineItemTaxModifier>> taxSummary = {};
+
+    for (var item in entity) {
+      if (item.isVoid) {
+        continue;
+      }
+
+      for (var taxModifier in item.taxModifiers) {
+        if (!taxSummary.containsKey(taxModifier.taxRuleId)) {
+          taxSummary[taxModifier.taxRuleId ?? "Default"] = [];
+        }
+        taxSummary[taxModifier.taxRuleId]!.add(taxModifier);
+      }
+    }
+
+    // Build Header List First.
+    List<String> header = ["taxRuleId", "taxableAmount", "taxAmount", "totalAmount"];
+
+    // For each taxSummary build the row.
+    List<Map<String, dynamic> > body = [];
+    for(var summary in taxSummary.keys) {
+      List<TransactionLineItemTaxModifier> taxLines = taxSummary[summary]!;
+      Map<String, dynamic> row = {};
+      row["taxRuleId"] = summary;
+      row["taxableAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxableAmount ?? 0.0));
+      row["taxAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0));
+      row["totalAmount"] = taxLines.fold<double>(0.00, (previousValue, element) => previousValue + (element.taxAmount ?? 0.0) + (element.taxableAmount ?? 0.0));
+      body.add(row);
+    }
+
     return InvoiceTaxData(header: header, body: body);
   }
 }
@@ -395,7 +448,9 @@ class InvoiceConfig {
   final List<ReportFieldConfigEntity> headerFieldConfig;
   final List<ReportFieldConfigEntity> billingAddFieldConfig;
   final List<ReportFieldConfigEntity> shippingAddFieldConfig;
+  final List<ReportFieldConfigEntity> taxFieldConfig;
   final bool showTaxSummary;
+  final TaxGroupType taxGroupType;
   final bool showPaymentDetails;
   final String? logo;
   final bool showTermsAndCondition;
@@ -412,6 +467,8 @@ class InvoiceConfig {
       required this.headerFieldConfig,
       required this.billingAddFieldConfig,
       required this.shippingAddFieldConfig,
+      required this.taxFieldConfig,
+        this.taxGroupType = TaxGroupType.hsn,
       this.showPaymentDetails = true,
       this.logo,
       this.showTermsAndCondition = false,
@@ -482,9 +539,10 @@ class InvoiceConfig {
           align: ColumnAlignment.right,
         ),
       ],
+      taxFieldConfig: [],
       billingAddFieldConfig: [],
       headerFieldConfig: [],
-      shippingAddFieldConfig: []);
+      shippingAddFieldConfig: [],);
 
   Map<String, dynamic> toMap() {
     return {
@@ -496,7 +554,9 @@ class InvoiceConfig {
           billingAddFieldConfig.map((e) => e.toMap()).toList(),
       'shippingAddFieldConfig':
           shippingAddFieldConfig.map((e) => e.toMap()).toList(),
+      'taxFieldConfig': taxFieldConfig.map((e) => e.toMap()).toList(),
       'showTaxSummary': showTaxSummary,
+      'taxGroupType': taxGroupType.value,
       'showPaymentDetails': showPaymentDetails,
       'logo': logo,
       'showTermsAndCondition': showTermsAndCondition,
@@ -535,6 +595,14 @@ class InvoiceConfig {
               .map((e) => ReportFieldConfigEntity.fromMap(e))
               .toList()
           : [],
+      taxFieldConfig: input['taxFieldConfig'] != null
+          ? (input['taxFieldConfig'] as List)
+              .map((e) => ReportFieldConfigEntity.fromMap(e))
+              .toList()
+          : [],
+      taxGroupType: TaxGroupType.values.firstWhere(
+          (element) => element.value == input['taxGroupType'],
+          orElse: () => TaxGroupType.hsn),
       showTaxSummary: input['showTaxSummary'],
       showPaymentDetails: input['showPaymentDetails'],
       logo: input['logo'],

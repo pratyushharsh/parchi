@@ -2,7 +2,7 @@ part of 'invoice_setting_bloc.dart';
 
 enum InvoiceSettingStatus { initial, preLoad, modified, saved }
 
-enum FieldType { header, billingAddress, shippingAddress, item, payment }
+enum FieldType { header, billingAddress, shippingAddress, item, payment, tax }
 
 class InvoiceSettingState {
   final List<ReportFieldConfigEntity> columns;
@@ -10,8 +10,10 @@ class InvoiceSettingState {
   final List<ReportFieldConfigEntity> headerFields;
   final List<ReportFieldConfigEntity> billingAddressFields;
   final List<ReportFieldConfigEntity> shippingAddressFields;
+  final List<ReportFieldConfigEntity> taxFields;
   final InvoiceSettingStatus status;
   final bool showTaxSummary;
+  final TaxGroupType taxGroupType;
   final bool showPaymentDetails;
   final PlatformFile? rawLogo;
   final String? logo;
@@ -26,8 +28,10 @@ class InvoiceSettingState {
     this.headerFields = const [],
     this.billingAddressFields = const [],
     this.shippingAddressFields = const [],
+    this.taxFields = const [],
     this.status = InvoiceSettingStatus.initial,
     this.showTaxSummary = true,
+    this.taxGroupType = TaxGroupType.hsn,
     this.showPaymentDetails = true,
     this.showDeclaration = true,
     this.declaration,
@@ -43,8 +47,10 @@ class InvoiceSettingState {
     List<ReportFieldConfigEntity>? headerFields,
     List<ReportFieldConfigEntity>? billingAddressFields,
     List<ReportFieldConfigEntity>? shippingAddressFields,
+    List<ReportFieldConfigEntity>? taxFields,
     InvoiceSettingStatus? status,
     bool? showTaxSummary,
+    TaxGroupType? taxGroupType,
     bool? showPaymentDetails,
     bool? showDeclaration,
     String? declaration,
@@ -60,8 +66,10 @@ class InvoiceSettingState {
       billingAddressFields: billingAddressFields ?? this.billingAddressFields,
       shippingAddressFields:
           shippingAddressFields ?? this.shippingAddressFields,
+      taxFields: taxFields ?? this.taxFields,
       status: status ?? this.status,
       showTaxSummary: showTaxSummary ?? this.showTaxSummary,
+      taxGroupType: taxGroupType ?? this.taxGroupType,
       showPaymentDetails: showPaymentDetails ?? this.showPaymentDetails,
       showDeclaration: showDeclaration ?? this.showDeclaration,
       declaration: declaration ?? this.declaration,

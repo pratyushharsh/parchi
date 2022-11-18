@@ -105,3 +105,9 @@ class OnReportFieldConfigUpdate extends InvoiceSettingEvent {
 
   OnReportFieldConfigUpdate({required this.field, required this.type});
 }
+
+class ChangeTaxGroupType extends InvoiceSettingEvent {
+  final TaxGroupType type;
+
+  ChangeTaxGroupType(this.type);
+}

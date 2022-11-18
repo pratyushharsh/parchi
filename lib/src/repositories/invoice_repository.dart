@@ -21,7 +21,9 @@ enum InvoiceField {
   headerFields("HEADER_FIELDS"),
   shippingAddressFields("SHIPPING_ADDRESS_FIELDS"),
   billingAddressFields("BILLING_ADDRESS_FIELDS"),
-  lastUpdateAt("LAST_UPDATE_AT");
+  taxFields("TAX_FIELDS"),
+  lastUpdateAt("LAST_UPDATE_AT"),
+  taxGroupType("TAX_GROUP_TYPE");
 
   const InvoiceField(this.value);
 
@@ -79,6 +81,15 @@ class InvoiceRepository with DatabaseProvider {
       );
     }
 
+    if (setting.taxFieldConfig.isNotEmpty) {
+      columns.add(
+        ReportColumn(
+          id: InvoiceField.taxFields.value,
+          fields: setting.taxFieldConfig,
+        ),
+      );
+    }
+
     await db.writeTxn(() async {
       db.reportConfigEntitys.putByTypeSubtype(ReportConfigEntity(
         type: 'INVOICE',
@@ -116,6 +127,10 @@ class InvoiceRepository with DatabaseProvider {
           ReportProperty(
             key: InvoiceField.lastUpdateAt.value,
             intValue: DateTime.now().millisecondsSinceEpoch,
+          ),
+          ReportProperty(
+            key: InvoiceField.taxGroupType.value,
+            stringValue: setting.taxGroupType.value,
           ),
         ],
       ));
@@ -211,6 +226,23 @@ class InvoiceRepository with DatabaseProvider {
                       id: InvoiceField.shippingAddressFields.value))
               .fields ??
           [],
+      taxFieldConfig: config.columns
+              .firstWhere(
+                  (element) => element.id == InvoiceField.taxFields.value,
+                  orElse: () =>
+                      ReportColumn(id: InvoiceField.taxFields.value))
+              .fields ??
+          [],
+taxGroupType: TaxGroupType.values.firstWhere(
+          (element) => element.value ==
+              config.properties
+                  .firstWhere(
+                      (element) => element.key == InvoiceField.taxGroupType.value,
+                      orElse: () =>
+                          ReportProperty(key: InvoiceField.taxGroupType.value))
+                  .stringValue,
+          orElse: () => TaxGroupType.hsn,
+        ),
     );
   }
 

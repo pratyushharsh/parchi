@@ -4,8 +4,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:isar/isar.dart';
 
 import '../../config/theme_settings.dart';
+import '../../database/db_provider.dart';
+import '../../entity/pos/entity.dart';
 import '../../widgets/appbar_leading.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -56,7 +59,9 @@ class _InvoiceSettingFormState extends State<InvoiceSettingForm> {
               top: 0,
               left: 0,
               right: 0,
-              bottom: (_isMobileView() && _openSetting) ? MediaQuery.of(context).size.height * 0.60 : 0,
+              bottom: (_isMobileView() && _openSetting)
+                  ? MediaQuery.of(context).size.height * 0.60
+                  : 0,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -126,7 +131,9 @@ class _InvoiceSettingFormState extends State<InvoiceSettingForm> {
                     width: 40,
                     child: Center(
                       child: FaIcon(
-                        _openSetting ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.pen,
+                        _openSetting
+                            ? FontAwesomeIcons.eyeSlash
+                            : FontAwesomeIcons.pen,
                         color: AppColor.primary,
                         size: 20,
                       ),
@@ -134,7 +141,7 @@ class _InvoiceSettingFormState extends State<InvoiceSettingForm> {
                   ),
                 ),
               ),
-              if (width <= 800 && _openSetting)
+            if (width <= 800 && _openSetting)
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.35,
                 right: 0,
@@ -166,18 +173,18 @@ class _InvoiceSettingFormState extends State<InvoiceSettingForm> {
                 ),
               ),
             if (width <= 800 && _openSetting)
-            Positioned(
-              bottom: 10,
-              left: 16,
-              right: 16,
-              child: AcceptButton(
-                label: 'Save',
-                onPressed: () {
-                  BlocProvider.of<InvoiceSettingBloc>(context)
-                      .add(OnSaveInvoiceSettingEvent());
-                },
+              Positioned(
+                bottom: 10,
+                left: 16,
+                right: 16,
+                child: AcceptButton(
+                  label: 'Save',
+                  onPressed: () {
+                    BlocProvider.of<InvoiceSettingBloc>(context)
+                        .add(OnSaveInvoiceSettingEvent());
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -192,15 +199,68 @@ class InvoiceSettingInput extends StatefulWidget {
   State<InvoiceSettingInput> createState() => _InvoiceSettingInputState();
 }
 
-class _InvoiceSettingInputState extends State<InvoiceSettingInput> {
+class _InvoiceSettingInputState extends State<InvoiceSettingInput> with DatabaseProvider {
   late TextEditingController _termsConditionController;
   late TextEditingController _declarationController;
+  late List<ReportFieldConfigEntity> _taxFields;
 
   @override
   void initState() {
     super.initState();
     _termsConditionController = TextEditingController();
     _declarationController = TextEditingController();
+    _taxFields = [];
+    _asyncLoadTaxColumns();
+  }
+
+  void _asyncLoadTaxColumns() async {
+    var tsxGroups = await db.taxGroupEntitys.where().findAll();
+    List<ReportFieldConfigEntity> taxFields = [];
+    Set<String> ruleIds = {};
+    for (var taxGrp in tsxGroups) {
+      ruleIds.addAll(taxGrp.taxRules.map((e) => e.ruleId ?? ''));
+    }
+
+    taxFields.add(ReportFieldConfigEntity(
+      key: 'hsn',
+      title: 'hsn',
+    ));
+
+    taxFields.add(ReportFieldConfigEntity(
+      key: 'taxableAmount',
+      title: 'taxableAmount',
+    ));
+
+    // For Each Rule Id Create a Tax Field
+    for (var ruleId in ruleIds) {
+      taxFields.add(ReportFieldConfigEntity(
+        key: ruleId,
+        title: ruleId,
+      ));
+      taxFields.add(ReportFieldConfigEntity(
+        key: '$ruleId-rate',
+        title: '$ruleId-rate',
+      ));
+    }
+
+    taxFields.add(ReportFieldConfigEntity(
+      key: 'taxAmount',
+      title: 'taxAmount',
+    ));
+
+    taxFields.add(ReportFieldConfigEntity(
+      key: 'totalAmount',
+      title: 'totalAmount',
+    ));
+
+    taxFields.add(ReportFieldConfigEntity(
+      key: 'taxGroup',
+      title: 'taxGroup',
+    ));
+
+    setState(() {
+      _taxFields = taxFields;
+    });
   }
 
   @override
@@ -228,14 +288,19 @@ class _InvoiceSettingInputState extends State<InvoiceSettingInput> {
                   .toList(),
               selectedOptions: state.headerFields,
               onUpdateOption: (val) {
-                BlocProvider.of<InvoiceSettingBloc>(context)
-                    .add(OnReportFieldConfigUpdate(field: val, type: FieldType.header));
+                BlocProvider.of<InvoiceSettingBloc>(context).add(
+                    OnReportFieldConfigUpdate(
+                        field: val, type: FieldType.header));
               },
               onSelect: (val) {
-                context.read<InvoiceSettingBloc>().add(AddNewConfigField(field: val, type: FieldType.header));
+                context
+                    .read<InvoiceSettingBloc>()
+                    .add(AddNewConfigField(field: val, type: FieldType.header));
               },
               onDeselect: (val) {
-                context.read<InvoiceSettingBloc>().add(RemoveConfigField(field: val, type: FieldType.header));
+                context
+                    .read<InvoiceSettingBloc>()
+                    .add(RemoveConfigField(field: val, type: FieldType.header));
               },
               label: "Add custom fields at store.",
             ),
@@ -248,14 +313,17 @@ class _InvoiceSettingInputState extends State<InvoiceSettingInput> {
                   .toList(),
               selectedOptions: state.billingAddressFields,
               onUpdateOption: (val) {
-                BlocProvider.of<InvoiceSettingBloc>(context)
-                    .add(OnReportFieldConfigUpdate(field: val, type: FieldType.billingAddress));
+                BlocProvider.of<InvoiceSettingBloc>(context).add(
+                    OnReportFieldConfigUpdate(
+                        field: val, type: FieldType.billingAddress));
               },
               onSelect: (val) {
-                context.read<InvoiceSettingBloc>().add(AddNewConfigField(field: val, type: FieldType.billingAddress));
+                context.read<InvoiceSettingBloc>().add(AddNewConfigField(
+                    field: val, type: FieldType.billingAddress));
               },
               onDeselect: (val) {
-                context.read<InvoiceSettingBloc>().add(RemoveConfigField(field: val, type: FieldType.billingAddress));
+                context.read<InvoiceSettingBloc>().add(RemoveConfigField(
+                    field: val, type: FieldType.billingAddress));
               },
               label: "Additional Fields At Billing Address",
             ),
@@ -268,14 +336,17 @@ class _InvoiceSettingInputState extends State<InvoiceSettingInput> {
                   .toList(),
               selectedOptions: state.shippingAddressFields,
               onUpdateOption: (val) {
-                BlocProvider.of<InvoiceSettingBloc>(context)
-                    .add(OnReportFieldConfigUpdate(field: val, type: FieldType.shippingAddress));
+                BlocProvider.of<InvoiceSettingBloc>(context).add(
+                    OnReportFieldConfigUpdate(
+                        field: val, type: FieldType.shippingAddress));
               },
               onSelect: (val) {
-                context.read<InvoiceSettingBloc>().add(AddNewConfigField(field: val, type: FieldType.shippingAddress));
+                context.read<InvoiceSettingBloc>().add(AddNewConfigField(
+                    field: val, type: FieldType.shippingAddress));
               },
               onDeselect: (val) {
-                context.read<InvoiceSettingBloc>().add(RemoveConfigField(field: val, type: FieldType.shippingAddress));
+                context.read<InvoiceSettingBloc>().add(RemoveConfigField(
+                    field: val, type: FieldType.shippingAddress));
               },
               label: "Additional Fields At Shipping Address.",
             ),
@@ -288,14 +359,19 @@ class _InvoiceSettingInputState extends State<InvoiceSettingInput> {
                   .toList(),
               selectedOptions: state.columns,
               onUpdateOption: (val) {
-                BlocProvider.of<InvoiceSettingBloc>(context)
-                    .add(OnReportFieldConfigUpdate(field: val, type: FieldType.item));
+                BlocProvider.of<InvoiceSettingBloc>(context).add(
+                    OnReportFieldConfigUpdate(
+                        field: val, type: FieldType.item));
               },
               onSelect: (val) {
-                context.read<InvoiceSettingBloc>().add(AddNewConfigField(field: val, type: FieldType.item));
+                context
+                    .read<InvoiceSettingBloc>()
+                    .add(AddNewConfigField(field: val, type: FieldType.item));
               },
               onDeselect: (val) {
-                context.read<InvoiceSettingBloc>().add(RemoveConfigField(field: val, type: FieldType.item));
+                context
+                    .read<InvoiceSettingBloc>()
+                    .add(RemoveConfigField(field: val, type: FieldType.item));
               },
               label: "Select Items Columns to display.",
             ),
@@ -317,39 +393,121 @@ class _InvoiceSettingInputState extends State<InvoiceSettingInput> {
               ],
             ),
             if (state.showPaymentDetails)
-            MultiChoiceReportColumnConfigSelection(
-              options: InvoiceConfigConstants.paymentColumn
-                  .where((e) => !state.paymentColumns.contains(e))
-                  .toList(),
-              selectedOptions: state.paymentColumns,
-              onUpdateOption: (val) {
-                BlocProvider.of<InvoiceSettingBloc>(context)
-                    .add(OnReportFieldConfigUpdate(field: val, type: FieldType.payment));
-              },
-              onSelect: (val) {
-                context.read<InvoiceSettingBloc>().add(AddNewConfigField(field: val, type: FieldType.payment));
-              },
-              onDeselect: (val) {
-                context.read<InvoiceSettingBloc>().add(RemoveConfigField(field: val, type: FieldType.payment));
-              },
-              label: "Select Payment Columns to display.",
-            ),
+              MultiChoiceReportColumnConfigSelection(
+                options: InvoiceConfigConstants.paymentColumn
+                    .where((e) => !state.paymentColumns.contains(e))
+                    .toList(),
+                selectedOptions: state.paymentColumns,
+                onUpdateOption: (val) {
+                  BlocProvider.of<InvoiceSettingBloc>(context).add(
+                      OnReportFieldConfigUpdate(
+                          field: val, type: FieldType.payment));
+                },
+                onSelect: (val) {
+                  context.read<InvoiceSettingBloc>().add(
+                      AddNewConfigField(field: val, type: FieldType.payment));
+                },
+                onDeselect: (val) {
+                  context.read<InvoiceSettingBloc>().add(
+                      RemoveConfigField(field: val, type: FieldType.payment));
+                },
+                label: "Select Payment Columns to display.",
+              ),
             const SizedBox(
               height: 16,
             ),
             Row(
               children: [
                 Checkbox(
-                    value: state.showTaxSummary,
-                    activeColor: AppColor.primary,
-                    onChanged: (val) {
-                      context
-                          .read<InvoiceSettingBloc>()
-                          .add(ShowTaxSummary(val!));
-                    }),
+                  value: state.showTaxSummary,
+                  activeColor: AppColor.primary,
+                  onChanged: (val) {
+                    context
+                        .read<InvoiceSettingBloc>()
+                        .add(ShowTaxSummary(val!));
+                  },
+                ),
                 const Text("Show Tax Summary")
               ],
             ),
+            if (state.showTaxSummary)
+              Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Radio<TaxGroupType>(
+                          value: TaxGroupType.hsn,
+                          groupValue: state.taxGroupType,
+                          onChanged: (TaxGroupType? value) {
+                            if (value != null) {
+                              context
+                                  .read<InvoiceSettingBloc>()
+                                  .add(ChangeTaxGroupType(value));
+                            }
+                          },
+                        ),
+                        const Text("HSN")
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Radio<TaxGroupType>(
+                          value: TaxGroupType.groupId,
+                          groupValue: state.taxGroupType,
+                          onChanged: (TaxGroupType? value) {
+                            if (value != null) {
+                              context
+                                  .read<InvoiceSettingBloc>()
+                                  .add(ChangeTaxGroupType(value));
+                            }
+                          },
+                        ),
+                        const Text("Group Id")
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Radio<TaxGroupType>(
+                          value: TaxGroupType.taxRule,
+                          groupValue: state.taxGroupType,
+                          onChanged: (TaxGroupType? value) {
+                            if (value != null) {
+                              context
+                                  .read<InvoiceSettingBloc>()
+                                  .add(ChangeTaxGroupType(value));
+                            }
+                          },
+                        ),
+                        const Text("Tax Rule")
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            if (state.showTaxSummary)
+              MultiChoiceReportColumnConfigSelection(
+                options: _taxFields,
+                selectedOptions: state.taxFields,
+                onUpdateOption: (val) {
+                  BlocProvider.of<InvoiceSettingBloc>(context).add(
+                      OnReportFieldConfigUpdate(
+                          field: val, type: FieldType.tax));
+                },
+                onSelect: (val) {
+                  context.read<InvoiceSettingBloc>().add(
+                      AddNewConfigField(field: val, type: FieldType.tax));
+                },
+                onDeselect: (val) {
+                  context.read<InvoiceSettingBloc>().add(
+                      RemoveConfigField(field: val, type: FieldType.tax));
+                },
+                label: "Select Tax Columns to display.",
+              ),
             const SizedBox(
               height: 16,
             ),

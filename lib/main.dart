@@ -18,74 +18,53 @@ import 'src/util/cache/custom_pdf_cache.dart';
 final log = Logger('Main');
 
 
-Future<void> main() {
-  return BlocOverrides.runZoned(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    initRootLogger();
-    await EasyLocalization.ensureInitialized();
-    await DatabaseProvider.ensureInitialized();
-    PdfBaseCache.defaultCache = CustomPdfCache();
+Future<void> main() async {
 
-    // Database Configuration
-    await Constants.getImageBasePath();
-    // log.info('App Support Directory:  $dir');
-    // final isar = await Isar.open(
-    //   [
-    //     RetailLocationEntitySchema,
-    //     ContactEntitySchema,
-    //     EmployeeEntitySchema,
-    //     EmployeeRoleEntitySchema,
-    //     ProductEntitySchema,
-    //     CollectionEntitySchema,
-    //     SequenceEntitySchema,
-    //     SettingEntitySchema,
-    //     SyncEntitySchema,
-    //     TransactionHeaderEntitySchema,
-    //     CodeValueEntitySchema,
-    //     ReasonCodeEntitySchema,
-    //     TaxGroupEntitySchema,
-    //     ReportConfigEntitySchema,
-    //   ],
-    //   inspector: true,
-    //   directory: dir.path,
-    //   name: 'default'
-    // );
+  Bloc.observer = InvoicingBlocObserver();
 
-    await _initAmplifyFlutter();
+  WidgetsFlutterBinding.ensureInitialized();
+  initRootLogger();
+  await EasyLocalization.ensureInitialized();
+  await DatabaseProvider.ensureInitialized();
+  PdfBaseCache.defaultCache = CustomPdfCache();
 
-    var customStorage = CustomStorage();
-    await customStorage.init();
+  // Database Configuration
+  await Constants.getImageBasePath();
 
-    // 'ap-south-1_gXgaeT7lu',
-    // '366tbopn6vh1f3v88e4u2drne2',
+  await _initAmplifyFlutter();
 
-    // 'ap-south-1_6L70C39jY',
-    // '2oabjq1j5kh9nqgd5hd7qs3cbi',
-    final userPool = CognitoUserPool(
-      'ap-south-1_KO3Zrjy4Z',
-      '580li4e3he25g1858241i9u97b',
-      storage: customStorage,
-    );
+  var customStorage = CustomStorage();
+  await customStorage.init();
 
-    final restClient = RestApiClient(
+  // 'ap-south-1_gXgaeT7lu',
+  // '366tbopn6vh1f3v88e4u2drne2',
+
+  // 'ap-south-1_6L70C39jY',
+  // '2oabjq1j5kh9nqgd5hd7qs3cbi',
+  final userPool = CognitoUserPool(
+    'ap-south-1_KO3Zrjy4Z',
+    '580li4e3he25g1858241i9u97b',
+    storage: customStorage,
+  );
+
+  final restClient = RestApiClient(
+      userPool: userPool,
+      baseUrl: "https://mr4f4gk1n3.execute-api.ap-south-1.amazonaws.com/dev");
+
+  runApp(
+    EasyLocalization(
+      path: 'assets/translations',
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('hi', 'IN'),
+      ],
+      fallbackLocale: const Locale('en', 'US'),
+      child: MyApp(
         userPool: userPool,
-        baseUrl: "https://mr4f4gk1n3.execute-api.ap-south-1.amazonaws.com/dev");
-
-    runApp(
-      EasyLocalization(
-        path: 'assets/translations',
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('hi', 'IN'),
-        ],
-        fallbackLocale: const Locale('en', 'US'),
-        child: MyApp(
-          userPool: userPool,
-          restClient: restClient,
-        ),
+        restClient: restClient,
       ),
-    );
-  }, blocObserver: InvoicingBlocObserver());
+    ),
+  );
 }
 
 Future<void> _initAmplifyFlutter() async {
