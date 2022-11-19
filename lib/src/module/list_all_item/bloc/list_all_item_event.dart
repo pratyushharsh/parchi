@@ -40,3 +40,9 @@ class RemoveCategoryFilter extends ListAllItemEvent {
 
   RemoveCategoryFilter(this.category);
 }
+
+class ProductFilterSortByCriteriaEvent extends ListAllItemEvent {
+  final ProductFilterSortByCriteria criteria;
+
+  ProductFilterSortByCriteriaEvent(this.criteria);
+}

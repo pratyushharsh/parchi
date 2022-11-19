@@ -27,6 +27,7 @@ class ListAllItemBloc extends Bloc<ListAllItemEvent, ListAllItemState>
     on<RefreshProduct>(_onRefreshProduct);
     on<AddCategoryFilter>(_addCategoryFilter);
     on<RemoveCategoryFilter>(_removeCategoryFilter);
+    on<ProductFilterSortByCriteriaEvent>(_onProductFilterSortByCriteriaEvent);
   }
 
   void _onInitProductSearch(
@@ -84,7 +85,8 @@ class ListAllItemBloc extends Bloc<ListAllItemEvent, ListAllItemState>
 
     if (!fc.brands.contains(event.brand)) {
       emit(state.copyWith(
-          filterCriteria: fc.copyWith(brands: [...fc.brands, event.brand], offset: 0)));
+          filterCriteria:
+              fc.copyWith(brands: [...fc.brands, event.brand], offset: 0)));
       add(LoadAllItems());
     }
   }
@@ -95,9 +97,9 @@ class ListAllItemBloc extends Bloc<ListAllItemEvent, ListAllItemState>
     if (fc.brands.contains(event.brand)) {
       emit(state.copyWith(
           filterCriteria: fc.copyWith(
-              brands: fc.brands
-                  .where((element) => element != event.brand)
-                  .toList(), offset: 0)));
+              brands:
+                  fc.brands.where((element) => element != event.brand).toList(),
+              offset: 0)));
       add(LoadAllItems());
     }
   }
@@ -114,9 +116,12 @@ class ListAllItemBloc extends Bloc<ListAllItemEvent, ListAllItemState>
     var fc = state.filterCriteria;
 
     if (!fc.categories.contains(event.category)) {
-      emit(state.copyWith(
-          filterCriteria:
-              fc.copyWith(categories: [...fc.categories, event.category], offset: 0),),);
+      emit(
+        state.copyWith(
+          filterCriteria: fc.copyWith(
+              categories: [...fc.categories, event.category], offset: 0),
+        ),
+      );
       add(LoadAllItems());
     }
   }
@@ -129,8 +134,18 @@ class ListAllItemBloc extends Bloc<ListAllItemEvent, ListAllItemState>
           filterCriteria: fc.copyWith(
               categories: fc.categories
                   .where((element) => element != event.category)
-                  .toList(), offset: 0)));
+                  .toList(),
+              offset: 0)));
       add(LoadAllItems());
     }
+  }
+
+  void _onProductFilterSortByCriteriaEvent(
+      ProductFilterSortByCriteriaEvent event,
+      Emitter<ListAllItemState> emit) async {
+    var fc = state.filterCriteria;
+    emit(state.copyWith(
+        filterCriteria: fc.copyWith(sortBy: event.criteria, offset: 0)));
+    add(LoadAllItems());
   }
 }

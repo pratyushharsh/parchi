@@ -86,7 +86,26 @@ class ProductRepository with DatabaseProvider {
       }
 
       if (fil != null) {
-        return fil
+        QueryBuilder<ProductEntity, ProductEntity, QAfterSortBy>? sortBy;
+        switch(filterCriteria.sortBy) {
+          case ProductFilterSortByCriteria.priceLowToHigh:
+            sortBy = fil.sortBySalePrice();
+            break;
+          case ProductFilterSortByCriteria.priceHighToLow:
+            sortBy = fil.sortBySalePriceDesc();
+            break;
+          case ProductFilterSortByCriteria.nameAtoZ:
+            sortBy = fil.sortByDisplayName();
+            break;
+          case ProductFilterSortByCriteria.nameZtoA:
+            sortBy = fil.sortByDisplayNameDesc();
+            break;
+          default:
+            sortBy = fil.sortByCreateTimeDesc();
+            break;
+        }
+
+        return sortBy
             .offset(filterCriteria.offset)
             .limit(filterCriteria.limit)
             .findAll();
@@ -94,12 +113,50 @@ class ProductRepository with DatabaseProvider {
     }
 
     if (qb != null) {
-      return qb
+      QueryBuilder<ProductEntity, ProductEntity, QAfterSortBy>? sortBy;
+      switch(filterCriteria.sortBy) {
+        case ProductFilterSortByCriteria.priceLowToHigh:
+          sortBy = qb.sortBySalePrice();
+          break;
+        case ProductFilterSortByCriteria.priceHighToLow:
+          sortBy = qb.sortBySalePriceDesc();
+          break;
+        case ProductFilterSortByCriteria.nameAtoZ:
+          sortBy = qb.sortByDisplayName();
+          break;
+        case ProductFilterSortByCriteria.nameZtoA:
+          sortBy = qb.sortByDisplayNameDesc();
+          break;
+        default:
+          sortBy = qb.sortByCreateTimeDesc();
+          break;
+      }
+      return sortBy
           .offset(filterCriteria.offset)
           .limit(filterCriteria.limit)
           .findAll();
     } else {
-      return q
+
+      QueryBuilder<ProductEntity, ProductEntity, QAfterSortBy>? sortBy;
+      switch(filterCriteria.sortBy) {
+        case ProductFilterSortByCriteria.priceLowToHigh:
+          sortBy = q.sortBySalePrice();
+          break;
+        case ProductFilterSortByCriteria.priceHighToLow:
+          sortBy = q.sortBySalePriceDesc();
+          break;
+        case ProductFilterSortByCriteria.nameAtoZ:
+          sortBy = q.sortByDisplayName();
+          break;
+        case ProductFilterSortByCriteria.nameZtoA:
+          sortBy = q.sortByDisplayNameDesc();
+          break;
+        default:
+          sortBy = q.sortByCreateTimeDesc();
+          break;
+      }
+
+      return sortBy
           .offset(filterCriteria.offset)
           .limit(filterCriteria.limit)
           .findAll();
@@ -108,7 +165,7 @@ class ProductRepository with DatabaseProvider {
 
   Future<List<String>> getAllProductsBrands() async {
     var brands = await db.productEntitys.where().distinctByBrand().findAll();
-    return brands.where((e) => e.brand != null).map((e) => e.brand!).toList();
+    return brands.where((e) => (e.brand != null && e.brand!.isNotEmpty)).map((e) => e.brand!).toList();
   }
 
   Future<List<String>> getAllCategory() async {
@@ -116,7 +173,7 @@ class ProductRepository with DatabaseProvider {
         await db.productEntitys.where().distinctByCategory().findAll();
     Set<String> set = {};
     for (var c in category) {
-      set.addAll(c.category);
+      set.addAll(c.category.where((element) => element.isNotEmpty));
     }
     return set.toList();
   }

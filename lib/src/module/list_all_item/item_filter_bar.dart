@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/color_config.dart';
+import '../../config/theme_settings.dart';
 import 'bloc/list_all_item_bloc.dart';
 
 class ItemFilterBar extends StatelessWidget {
@@ -15,6 +16,7 @@ class ItemFilterBar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         primary: true,
         children: [
+          const ProductSortChip(),
           const BrandFilterBar(),
           BlocBuilder<ListAllItemBloc, ListAllItemState>(
             builder: (context, state) {
@@ -73,8 +75,29 @@ class BrandFilterBar extends StatelessWidget {
           itemBuilder: (context) {
             return state.brands.map((e) {
               return PopupMenuItem<String>(
+                height: 30,
                 value: e,
-                child: Text(e),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: ColorConstants.getBrandColor(e),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      e,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               );
             }).toList();
           },
@@ -82,7 +105,7 @@ class BrandFilterBar extends StatelessWidget {
             context.read<ListAllItemBloc>().add(AddProductByBrandFilter(value));
           },
           child: const Padding(
-            padding: EdgeInsets.only(right: 4.0),
+            padding: EdgeInsets.symmetric(horizontal: 4.0),
             child: Chip(
               avatar: Icon(Icons.badge_outlined, size: 16,),
               label: Text("Brand"),
@@ -106,7 +129,7 @@ class FilterBrandChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color color = ColorConstants.getCategoryColor(brand);
+    Color color = ColorConstants.getBrandColor(brand);
     return Container(
       height: 10,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -235,8 +258,29 @@ class CategoryFilterBar extends StatelessWidget {
               itemBuilder: (context) {
                 return state.categories.map((e) {
                   return PopupMenuItem<String>(
+                    height: 30,
                     value: e,
-                    child: Text(e),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: ColorConstants.getCategoryColor(e),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          e,
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }).toList();
               },
@@ -263,6 +307,94 @@ class CategoryFilterBar extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class ProductSortChip extends StatelessWidget {
+  const ProductSortChip({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ListAllItemBloc, ListAllItemState>(
+      builder: (context, state) {
+        return PopupMenuButton<ProductFilterSortByCriteria>(
+          position: PopupMenuPosition.under,
+          offset: const Offset(0, 10),
+          onSelected: (ProductFilterSortByCriteria sortBy) {
+            context.read<ListAllItemBloc>().add(ProductFilterSortByCriteriaEvent(sortBy));
+          },
+          itemBuilder: (context) => ProductFilterSortByCriteria.values
+              .map(
+                (e) => PopupMenuItem<ProductFilterSortByCriteria>(
+              height: 30,
+              value: e,
+              child: Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.black87,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    e.value,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+              .toList(),
+          child: ProductSortByCriteria(
+            sortBy: state.filterCriteria.sortBy
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ProductSortByCriteria extends StatelessWidget {
+  final ProductFilterSortByCriteria sortBy;
+  const ProductSortByCriteria({Key? key, required this.sortBy}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color color = AppColor.primary;
+    return Container(
+      height: 10,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: color,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Icon(Icons.sort_sharp, size: 14,),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            sortBy.value,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

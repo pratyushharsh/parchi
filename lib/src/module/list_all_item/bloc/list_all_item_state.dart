@@ -41,12 +41,25 @@ class ListAllItemState {
   }
 }
 
+enum ProductFilterSortByCriteria {
+  priceLowToHigh("Price Low To High"),
+  priceHighToLow("Price High To Low"),
+  nameAtoZ("Name A to Z"),
+  nameZtoA("Name Z to A"),
+  ratingLowToHigh("Rating Low To High"),
+  ratingHighToLow("Rating High To Low");
+
+  final String value;
+  const ProductFilterSortByCriteria(this.value);
+}
+
 class ProductFilterCriteria {
   final String? filter;
   final List<String> brands;
   final List<String> categories;
   final int limit;
   final int offset;
+  final ProductFilterSortByCriteria sortBy;
 
   ProductFilterCriteria copyWith({
     String? filter,
@@ -54,6 +67,7 @@ class ProductFilterCriteria {
     List<String>? categories,
     int? limit,
     int? offset,
+    ProductFilterSortByCriteria? sortBy,
   }) {
     return ProductFilterCriteria(
       filter: filter ?? this.filter,
@@ -61,6 +75,7 @@ class ProductFilterCriteria {
       categories: categories ?? this.categories,
       limit: limit ?? this.limit,
       offset: offset ?? this.offset,
+      sortBy: sortBy ?? this.sortBy,
     );
   }
 
@@ -69,5 +84,6 @@ class ProductFilterCriteria {
       this.limit = 20,
       this.offset = 0,
       this.brands = const [],
-      this.categories = const []});
+      this.categories = const [],
+      this.sortBy = ProductFilterSortByCriteria.priceLowToHigh});
 }
