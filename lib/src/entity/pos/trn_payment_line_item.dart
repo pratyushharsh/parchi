@@ -4,7 +4,7 @@ part 'trn_payment_line_item.g.dart';
 @embedded
 class TransactionPaymentLineItemEntity {
 
-  int? transId;
+  String? transId;
   int? paymentSeq;
   double? amount;
   DateTime? beginDate;

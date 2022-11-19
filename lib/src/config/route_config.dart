@@ -77,7 +77,7 @@ class RouteConfig {
       case loadItemsInBulkScreen:
         return MaterialPageRoute(builder: (_) => const LoadItemInBulk());
       case createReceiptScreen:
-        var transId = settings.arguments as int?;
+        var transId = settings.arguments as String?;
         return MaterialPageRoute(builder: (_) => NewReceiptView(transId: transId,));
       case invoiceViewScreen:
         return MaterialPageRoute(builder: (_) => const InvoiceView());
@@ -90,13 +90,13 @@ class RouteConfig {
       case receiptSettingViewScreen:
         return MaterialPageRoute(builder: (_) => const ReceiptSettingView());
       case receiptDisplayScreen:
-        var transId = settings.arguments as int;
+        var transId = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => ReceiptDisplayView(transactionId: transId,));
       // case invoiceDisplayScreen:
       //   var transId = settings.arguments as int;
       //   return MaterialPageRoute(builder: (_) => InvoiceDisplayView(transactionId: transId,));
       case invoiceDisplayScreen:
-        var transId = settings.arguments as int;
+        var transId = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => AppInvoiceDisplay(transactionId: transId,));
       case customerDetailScreen:
         var contactId = settings.arguments as String;
@@ -105,7 +105,7 @@ class RouteConfig {
         var line = settings.arguments as SaleLine;
         return MaterialPageRoute(builder: (_) => ModifyLineItemScreen(saleLine: line,));
       case orderSummaryScreen:
-        var transId = settings.arguments as int;
+        var transId = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => OrderSummaryView(orderId: transId,));
       case localeScreen:
         return MaterialPageRoute(builder: (_) => const LocaleView());

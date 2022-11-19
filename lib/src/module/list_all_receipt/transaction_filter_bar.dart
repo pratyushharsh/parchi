@@ -35,6 +35,10 @@ class TransactionFilterBar extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(right: 10),
+            child: const TransactionSortByChip(),
+          ),
+          Container(
+            margin: const EdgeInsets.only(right: 10),
             child: const TransactionStatusFilterChip(),
           ),
           Container(
@@ -67,6 +71,11 @@ class TransactionStatusFilterChip extends StatelessWidget {
     return BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
       builder: (context, state) {
         return PopupMenuButton<TransactionStatus>(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
           position: PopupMenuPosition.under,
           offset: const Offset(0, 10),
           onSelected: (TransactionStatus status) {
@@ -235,6 +244,96 @@ class TransactionDateTimeRangePicker extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+
+class TransactionSortByChip extends StatelessWidget {
+  const TransactionSortByChip({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
+      builder: (context, state) {
+        return PopupMenuButton<TransactionSortByCriteria>(
+          tooltip: "Sort Transaction",
+          position: PopupMenuPosition.under,
+          offset: const Offset(0, 10),
+          onSelected: (TransactionSortByCriteria sortBy) {
+            context.read<ListAllReceiptBloc>().add(SortTransaction(sortBy));
+          },
+          itemBuilder: (context) => TransactionSortByCriteria.values
+              .map(
+                (e) => PopupMenuItem<TransactionSortByCriteria>(
+              height: 30,
+              value: e,
+              child: Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.black87,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    e.value,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+              .toList(),
+          child: TransactionSortByCriteriaChip(
+              sortBy: state.filter.sortBy
+          ),
+        );
+      },
+    );
+  }
+}
+
+class TransactionSortByCriteriaChip extends StatelessWidget {
+  final TransactionSortByCriteria sortBy;
+  const TransactionSortByCriteriaChip({Key? key, required this.sortBy}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color color = AppColor.primary;
+    return Container(
+      height: 10,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: color,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Icon(Icons.sort_sharp, size: 14,),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            sortBy.value,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

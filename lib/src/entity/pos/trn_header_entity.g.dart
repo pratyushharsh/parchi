@@ -153,8 +153,13 @@ const TransactionHeaderEntitySchema = CollectionSchema(
       name: r'total',
       type: IsarType.double,
     ),
-    r'transactionType': PropertySchema(
+    r'transId': PropertySchema(
       id: 26,
+      name: r'transId',
+      type: IsarType.string,
+    ),
+    r'transactionType': PropertySchema(
+      id: 27,
       name: r'transactionType',
       type: IsarType.string,
     )
@@ -163,8 +168,34 @@ const TransactionHeaderEntitySchema = CollectionSchema(
   serialize: _transactionHeaderEntitySerialize,
   deserialize: _transactionHeaderEntityDeserialize,
   deserializeProp: _transactionHeaderEntityDeserializeProp,
-  idName: r'transId',
+  idName: r'id',
   indexes: {
+    r'transId': IndexSchema(
+      id: -6078223865517958927,
+      name: r'transId',
+      unique: true,
+      replace: true,
+      properties: [
+        IndexPropertySchema(
+          name: r'transId',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'businessDate': IndexSchema(
+      id: -3882326336059088368,
+      name: r'businessDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'businessDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
     r'status': IndexSchema(
       id: -107785170620420283,
       name: r'status',
@@ -336,6 +367,7 @@ int _transactionHeaderEntityEstimateSize(
   bytesCount += 3 + object.status.name.length * 3;
   bytesCount += 3 + object.storeCurrency.length * 3;
   bytesCount += 3 + object.storeLocale.length * 3;
+  bytesCount += 3 + object.transId.length * 3;
   bytesCount += 3 + object.transactionType.length * 3;
   return bytesCount;
 }
@@ -392,7 +424,8 @@ void _transactionHeaderEntitySerialize(
   writer.writeLong(offsets[23], object.syncState);
   writer.writeDouble(offsets[24], object.taxTotal);
   writer.writeDouble(offsets[25], object.total);
-  writer.writeString(offsets[26], object.transactionType);
+  writer.writeString(offsets[26], object.transId);
+  writer.writeString(offsets[27], object.transactionType);
 }
 
 TransactionHeaderEntity _transactionHeaderEntityDeserialize(
@@ -450,9 +483,10 @@ TransactionHeaderEntity _transactionHeaderEntityDeserialize(
     syncState: reader.readLongOrNull(offsets[23]),
     taxTotal: reader.readDouble(offsets[24]),
     total: reader.readDouble(offsets[25]),
-    transId: id,
-    transactionType: reader.readString(offsets[26]),
+    transId: reader.readString(offsets[26]),
+    transactionType: reader.readString(offsets[27]),
   );
+  object.id = id;
   return object;
 }
 
@@ -539,6 +573,8 @@ P _transactionHeaderEntityDeserializeProp<P>(
       return (reader.readDouble(offset)) as P;
     case 26:
       return (reader.readString(offset)) as P;
+    case 27:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -564,7 +600,7 @@ const _TransactionHeaderEntitystatusValueEnumMap = {
 };
 
 Id _transactionHeaderEntityGetId(TransactionHeaderEntity object) {
-  return object.transId;
+  return object.id ?? Isar.autoIncrement;
 }
 
 List<IsarLinkBase<dynamic>> _transactionHeaderEntityGetLinks(
@@ -573,14 +609,92 @@ List<IsarLinkBase<dynamic>> _transactionHeaderEntityGetLinks(
 }
 
 void _transactionHeaderEntityAttach(
-    IsarCollection<dynamic> col, Id id, TransactionHeaderEntity object) {}
+    IsarCollection<dynamic> col, Id id, TransactionHeaderEntity object) {
+  object.id = id;
+}
+
+extension TransactionHeaderEntityByIndex
+    on IsarCollection<TransactionHeaderEntity> {
+  Future<TransactionHeaderEntity?> getByTransId(String transId) {
+    return getByIndex(r'transId', [transId]);
+  }
+
+  TransactionHeaderEntity? getByTransIdSync(String transId) {
+    return getByIndexSync(r'transId', [transId]);
+  }
+
+  Future<bool> deleteByTransId(String transId) {
+    return deleteByIndex(r'transId', [transId]);
+  }
+
+  bool deleteByTransIdSync(String transId) {
+    return deleteByIndexSync(r'transId', [transId]);
+  }
+
+  Future<List<TransactionHeaderEntity?>> getAllByTransId(
+      List<String> transIdValues) {
+    final values = transIdValues.map((e) => [e]).toList();
+    return getAllByIndex(r'transId', values);
+  }
+
+  List<TransactionHeaderEntity?> getAllByTransIdSync(
+      List<String> transIdValues) {
+    final values = transIdValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'transId', values);
+  }
+
+  Future<int> deleteAllByTransId(List<String> transIdValues) {
+    final values = transIdValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'transId', values);
+  }
+
+  int deleteAllByTransIdSync(List<String> transIdValues) {
+    final values = transIdValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'transId', values);
+  }
+
+  Future<Id> putByTransId(TransactionHeaderEntity object) {
+    return putByIndex(r'transId', object);
+  }
+
+  Id putByTransIdSync(TransactionHeaderEntity object, {bool saveLinks = true}) {
+    return putByIndexSync(r'transId', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByTransId(List<TransactionHeaderEntity> objects) {
+    return putAllByIndex(r'transId', objects);
+  }
+
+  List<Id> putAllByTransIdSync(List<TransactionHeaderEntity> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'transId', objects, saveLinks: saveLinks);
+  }
+}
 
 extension TransactionHeaderEntityQueryWhereSort
     on QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QWhere> {
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterWhere>
-      anyTransId() {
+      anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterWhere>
+      anyTransId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'transId'),
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterWhere>
+      anyBusinessDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'businessDate'),
+      );
     });
   }
 
@@ -624,69 +738,302 @@ extension TransactionHeaderEntityQueryWhereSort
 extension TransactionHeaderEntityQueryWhere on QueryBuilder<
     TransactionHeaderEntity, TransactionHeaderEntity, QWhereClause> {
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
-      QAfterWhereClause> transIdEqualTo(Id transId) {
+      QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: transId,
-        upper: transId,
+        lower: id,
+        upper: id,
       ));
     });
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
-      QAfterWhereClause> transIdNotEqualTo(Id transId) {
+      QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: transId, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: transId, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: transId, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: transId, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             );
       }
     });
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
-          QAfterWhereClause>
-      transIdGreaterThan(Id transId, {bool include = false}) {
+      QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: transId, includeLower: include),
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
       );
     });
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
-      QAfterWhereClause> transIdLessThan(Id transId, {bool include = false}) {
+      QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: transId, includeUpper: include),
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
       );
     });
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
-      QAfterWhereClause> transIdBetween(
-    Id lowerTransId,
-    Id upperTransId, {
+      QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerTransId,
+        lower: lowerId,
         includeLower: includeLower,
-        upper: upperTransId,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdEqualTo(String transId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'transId',
+        value: [transId],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdNotEqualTo(String transId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transId',
+              lower: [],
+              upper: [transId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transId',
+              lower: [transId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transId',
+              lower: [transId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transId',
+              lower: [],
+              upper: [transId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdGreaterThan(
+    String transId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transId',
+        lower: [transId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdLessThan(
+    String transId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transId',
+        lower: [],
+        upper: [transId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdBetween(
+    String lowerTransId,
+    String upperTransId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transId',
+        lower: [lowerTransId],
+        includeLower: includeLower,
+        upper: [upperTransId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdStartsWith(String TransIdPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transId',
+        lower: [TransIdPrefix],
+        upper: ['$TransIdPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'transId',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'transId',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'transId',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'transId',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'transId',
+              upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> businessDateEqualTo(DateTime businessDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'businessDate',
+        value: [businessDate],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> businessDateNotEqualTo(DateTime businessDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'businessDate',
+              lower: [],
+              upper: [businessDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'businessDate',
+              lower: [businessDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'businessDate',
+              lower: [businessDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'businessDate',
+              lower: [],
+              upper: [businessDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> businessDateGreaterThan(
+    DateTime businessDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'businessDate',
+        lower: [businessDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> businessDateLessThan(
+    DateTime businessDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'businessDate',
+        lower: [],
+        upper: [businessDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> businessDateBetween(
+    DateTime lowerBusinessDate,
+    DateTime upperBusinessDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'businessDate',
+        lower: [lowerBusinessDate],
+        includeLower: includeLower,
+        upper: [upperBusinessDate],
         includeUpper: includeUpper,
       ));
     });
@@ -2366,6 +2713,80 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> idEqualTo(Id? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> idGreaterThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> idLessThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> idBetween(
+    Id? lower,
+    Id? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> isVoidEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -3684,49 +4105,58 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
-      QAfterFilterCondition> transIdEqualTo(Id value) {
+      QAfterFilterCondition> transIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'transId',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> transIdGreaterThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'transId',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> transIdLessThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'transId',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> transIdBetween(
-    Id lower,
-    Id upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -3735,6 +4165,79 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> transIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'transId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> transIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'transId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterFilterCondition>
+      transIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'transId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterFilterCondition>
+      transIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'transId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> transIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> transIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'transId',
+        value: '',
       ));
     });
   }
@@ -4225,6 +4728,20 @@ extension TransactionHeaderEntityQuerySortBy
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      sortByTransId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      sortByTransIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
       sortByTransactionType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'transactionType', Sort.asc);
@@ -4364,6 +4881,20 @@ extension TransactionHeaderEntityQuerySortThenBy on QueryBuilder<
       thenByEndDateTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'endDateTime', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
     });
   }
 
@@ -4738,6 +5269,13 @@ extension TransactionHeaderEntityQueryWhereDistinct on QueryBuilder<
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QDistinct>
+      distinctByTransId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'transId', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QDistinct>
       distinctByTransactionType({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'transactionType',
@@ -4748,10 +5286,9 @@ extension TransactionHeaderEntityQueryWhereDistinct on QueryBuilder<
 
 extension TransactionHeaderEntityQueryProperty on QueryBuilder<
     TransactionHeaderEntity, TransactionHeaderEntity, QQueryProperty> {
-  QueryBuilder<TransactionHeaderEntity, int, QQueryOperations>
-      transIdProperty() {
+  QueryBuilder<TransactionHeaderEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'transId');
+      return query.addPropertyName(r'id');
     });
   }
 
@@ -4934,6 +5471,13 @@ extension TransactionHeaderEntityQueryProperty on QueryBuilder<
       totalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'total');
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, String, QQueryOperations>
+      transIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'transId');
     });
   }
 

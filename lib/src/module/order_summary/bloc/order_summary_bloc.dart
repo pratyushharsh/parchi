@@ -10,9 +10,8 @@ part 'order_summary_state.dart';
 
 class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> with DatabaseProvider {
 
-  final int orderId;
-
-
+  final String orderId;
+  
   OrderSummaryBloc({required this.orderId}) : super(const OrderSummaryState()) {
     on<LoadOrderDetail>(_fetchOrderDetail);
     add(LoadOrderDetail());
@@ -21,7 +20,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> with D
   void _fetchOrderDetail(LoadOrderDetail event,
       Emitter<OrderSummaryState> emit) async {
       emit(state.copyWith(status: OrderSummaryStatus.loading));
-      TransactionHeaderEntity? order = await db.transactionHeaderEntitys.get(orderId);
+      TransactionHeaderEntity? order = await db.transactionHeaderEntitys.getByTransId(orderId);
       if (order == null) {
         emit(state.copyWith(status: OrderSummaryStatus.failure));
         return;

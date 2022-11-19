@@ -5,7 +5,7 @@ part 'trn_line_item_tax.g.dart';
 @embedded
 class TransactionLineItemTaxModifier {
 
-  int? transSeq;
+  String? transSeq;
   int? lineItemSeq;
 
   String? authorityId;

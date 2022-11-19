@@ -12,7 +12,7 @@ import 'template/invoice.dart';
 import 'template/invoice_config.dart';
 
 class AppInvoiceDisplay extends StatelessWidget {
-  final int transactionId;
+  final String transactionId;
 
   const AppInvoiceDisplay({Key? key, required this.transactionId})
       : super(key: key);

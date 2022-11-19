@@ -66,7 +66,7 @@ const TransactionPaymentLineItemEntitySchema = Schema(
     r'transId': PropertySchema(
       id: 10,
       name: r'transId',
-      type: IsarType.long,
+      type: IsarType.string,
     )
   },
   estimateSize: _transactionPaymentLineItemEntityEstimateSize,
@@ -111,6 +111,12 @@ int _transactionPaymentLineItemEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.transId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -130,7 +136,7 @@ void _transactionPaymentLineItemEntitySerialize(
   writer.writeString(offsets[7], object.tenderId);
   writer.writeString(offsets[8], object.tenderStatusCode);
   writer.writeString(offsets[9], object.token);
-  writer.writeLong(offsets[10], object.transId);
+  writer.writeString(offsets[10], object.transId);
 }
 
 TransactionPaymentLineItemEntity _transactionPaymentLineItemEntityDeserialize(
@@ -150,7 +156,7 @@ TransactionPaymentLineItemEntity _transactionPaymentLineItemEntityDeserialize(
     tenderId: reader.readStringOrNull(offsets[7]),
     tenderStatusCode: reader.readStringOrNull(offsets[8]),
     token: reader.readStringOrNull(offsets[9]),
-    transId: reader.readLongOrNull(offsets[10]),
+    transId: reader.readStringOrNull(offsets[10]),
   );
   return object;
 }
@@ -183,7 +189,7 @@ P _transactionPaymentLineItemEntityDeserializeProp<P>(
     case 9:
       return (reader.readStringOrNull(offset)) as P;
     case 10:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1411,14 +1417,16 @@ extension TransactionPaymentLineItemEntityQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<
-      TransactionPaymentLineItemEntity,
-      TransactionPaymentLineItemEntity,
-      QAfterFilterCondition> transIdEqualTo(int? value) {
+  QueryBuilder<TransactionPaymentLineItemEntity,
+      TransactionPaymentLineItemEntity, QAfterFilterCondition> transIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'transId',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -1427,38 +1435,43 @@ extension TransactionPaymentLineItemEntityQueryFilter on QueryBuilder<
       TransactionPaymentLineItemEntity,
       TransactionPaymentLineItemEntity,
       QAfterFilterCondition> transIdGreaterThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'transId',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionPaymentLineItemEntity,
       TransactionPaymentLineItemEntity, QAfterFilterCondition> transIdLessThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'transId',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionPaymentLineItemEntity,
       TransactionPaymentLineItemEntity, QAfterFilterCondition> transIdBetween(
-    int? lower,
-    int? upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1467,6 +1480,85 @@ extension TransactionPaymentLineItemEntityQueryFilter on QueryBuilder<
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionPaymentLineItemEntity,
+      TransactionPaymentLineItemEntity,
+      QAfterFilterCondition> transIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'transId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionPaymentLineItemEntity,
+      TransactionPaymentLineItemEntity, QAfterFilterCondition> transIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'transId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionPaymentLineItemEntity,
+          TransactionPaymentLineItemEntity, QAfterFilterCondition>
+      transIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'transId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionPaymentLineItemEntity,
+          TransactionPaymentLineItemEntity, QAfterFilterCondition>
+      transIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'transId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionPaymentLineItemEntity,
+      TransactionPaymentLineItemEntity,
+      QAfterFilterCondition> transIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionPaymentLineItemEntity,
+      TransactionPaymentLineItemEntity,
+      QAfterFilterCondition> transIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'transId',
+        value: '',
       ));
     });
   }

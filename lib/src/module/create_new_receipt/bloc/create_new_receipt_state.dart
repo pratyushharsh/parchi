@@ -39,7 +39,7 @@ class CustomerAddress {
 }
 
 class CreateNewReceiptState extends Equatable {
-  final int transSeq;
+  final String transSeq;
   final TransactionHeaderEntity? transactionHeader;
   final List<TransactionLineItemEntity> lineItem;
   final List<TransactionPaymentLineItemEntity> tenderLine;
@@ -50,7 +50,7 @@ class CreateNewReceiptState extends Equatable {
   final SaleStep step;
 
   const CreateNewReceiptState({
-    this.transSeq = -1,
+    this.transSeq = '',
     this.lineItem = const [],
     this.transactionHeader,
     this.tenderLine = const [],
@@ -59,7 +59,7 @@ class CreateNewReceiptState extends Equatable {
     this.step = SaleStep.item,
     this.customer,
     this.customerAddress,
-  }): assert(transSeq > 0 ? transactionHeader != null : true);
+  }): assert(transSeq != '' ? transactionHeader != null : true);
 
   bool get isCustomerPresent {
     return customer != null;
@@ -119,7 +119,7 @@ class CreateNewReceiptState extends Equatable {
       ];
 
   CreateNewReceiptState copyWith({
-    int? transSeq,
+    String? transSeq,
     TransactionHeaderEntity? transactionHeader,
     List<TransactionLineItemEntity>? lineItem,
     List<TransactionPaymentLineItemEntity>? tenderLine,

@@ -4,7 +4,7 @@ part of 'return_order_bloc.dart';
 abstract class ReturnOrderEvent {}
 
 class SearchOrderToReturn extends ReturnOrderEvent {
-  final int orderId;
+  final String orderId;
 
   SearchOrderToReturn({ required this.orderId });
 }

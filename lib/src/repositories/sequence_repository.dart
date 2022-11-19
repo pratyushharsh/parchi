@@ -19,7 +19,7 @@ class SequenceRepository with DatabaseProvider {
         seq.nextSeq++;
         await db.sequenceEntitys.put(seq);
       } else {
-        await db.sequenceEntitys.put(SequenceEntity(name: type, nextSeq: 1, pattern: '', createAt: DateTime.now()));
+        await db.sequenceEntitys.put(SequenceEntity(name: type, nextSeq: 1, pattern: '{counter}', createAt: DateTime.now()));
       }
     });
     // Use the pattern to generate the sequence
@@ -50,7 +50,7 @@ class SequenceRepository with DatabaseProvider {
           }
         }
         if (!exist) {
-          var tmp = SequenceEntity(name: type, nextSeq: 1, pattern: '', createAt: DateTime.now());
+          var tmp = SequenceEntity(name: type, nextSeq: 1, pattern: '{counter}', createAt: DateTime.now());
           await db.sequenceEntitys.putByName(tmp);
           sequences.add(tmp);
         }

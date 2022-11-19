@@ -17,7 +17,7 @@ part 'receipt_display_state.dart';
 class ReceiptDisplayBloc
     extends Bloc<ReceiptDisplayEvent, ReceiptDisplayState> {
   final log = Logger('ReceiptDisplayBloc');
-  final int transId;
+  final String transId;
   final SettingsRepository settingsRepo;
   final AuthenticationBloc authBloc;
   final TransactionRepository transactionRepo;

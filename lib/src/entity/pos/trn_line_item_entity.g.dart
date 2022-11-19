@@ -122,7 +122,7 @@ const TransactionLineItemEntitySchema = Schema(
     r'originalTransSeq': PropertySchema(
       id: 21,
       name: r'originalTransSeq',
-      type: IsarType.long,
+      type: IsarType.string,
     ),
     r'posId': PropertySchema(
       id: 22,
@@ -208,7 +208,7 @@ const TransactionLineItemEntitySchema = Schema(
     r'transSeq': PropertySchema(
       id: 38,
       name: r'transSeq',
-      type: IsarType.long,
+      type: IsarType.string,
     ),
     r'unitCost': PropertySchema(
       id: 39,
@@ -289,6 +289,12 @@ int _transactionLineItemEntityEstimateSize(
     }
   }
   {
+    final value = object.originalTransSeq;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.priceEntryMethod;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -331,6 +337,12 @@ int _transactionLineItemEntityEstimateSize(
       final value = object.taxModifiers[i];
       bytesCount += TransactionLineItemTaxModifierSchema.estimateSize(
           value, offsets, allOffsets);
+    }
+  }
+  {
+    final value = object.transSeq;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
     }
   }
   {
@@ -380,7 +392,7 @@ void _transactionLineItemEntitySerialize(
   writer.writeDateTime(offsets[18], object.originalBusinessDate);
   writer.writeLong(offsets[19], object.originalLineItemSeq);
   writer.writeLong(offsets[20], object.originalPosId);
-  writer.writeLong(offsets[21], object.originalTransSeq);
+  writer.writeString(offsets[21], object.originalTransSeq);
   writer.writeLong(offsets[22], object.posId);
   writer.writeString(offsets[23], object.priceEntryMethod);
   writer.writeBool(offsets[24], object.priceOverride);
@@ -402,7 +414,7 @@ void _transactionLineItemEntitySerialize(
     TransactionLineItemTaxModifierSchema.serialize,
     object.taxModifiers,
   );
-  writer.writeLong(offsets[38], object.transSeq);
+  writer.writeString(offsets[38], object.transSeq);
   writer.writeDouble(offsets[39], object.unitCost);
   writer.writeDouble(offsets[40], object.unitPrice);
   writer.writeString(offsets[41], object.uom);
@@ -442,7 +454,7 @@ TransactionLineItemEntity _transactionLineItemEntityDeserialize(
     originalBusinessDate: reader.readDateTimeOrNull(offsets[18]),
     originalLineItemSeq: reader.readLongOrNull(offsets[19]),
     originalPosId: reader.readLongOrNull(offsets[20]),
-    originalTransSeq: reader.readLongOrNull(offsets[21]),
+    originalTransSeq: reader.readStringOrNull(offsets[21]),
     posId: reader.readLongOrNull(offsets[22]),
     priceEntryMethod: reader.readStringOrNull(offsets[23]),
     priceOverride: reader.readBoolOrNull(offsets[24]) ?? false,
@@ -465,7 +477,7 @@ TransactionLineItemEntity _transactionLineItemEntityDeserialize(
           TransactionLineItemTaxModifier(),
         ) ??
         const [],
-    transSeq: reader.readLongOrNull(offsets[38]),
+    transSeq: reader.readStringOrNull(offsets[38]),
     unitCost: reader.readDoubleOrNull(offsets[39]),
     unitPrice: reader.readDoubleOrNull(offsets[40]),
     uom: reader.readStringOrNull(offsets[41]),
@@ -530,7 +542,7 @@ P _transactionLineItemEntityDeserializeProp<P>(
     case 20:
       return (reader.readLongOrNull(offset)) as P;
     case 21:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 22:
       return (reader.readLongOrNull(offset)) as P;
     case 23:
@@ -570,7 +582,7 @@ P _transactionLineItemEntityDeserializeProp<P>(
           ) ??
           const []) as P;
     case 38:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 39:
       return (reader.readDoubleOrNull(offset)) as P;
     case 40:
@@ -2506,49 +2518,58 @@ extension TransactionLineItemEntityQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
-      QAfterFilterCondition> originalTransSeqEqualTo(int? value) {
+      QAfterFilterCondition> originalTransSeqEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'originalTransSeq',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
       QAfterFilterCondition> originalTransSeqGreaterThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'originalTransSeq',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
       QAfterFilterCondition> originalTransSeqLessThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'originalTransSeq',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
       QAfterFilterCondition> originalTransSeqBetween(
-    int? lower,
-    int? upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -2557,6 +2578,79 @@ extension TransactionLineItemEntityQueryFilter on QueryBuilder<
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> originalTransSeqStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'originalTransSeq',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> originalTransSeqEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'originalTransSeq',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+          QAfterFilterCondition>
+      originalTransSeqContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'originalTransSeq',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+          QAfterFilterCondition>
+      originalTransSeqMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'originalTransSeq',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> originalTransSeqIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'originalTransSeq',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> originalTransSeqIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'originalTransSeq',
+        value: '',
       ));
     });
   }
@@ -4193,49 +4287,58 @@ extension TransactionLineItemEntityQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
-      QAfterFilterCondition> transSeqEqualTo(int? value) {
+      QAfterFilterCondition> transSeqEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'transSeq',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
       QAfterFilterCondition> transSeqGreaterThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'transSeq',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
       QAfterFilterCondition> transSeqLessThan(
-    int? value, {
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'transSeq',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
       QAfterFilterCondition> transSeqBetween(
-    int? lower,
-    int? upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -4244,6 +4347,79 @@ extension TransactionLineItemEntityQueryFilter on QueryBuilder<
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> transSeqStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'transSeq',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> transSeqEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'transSeq',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+          QAfterFilterCondition>
+      transSeqContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'transSeq',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+          QAfterFilterCondition>
+      transSeqMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'transSeq',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> transSeqIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transSeq',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> transSeqIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'transSeq',
+        value: '',
       ));
     });
   }

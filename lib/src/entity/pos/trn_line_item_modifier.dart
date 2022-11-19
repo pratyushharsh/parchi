@@ -7,7 +7,7 @@ class TransactionLineItemModifierEntity {
   int? storeId;
   DateTime? businessDate;
   int? posId;
-  int? transSeq;
+  String? transSeq;
   int? lineItemSeq;
   int? lineItemModSeq;
 

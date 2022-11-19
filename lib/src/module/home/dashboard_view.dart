@@ -15,8 +15,8 @@ class DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ListAllReceiptBloc(transactionRepository: context.read())
-            ..add(LoadAllReceipt()),
+      ListAllReceiptBloc(transactionRepository: context.read())
+        ..add(LoadAllReceipt()),
       child: Column(
         children: [
           Container(
@@ -43,12 +43,20 @@ class DashboardView extends StatelessWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 8.0, left: 8, right: 8),
-            child: SearchBar(
-                label: "dashboard",
-                hintText: "Search by Receipt Id, Phone Number",
-                filterWidget: TransactionFilterBar()),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+            child: BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
+              builder: (context, state) {
+                return SearchBar(
+                    label: "dashboard",
+                    hintText: "Search by Receipt Id, Phone Number",
+                    onChanged: (val) {
+                      BlocProvider.of<ListAllReceiptBloc>(context)
+                          .add(SearchTransactionByText(val));
+                    },
+                    filterWidget: const TransactionFilterBar());
+              },
+            ),
           ),
           const Expanded(
             child: ListAllReceiptView(),

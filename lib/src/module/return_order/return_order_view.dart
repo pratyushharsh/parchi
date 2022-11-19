@@ -78,7 +78,7 @@ class SearchReturnOrderForm extends StatelessWidget {
           onFieldSubmitted: (value) {
             if (int.tryParse(value) != null) {
               BlocProvider.of<ReturnOrderBloc>(context)
-                  .add(SearchOrderToReturn(orderId: int.parse(value)));
+                  .add(SearchOrderToReturn(orderId: value));
             }
           },
         ),

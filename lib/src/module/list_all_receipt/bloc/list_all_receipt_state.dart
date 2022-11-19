@@ -23,16 +23,46 @@ class ListAllReceiptState {
   }
 }
 
+enum TransactionSortByCriteria {
+  date("Date (Oldest to Newest)"),
+  dateDesc("Date (Newest to Oldest)"),
+  amount("Amount (Lowest to Highest)"),
+  amountHighToLow("Amount (Highest to Lowest)");
+
+  final String value;
+  const TransactionSortByCriteria(this.value);
+}
+
 class TransactionFilterCriteria {
   final TransactionStatus? status;
   final DateTimeRange? dateRange;
+  final String? search;
+  final int limit;
+  final int offset;
+  final TransactionSortByCriteria sortBy;
 
-  const TransactionFilterCriteria({this.status, this.dateRange});
+  const TransactionFilterCriteria(
+      {this.status,
+      this.dateRange,
+      this.search,
+      this.limit = 10,
+      this.offset = 0,
+      this.sortBy = TransactionSortByCriteria.dateDesc});
 
-  TransactionFilterCriteria copyWith(
-      {TransactionStatus? status, DateTimeRange? dateRange}) {
+  TransactionFilterCriteria copyWith({
+    TransactionStatus? status,
+    DateTimeRange? dateRange,
+    String? search,
+    int? limit,
+    int? offset,
+    TransactionSortByCriteria? sortBy,
+  }) {
     return TransactionFilterCriteria(
         status: status ?? this.status,
-        dateRange: dateRange ?? this.dateRange);
+        dateRange: dateRange ?? this.dateRange,
+        search: search ?? this.search,
+        limit: limit ?? this.limit,
+        offset: offset ?? this.offset,
+        sortBy: sortBy ?? this.sortBy);
   }
 }

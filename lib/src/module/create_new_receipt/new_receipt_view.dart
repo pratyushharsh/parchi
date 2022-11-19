@@ -25,7 +25,7 @@ import 'new_recipt_desktop_view.dart';
 import 'sale_complete_dialog.dart';
 
 class NewReceiptView extends StatelessWidget {
-  final int? transId;
+  final String? transId;
   const NewReceiptView({Key? key, this.transId}) : super(key: key);
 
   @override
@@ -742,7 +742,7 @@ class NewInvoiceButtonBar extends StatelessWidget {
               if (state.step == SaleStep.item || state.step == SaleStep.payment)
                 Expanded(
                   child: AcceptButton(
-                    onPressed: state.transSeq > 0 && state.lineItem.isNotEmpty
+                    onPressed: state.transSeq.isNotEmpty && state.lineItem.isNotEmpty
                         ? () {
                             BlocProvider.of<CreateNewReceiptBloc>(context)
                                 .add(OnChangeSaleStep(SaleStep.payment));
@@ -918,7 +918,7 @@ class SaleHeaderBlock extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'Transaction No#  ${state.transSeq > 0 ? state.transSeq : ""}',
+                'Transaction No# ${state.transSeq}',
                 style: const TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold),
               )

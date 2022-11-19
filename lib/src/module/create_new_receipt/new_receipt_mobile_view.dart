@@ -61,7 +61,7 @@ class NewReceiptMobileView extends StatelessWidget {
                     left: 16,
                     child: AppBarLeading(
                       heading:
-                          "Receipt #${state.transSeq > 0 ? state.transSeq : ""}",
+                          "Receipt #${state.transSeq}",
                       icon: Icons.arrow_back,
                       onTap: () {
                         if (state.transactionHeader == null) {

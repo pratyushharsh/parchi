@@ -26,7 +26,7 @@ class OnUnitPriceUpdate extends CreateNewReceiptEvent {
 }
 
 class OnInitiateNewTransaction extends CreateNewReceiptEvent {
-  final int? transSeq;
+  final String? transSeq;
 
   OnInitiateNewTransaction({this.transSeq});
 }

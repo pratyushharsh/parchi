@@ -15,7 +15,7 @@ import '../create_new_receipt/new_receipt_view.dart';
 import 'bloc/order_summary_bloc.dart';
 
 class OrderSummaryView extends StatelessWidget {
-  final int orderId;
+  final String orderId;
   const OrderSummaryView({Key? key, required this.orderId}) : super(key: key);
 
   @override

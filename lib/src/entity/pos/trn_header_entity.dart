@@ -7,12 +7,16 @@ part 'trn_header_entity.g.dart';
 
 @Collection()
 class TransactionHeaderEntity {
-  final Id transId;
+  Id? id;
 
+  @Index(unique: true, replace: true, type: IndexType.value, caseSensitive: true)
+  final String transId;
   final int storeId;
   final String storeLocale;
   final String storeCurrency;
   final String transactionType;
+
+  @Index()
   final DateTime businessDate;
   final DateTime beginDatetime;
   DateTime? endDateTime;

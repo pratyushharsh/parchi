@@ -17,10 +17,10 @@ class MockTransactionRepository extends TransactionRepository {
   }
 
   @override
-  Future<TransactionHeaderEntity?> getTransaction(int id) async {
+  Future<TransactionHeaderEntity?> getTransaction(String id) async {
 
     var pi = List<int>.generate(5, (index) => index + 1).map((e) => TransactionPaymentLineItemEntity(
-      transId: 8721,
+      transId: '8721',
       isVoid: false,
       tenderId: "CASH",
       currencyId: "INR",
@@ -37,7 +37,7 @@ class MockTransactionRepository extends TransactionRepository {
         unitCost: 100,
         itemIdEntryMethod: EntryMethod.keyboard,
         itemId: 'TEST00001',
-        transSeq: 1000,
+        transSeq: '1000',
         lineItemSeq: e,
         itemDescription: 'Test Item',
         quantity: 5,
@@ -74,7 +74,7 @@ class MockTransactionRepository extends TransactionRepository {
       );
 
       TransactionLineItemTaxModifier cgst = TransactionLineItemTaxModifier(
-        transSeq: 1000,
+        transSeq: '1000',
         lineItemSeq: 1,
         authorityId: 'GST',
         authorityName: 'INGST',
@@ -93,7 +93,7 @@ class MockTransactionRepository extends TransactionRepository {
         taxOverridePercent: null,
       );
       TransactionLineItemTaxModifier sgst = TransactionLineItemTaxModifier(
-        transSeq: 1000,
+        transSeq: '1000',
         lineItemSeq: 1,
         authorityId: 'GST',
         authorityName: 'INGST',
@@ -116,7 +116,7 @@ class MockTransactionRepository extends TransactionRepository {
     }).toList();
 
     TransactionHeaderEntity header = TransactionHeaderEntity(
-      transId: 1000,
+      transId: '1000',
       storeId: 99999,
       storeCurrency: 'INR',
       storeLocale: 'en_IN',
@@ -156,7 +156,7 @@ class MockTransactionRepository extends TransactionRepository {
 
   @override
   Future<List<TransactionLineItemEntity>> getLineItemWithOriginalTransactionNo(
-      int id) async {
+      String id) async {
     throw UnimplementedError('Cannot Implement in the Mock Interface');
   }
 }

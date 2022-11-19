@@ -24,7 +24,7 @@ class _MockReceiptViewState extends State<MockReceiptView> {
     return BlocProvider(
       lazy: false,
       create: (context) => ReceiptDisplayBloc(
-          transId: 10001,
+          transId: '10001',
           authBloc: RepositoryProvider.of(context),
           transactionRepo: MockTransactionRepository(
               restClient: RepositoryProvider.of(context)),

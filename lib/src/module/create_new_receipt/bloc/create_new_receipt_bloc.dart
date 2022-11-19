@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
+import '../../../config/sequence_config.dart';
 import '../../../config/transaction_config.dart';
 import '../../../entity/pos/address.dart';
 import '../../../entity/pos/entity.dart';
@@ -20,7 +21,7 @@ part 'create_new_receipt_event.dart';
 part 'create_new_receipt_state.dart';
 
 class CreateNewReceiptBloc
-    extends Bloc<CreateNewReceiptEvent, CreateNewReceiptState> {
+    extends Bloc<CreateNewReceiptEvent, CreateNewReceiptState> with SequenceConfig {
   final log = Logger('CreateNewReceiptBloc');
   final AuthenticationBloc authenticationBloc;
   final SequenceRepository sequenceRepository;
@@ -189,12 +190,14 @@ class CreateNewReceiptBloc
     RetailLocationEntity? store = authenticationBloc.state.store;
     if (store == null) throw Exception("Store Not Found");
 
+    // @TODO Generate New Sequence.
     var newTransactionSequence =
-        (await sequenceRepository.getNextSequence(SequenceType.transaction)).nextSeq;
+        (await sequenceRepository.getNextSequence(SequenceType.transaction));
+    var nextSeq = generateSequence(newTransactionSequence);
 
     var currentEmployee = authenticationBloc.state.employee;
     TransactionHeaderEntity header = TransactionHeaderEntity(
-      transId: newTransactionSequence,
+      transId: nextSeq,
       businessDate: DateTime.now(),
       beginDatetime: DateTime.now(),
       storeCurrency: store.currencyId ?? 'INR',

@@ -9,7 +9,7 @@ class TransactionLineItemEntity {
   int? storeId;
   DateTime? businessDate;
   int? posId;
-  int? transSeq;
+  String? transSeq;
   int? lineItemSeq;
   String? category;
   String? itemId;
@@ -44,7 +44,7 @@ class TransactionLineItemEntity {
 
   final int? originalPosId;
 
-  int? originalTransSeq;
+  String? originalTransSeq;
   int? originalLineItemSeq;
   DateTime? originalBusinessDate;
   String? returnReasonCode;

@@ -17,7 +17,7 @@ import 'invoice_builder.dart';
 const double fontSize = 7;
 
 class InvoiceDisplayView extends StatefulWidget {
-  final int transactionId;
+  final String transactionId;
   const InvoiceDisplayView({Key? key, required this.transactionId})
       : super(key: key);
 

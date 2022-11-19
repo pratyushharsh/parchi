@@ -23,8 +23,8 @@ class TransactionRepository with DatabaseProvider {
     return header;
   }
 
-  Future<TransactionHeaderEntity?> getTransaction(int id) async {
-    TransactionHeaderEntity? order = await db.transactionHeaderEntitys.get(id);
+  Future<TransactionHeaderEntity?> getTransaction(String id) async {
+    TransactionHeaderEntity? order = await db.transactionHeaderEntitys.getByTransId(id);
     if (order != null) {
       return order;
     }
@@ -33,7 +33,7 @@ class TransactionRepository with DatabaseProvider {
 
   // @TODO
   Future<List<TransactionLineItemEntity>> getLineItemWithOriginalTransactionNo(
-      int id) async {
+      String id) async {
     // var order = await db.transactionHeaderEntitys.where().lineItemsProperty().originalTransSeqProperty().equalTo(id).findAll();
     return [];
   }
@@ -45,18 +45,45 @@ class TransactionRepository with DatabaseProvider {
     DateTime end = criteria.dateRange?.end ?? DateTime.now();
 
     var query = db.transactionHeaderEntitys;
-    if (criteria.status != null) {
-      var t = query
-          .where()
-          .statusEqualTo(criteria.status!)
-          .filter()
-          .businessDateBetween(start, end);
-      return t.sortByBeginDatetime().findAll();
+
+    QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+        QAfterWhereClause>? whereQuery;
+    if (criteria.search != null && criteria.search!.isNotEmpty) {
+      whereQuery = query.where().transIdEqualTo(criteria.search!).or().transIdStartsWith(criteria.search!);
     }
-    return query
-        .filter()
-        .businessDateBetween(start, end)
-        .sortByBeginDatetimeDesc()
-        .findAll();
+
+    if (criteria.status != null) {
+      if (whereQuery != null) {
+        whereQuery = whereQuery.or().statusEqualTo(criteria.status!);
+      } else {
+        whereQuery = query.where().statusEqualTo(criteria.status!);
+      }
+    }
+
+    QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+        QAfterFilterCondition>? filterQuery;
+    if (whereQuery != null) {
+      filterQuery = whereQuery.filter().businessDateBetween(start, end);
+    } else {
+      filterQuery = query.filter().businessDateBetween(start, end);
+    }
+
+
+    late QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy> sortQuery;
+    switch (criteria.sortBy) {
+      case TransactionSortByCriteria.date:
+        sortQuery = filterQuery.sortByBusinessDate();
+        break;
+      case TransactionSortByCriteria.dateDesc:
+        sortQuery = filterQuery.sortByBusinessDateDesc();
+        break;
+      case TransactionSortByCriteria.amount:
+        sortQuery = filterQuery.sortByTotal();
+        break;
+      case TransactionSortByCriteria.amountHighToLow:
+        sortQuery = filterQuery.sortByTotalDesc();
+        break;
+    }
+    return sortQuery.offset(criteria.offset).limit(criteria.limit).findAll();
   }
 }

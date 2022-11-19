@@ -21,7 +21,7 @@ const String top = "TOP";
 const String bottom = "BOTTOM";
 
 class ReceiptDisplayView extends StatelessWidget {
-  final int transactionId;
+  final String transactionId;
   ReceiptDisplayView({Key? key, required this.transactionId}) : super(key: key);
 
   final GlobalKey<State<StatefulWidget>> _printKey = GlobalKey();
