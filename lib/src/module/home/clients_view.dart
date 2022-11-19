@@ -1,9 +1,12 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/theme_settings.dart';
 import '../../widgets/search_bar.dart';
 import '../all_customer/all_customer_view.dart';
+import '../all_customer/bloc/all_customer_bloc.dart';
+import '../all_customer/customer_filter_bar.dart';
 import '../create_edit_customer/create_edit_customer_view.dart';
 
 const List<String> sortOptions = [
@@ -17,35 +20,52 @@ class ClientsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AllCustomerBloc(
+        customerRepository: RepositoryProvider.of(context),
+      )..add(InitCustomerSearch()),
+      child: const ClientsViewWidget(),
+    );
+  }
+}
+
+class ClientsViewWidget extends StatelessWidget {
+  const ClientsViewWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
+      fit: StackFit.expand,
       children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            color: AppColor.primary,
-            height: 30,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            child: Row(
-              children: const [
-                Text("Customer", style: TextStyle(color: Colors.white)),
-              ],
+        Column(
+          children: [
+            Container(
+              color: AppColor.primary,
+              height: 30,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              child: Row(
+                children: const [
+                  Text("Customer", style: TextStyle(color: Colors.white)),
+                ],
+              ),
             ),
-          ),
-        ),
-        const Positioned(
-          top: 35,
-          left: 10,
-          right: 10,
-          child: SearchBar(label: "clients", hintText: "Search by Name, Phone Number",),
-        ),
-        const Positioned(
-          top: 80,
-          bottom: 0,
-          left: 10,
-          right: 10,
-          child: AllCustomerView(),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+              child: SearchBar(
+                label: "clients",
+                hintText: "Search by Name, Phone Number",
+                onChanged: (val) {
+                  BlocProvider.of<AllCustomerBloc>(context).add(
+                    SearchCustomerFilter(val),
+                  );
+                },
+                filterWidget: const CustomerFilterBar(),
+              ),
+            ),
+            const Expanded(
+              child: AllCustomerView(),
+            )
+          ],
         ),
         Positioned(
           bottom: 90,

@@ -34,27 +34,22 @@ class AllCustomerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      lazy: false,
-      create: (context) => AllCustomerBloc()
-        ..add(LoadAllCustomer()),
-      child: BlocBuilder<AllCustomerBloc, AllCustomerState>(
-        builder: (context, state) {
-          if (state.status == AllCustomerStatus.loading) {
-            return const MyLoader(color: AppColor.color6,);
-          }
-          return RefreshIndicator(
-            onRefresh: () async {
-              BlocProvider.of<AllCustomerBloc>(context).add(LoadAllCustomer());
-            },
-            child: state.customers.isEmpty ? const WidgetNoCustomer() : ListView.builder(
-                itemCount: state.customers.length,
-                itemBuilder: (ctx, idx) {
-                  return CustomerViewCard(contact: state.customers[idx]);
-                }),
-          );
-        },
-      ),
+    return BlocBuilder<AllCustomerBloc, AllCustomerState>(
+      builder: (context, state) {
+        if (state.status == AllCustomerStatus.loading) {
+          return const MyLoader(color: AppColor.color6,);
+        }
+        return RefreshIndicator(
+          onRefresh: () async {
+            BlocProvider.of<AllCustomerBloc>(context).add(LoadAllCustomer());
+          },
+          child: state.customers.isEmpty ? const WidgetNoCustomer() : ListView.builder(
+              itemCount: state.customers.length,
+              itemBuilder: (ctx, idx) {
+                return CustomerViewCard(contact: state.customers[idx]);
+              }),
+        );
+      },
     );
   }
 }
@@ -80,7 +75,7 @@ class CustomerViewCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    contact.firstName + ' ' + contact.lastName,
+                    '${contact.firstName} ${contact.lastName}',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   if (contact.phoneNumber != null) Text('${contact.phoneNumber}'),
