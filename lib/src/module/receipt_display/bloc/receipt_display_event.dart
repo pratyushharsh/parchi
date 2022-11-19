@@ -6,7 +6,7 @@ abstract class ReceiptDisplayEvent {}
 class FetchReceiptDataEvent extends ReceiptDisplayEvent{}
 
 class UpdateReceiptStatusEvent extends ReceiptDisplayEvent{
-  final String status;
+  final TransactionStatus status;
   UpdateReceiptStatusEvent(this.status);
 }
 

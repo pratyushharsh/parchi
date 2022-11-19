@@ -146,7 +146,7 @@ class MockTransactionRepository extends TransactionRepository {
       subtotal: 100,
       roundTotal: 0.00,
       discountTotal: 0.00,
-      status: 'COMPLETED',
+      status: TransactionStatus.completed,
     );
     header.lineItems = li;
     header.paymentLineItems = pi;

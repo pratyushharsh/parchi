@@ -6,8 +6,13 @@ class SearchBar extends StatefulWidget {
   final String label;
   final String? hintText;
   final ValueChanged<String>? onChanged;
+  final Widget? filterWidget;
   const SearchBar(
-      {Key? key, required this.label, this.onChanged, this.hintText})
+      {Key? key,
+      required this.label,
+      this.onChanged,
+      this.hintText,
+      this.filterWidget})
       : super(key: key);
 
   @override
@@ -15,86 +20,45 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  late GlobalKey actionKey;
-
-  OverlayEntry? sortOverlay;
-  double? height, width, dx, dy;
-  bool? sortDropdownOpened;
-
-  findDropdownData() {
-    RenderBox? renderBox =
-        actionKey.currentContext?.findRenderObject() as RenderBox?;
-    height = renderBox?.size.height;
-    width = renderBox?.size.width;
-    Offset? offset = renderBox?.localToGlobal(Offset.zero);
-    dx = offset?.dx;
-    dy = offset?.dy;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    sortDropdownOpened = false;
-    actionKey = LabeledGlobalKey(widget.label);
-  }
-
-  @override
-  void dispose() {
-    if (sortOverlay != null && sortOverlay!.mounted) {
-      sortOverlay?.remove();
-    }
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: TextField(
-            cursorColor: AppColor.primary,
-            decoration: InputDecoration(
-              isDense: true,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(
-                Icons.search,
-                color: AppColor.primary,
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                cursorColor: AppColor.primary,
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: AppColor.primary,
+                  ),
+                  prefixIconConstraints:
+                      const BoxConstraints(minHeight: 40, minWidth: 40),
+                  contentPadding: const EdgeInsets.all(4),
+                  focusedBorder: const OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: AppColor.primary, width: 2)),
+                  focusColor: AppColor.primary,
+                  hoverColor: AppColor.primary,
+                  hintText: widget.hintText,
+                ),
+                onChanged: widget.onChanged,
               ),
-              prefixIconConstraints:
-                  const BoxConstraints(minHeight: 40, minWidth: 40),
-              contentPadding: const EdgeInsets.all(4),
-              focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColor.primary, width: 2)),
-              focusColor: AppColor.primary,
-              hoverColor: AppColor.primary,
-              hintText: widget.hintText,
             ),
-            onChanged: widget.onChanged,
-          ),
-        ),
-        const SizedBox(
-          width: 6,
-        ),
-        FilterButton(
-          child: Container(
-            padding: const EdgeInsets.all(7),
-            child: const Icon(Icons.sync_alt_outlined),
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(4),
+            const SizedBox(
+              width: 6,
             ),
+          ],
+        ),
+        if (widget.filterWidget != null)
+          const SizedBox(
+            height: 4,
           ),
-          filterWidget: Container(),
-        ),
-        const SizedBox(
-          width: 6,
-        ),
-        Container(
-          padding: const EdgeInsets.all(7),
-          decoration: BoxDecoration(
-              border: Border.all(), borderRadius: BorderRadius.circular(4)),
-          child: const Icon(Icons.filter_alt_outlined),
-        ),
+        if (widget.filterWidget != null) widget.filterWidget!,
       ],
     );
   }
@@ -148,6 +112,7 @@ class FilterButton extends StatefulWidget {
   @override
   State<FilterButton> createState() => _FilterButtonState();
 }
+
 class _FilterButtonState extends State<FilterButton> {
   RelativeRect _position(RenderBox popupButtonObject, RenderBox overlay) {
     // Calculate the show-up area for the dropdown using button's size & position based on the `overlay` used as the coordinate space.

@@ -220,7 +220,7 @@ class CreateNewReceiptBloc
   }
 
   // @TODO List different transaction status INITIATED, SALE_COMPLETED, SUSPENDED, CANCELLED, RETURNED, EXCHANGED
-  Future<TransactionHeaderEntity> _manageOrder(String status) async {
+  Future<TransactionHeaderEntity> _manageOrder(TransactionStatus status) async {
     TransactionHeaderEntity transaction = state.transactionHeader!;
 
     transaction.total = state.total;

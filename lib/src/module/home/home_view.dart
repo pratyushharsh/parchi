@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -121,6 +123,12 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.spaceEvenly;
+    if (Platform.isMacOS || Platform.isWindows) {
+      mainAxisAlignment = MainAxisAlignment.center;
+    }
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -143,9 +151,10 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
               height: 60,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: mainAxisAlignment,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   InkWell(
                     onTap: () {
@@ -154,25 +163,28 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                         _open = false;
                       });
                     },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.stacked_bar_chart_rounded,
-                          color: widget.selectedIndex == 0
-                              ? AppColor.primary
-                              : AppColor.iconColor,
-                        ),
-                        Text(
-                          LocaleKeys.home,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.stacked_bar_chart_rounded,
                             color: widget.selectedIndex == 0
                                 ? AppColor.primary
                                 : AppColor.iconColor,
                           ),
-                        ).tr(),
-                      ],
+                          Text(
+                            LocaleKeys.home,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: widget.selectedIndex == 0
+                                  ? AppColor.primary
+                                  : AppColor.iconColor,
+                            ),
+                          ).tr(),
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
@@ -182,23 +194,26 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                         _open = false;
                       });
                     },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.people_outline,
-                          color: widget.selectedIndex == 1
-                              ? AppColor.primary
-                              : AppColor.iconColor,
-                        ),
-                        Text(LocaleKeys.customer,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: widget.selectedIndex == 1
-                                  ? AppColor.primary
-                                  : AppColor.iconColor,
-                            )).tr(),
-                      ],
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.people_outline,
+                            color: widget.selectedIndex == 1
+                                ? AppColor.primary
+                                : AppColor.iconColor,
+                          ),
+                          Text(LocaleKeys.customer,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.selectedIndex == 1
+                                    ? AppColor.primary
+                                    : AppColor.iconColor,
+                              )).tr(),
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
@@ -208,23 +223,26 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                         _open = !_open;
                       });
                     },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.receipt_long_rounded,
-                          color: widget.selectedIndex == 2
-                              ? AppColor.primary
-                              : AppColor.iconColor,
-                        ),
-                        Text(LocaleKeys.sale,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: widget.selectedIndex == 2
-                                  ? AppColor.primary
-                                  : AppColor.iconColor,
-                            )).tr(),
-                      ],
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.receipt_long_rounded,
+                            color: widget.selectedIndex == 2
+                                ? AppColor.primary
+                                : AppColor.iconColor,
+                          ),
+                          Text(LocaleKeys.sale,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.selectedIndex == 2
+                                    ? AppColor.primary
+                                    : AppColor.iconColor,
+                              )).tr(),
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
@@ -234,24 +252,28 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                         _open = false;
                       });
                     },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.boxesStacked,
-                          color: widget.selectedIndex == 3
-                              ? AppColor.primary
-                              : AppColor.iconColor,
-                          size: 18,
-                        ),
-                        Text(LocaleKeys.product,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: widget.selectedIndex == 3
-                                  ? AppColor.primary
-                                  : AppColor.iconColor,
-                            )).tr(),
-                      ],
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.boxesStacked,
+                            color: widget.selectedIndex == 3
+                                ? AppColor.primary
+                                : AppColor.iconColor,
+                            size: 18,
+                          ),
+                          const SizedBox(height: 3,),
+                          Text(LocaleKeys.product,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.selectedIndex == 3
+                                    ? AppColor.primary
+                                    : AppColor.iconColor,
+                              )).tr(),
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
@@ -261,24 +283,27 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                         _open = false;
                       });
                     },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.ellipsis,
-                          color: widget.selectedIndex == 4
-                              ? AppColor.primary
-                              : AppColor.iconColor,
-                          size: 18,
-                        ),
-                        Text(LocaleKeys.more,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: widget.selectedIndex == 4
-                                  ? AppColor.primary
-                                  : AppColor.iconColor,
-                            )).tr(),
-                      ],
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.ellipsis,
+                            color: widget.selectedIndex == 4
+                                ? AppColor.primary
+                                : AppColor.iconColor,
+                            size: 18,
+                          ),
+                          Text(LocaleKeys.more,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.selectedIndex == 4
+                                    ? AppColor.primary
+                                    : AppColor.iconColor,
+                              )).tr(),
+                        ],
+                      ),
                     ),
                   ),
                 ],

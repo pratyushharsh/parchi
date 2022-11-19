@@ -116,6 +116,7 @@ const TransactionHeaderEntitySchema = CollectionSchema(
       id: 18,
       name: r'status',
       type: IsarType.string,
+      enumMap: _TransactionHeaderEntitystatusEnumValueMap,
     ),
     r'storeCurrency': PropertySchema(
       id: 19,
@@ -164,6 +165,19 @@ const TransactionHeaderEntitySchema = CollectionSchema(
   deserializeProp: _transactionHeaderEntityDeserializeProp,
   idName: r'transId',
   indexes: {
+    r'status': IndexSchema(
+      id: -107785170620420283,
+      name: r'status',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'status',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
+    ),
     r'customerId': IndexSchema(
       id: 1498639901530368639,
       name: r'customerId',
@@ -319,7 +333,7 @@ int _transactionHeaderEntityEstimateSize(
           AddressSchema.estimateSize(value, allOffsets[Address]!, allOffsets);
     }
   }
-  bytesCount += 3 + object.status.length * 3;
+  bytesCount += 3 + object.status.name.length * 3;
   bytesCount += 3 + object.storeCurrency.length * 3;
   bytesCount += 3 + object.storeLocale.length * 3;
   bytesCount += 3 + object.transactionType.length * 3;
@@ -370,7 +384,7 @@ void _transactionHeaderEntitySerialize(
     AddressSchema.serialize,
     object.shippingAddress,
   );
-  writer.writeString(offsets[18], object.status);
+  writer.writeString(offsets[18], object.status.name);
   writer.writeString(offsets[19], object.storeCurrency);
   writer.writeLong(offsets[20], object.storeId);
   writer.writeString(offsets[21], object.storeLocale);
@@ -426,7 +440,9 @@ TransactionHeaderEntity _transactionHeaderEntityDeserialize(
       AddressSchema.deserialize,
       allOffsets,
     ),
-    status: reader.readString(offsets[18]),
+    status: _TransactionHeaderEntitystatusValueEnumMap[
+            reader.readStringOrNull(offsets[18])] ??
+        TransactionStatus.created,
     storeCurrency: reader.readString(offsets[19]),
     storeId: reader.readLong(offsets[20]),
     storeLocale: reader.readString(offsets[21]),
@@ -504,7 +520,9 @@ P _transactionHeaderEntityDeserializeProp<P>(
         allOffsets,
       )) as P;
     case 18:
-      return (reader.readString(offset)) as P;
+      return (_TransactionHeaderEntitystatusValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          TransactionStatus.created) as P;
     case 19:
       return (reader.readString(offset)) as P;
     case 20:
@@ -526,6 +544,25 @@ P _transactionHeaderEntityDeserializeProp<P>(
   }
 }
 
+const _TransactionHeaderEntitystatusEnumValueMap = {
+  r'created': r'created',
+  r'voided': r'voided',
+  r'suspended': r'suspended',
+  r'completed': r'completed',
+  r'inProgress': r'inProgress',
+  r'cancelled': r'cancelled',
+  r'partialPayment': r'partialPayment',
+};
+const _TransactionHeaderEntitystatusValueEnumMap = {
+  r'created': TransactionStatus.created,
+  r'voided': TransactionStatus.voided,
+  r'suspended': TransactionStatus.suspended,
+  r'completed': TransactionStatus.completed,
+  r'inProgress': TransactionStatus.inProgress,
+  r'cancelled': TransactionStatus.cancelled,
+  r'partialPayment': TransactionStatus.partialPayment,
+};
+
 Id _transactionHeaderEntityGetId(TransactionHeaderEntity object) {
   return object.transId;
 }
@@ -544,6 +581,15 @@ extension TransactionHeaderEntityQueryWhereSort
       anyTransId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterWhere>
+      anyStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'status'),
+      );
     });
   }
 
@@ -643,6 +689,147 @@ extension TransactionHeaderEntityQueryWhere on QueryBuilder<
         upper: upperTransId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusEqualTo(TransactionStatus status) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'status',
+        value: [status],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusNotEqualTo(TransactionStatus status) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [],
+              upper: [status],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [status],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [status],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'status',
+              lower: [],
+              upper: [status],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusGreaterThan(
+    TransactionStatus status, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'status',
+        lower: [status],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusLessThan(
+    TransactionStatus status, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'status',
+        lower: [],
+        upper: [status],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusBetween(
+    TransactionStatus lowerStatus,
+    TransactionStatus upperStatus, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'status',
+        lower: [lowerStatus],
+        includeLower: includeLower,
+        upper: [upperStatus],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusStartsWith(String StatusPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'status',
+        lower: [StatusPrefix],
+        upper: ['$StatusPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'status',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> statusIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'status',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'status',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'status',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'status',
+              upper: [''],
+            ));
+      }
     });
   }
 
@@ -2756,7 +2943,7 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> statusEqualTo(
-    String value, {
+    TransactionStatus value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -2770,7 +2957,7 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> statusGreaterThan(
-    String value, {
+    TransactionStatus value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2786,7 +2973,7 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> statusLessThan(
-    String value, {
+    TransactionStatus value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2802,8 +2989,8 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> statusBetween(
-    String lower,
-    String upper, {
+    TransactionStatus lower,
+    TransactionStatus upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -4694,7 +4881,7 @@ extension TransactionHeaderEntityQueryProperty on QueryBuilder<
     });
   }
 
-  QueryBuilder<TransactionHeaderEntity, String, QQueryOperations>
+  QueryBuilder<TransactionHeaderEntity, TransactionStatus, QQueryOperations>
       statusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'status');

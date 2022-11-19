@@ -21,7 +21,10 @@ class TransactionHeaderEntity {
   double subtotal;
   double discountTotal;
   double roundTotal;
-  String status;
+
+  @Index(type: IndexType.value)
+  @Enumerated(EnumType.name)
+  TransactionStatus status;
   bool isVoid;
 
   @Index()
@@ -83,4 +86,20 @@ class TransactionHeaderEntity {
       this.syncState,
       this.associateId,
       this.associateName});
+}
+
+enum TransactionStatus {
+  created("CREATED"),
+  // pending,
+  // approved,
+  // rejected,
+  voided("VOIDED"),
+  suspended("SUSPENDED"),
+  completed("COMPLETED"),
+  inProgress("IN_PROGRESS"),
+  cancelled("CANCELLED"),
+  partialPayment("PARTIAL_PAYMENT");
+
+  const TransactionStatus(this.value);
+  final String value;
 }

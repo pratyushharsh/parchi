@@ -23,8 +23,11 @@ class WidgetNoReceipt extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: const [
             // Icon(Icons.person_pin_outlined, size: 100, color: Colors.grey),
-            Icon(Icons.receipt_long_outlined, size: 100, color: AppColor.iconColor),
-            Text("Create a Sale/Return to view receipts.", style: TextStyle(color: AppColor.iconColor, fontStyle: FontStyle.italic)),
+            Icon(Icons.receipt_long_outlined,
+                size: 100, color: AppColor.iconColor),
+            Text("Create a Sale/Return to view receipts.",
+                style: TextStyle(
+                    color: AppColor.iconColor, fontStyle: FontStyle.italic)),
             SizedBox(height: 50),
           ],
         ),
@@ -38,36 +41,31 @@ class ListAllReceiptView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      lazy: false,
-      create: (context) =>
-          ListAllReceiptBloc()
-            ..add(LoadAllReceipt()),
-      child: BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
-        builder: (context, state) {
-          if (state.status == ListAllReceiptStatus.loading) {
-            return const MyLoader(
-              color: AppColor.color6,
-            );
-          }
-          return RefreshIndicator(
-            onRefresh: () async {
-              BlocProvider.of<ListAllReceiptBloc>(context)
-                  .add(LoadAllReceipt());
-            },
-            child: state.receipts.isEmpty ? const WidgetNoReceipt(): ListView.builder(
-                itemCount: state.receipts.length + 1,
-                itemBuilder: (ctx, idx) {
-
-                  if (idx == state.receipts.length) {
-                    return const SizedBox(height: 150);
-                  }
-
-                  return ReceiptHeaderCard(receipt: state.receipts[idx]);
-                }),
+    return BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
+      builder: (context, state) {
+        if (state.status == ListAllReceiptStatus.loading) {
+          return const MyLoader(
+            color: AppColor.color6,
           );
-        },
-      ),
+        }
+        return RefreshIndicator(
+          onRefresh: () async {
+            BlocProvider.of<ListAllReceiptBloc>(context)
+                .add(LoadAllReceipt());
+          },
+          child: state.receipts.isEmpty
+              ? const WidgetNoReceipt()
+              : ListView.builder(
+                  itemCount: state.receipts.length + 1,
+                  itemBuilder: (ctx, idx) {
+                    if (idx == state.receipts.length) {
+                      return const SizedBox(height: 150);
+                    }
+
+                    return ReceiptHeaderCard(receipt: state.receipts[idx]);
+                  }),
+        );
+      },
     );
   }
 }
@@ -81,10 +79,11 @@ class ReceiptHeaderCard extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          if (receipt.status == TransactionStatus.suspended || receipt.status == TransactionStatus.partialPayment) {
+          if (receipt.status == TransactionStatus.suspended ||
+              receipt.status == TransactionStatus.partialPayment) {
             // Navigator.of(context).pushNamed(RouteConfig.receiptDetail, arguments: receipt);
-            Navigator.of(context)
-                .pushNamed(RouteConfig.createReceiptScreen, arguments: receipt.transId);
+            Navigator.of(context).pushNamed(RouteConfig.createReceiptScreen,
+                arguments: receipt.transId);
           } else {
             Navigator.of(context).pushNamed(RouteConfig.orderSummaryScreen,
                 arguments: receipt.transId);
@@ -118,11 +117,10 @@ class ReceiptHeaderCard extends StatelessWidget {
                     'Receipt #${receipt.transId}',
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  if (receipt.status.isNotEmpty)
-                    HeaderStatusChip(
-                      status: receipt.status,
-                      syncState: receipt.syncState ?? 0,
-                    )
+                  HeaderStatusChip(
+                    status: receipt.status,
+                    syncState: receipt.syncState ?? 0,
+                  )
                 ],
               ),
               Row(
@@ -154,9 +152,10 @@ class ReceiptHeaderCard extends StatelessWidget {
 }
 
 class HeaderStatusChip extends StatelessWidget {
-  final String status;
+  final TransactionStatus status;
   final int syncState;
-  const HeaderStatusChip({Key? key, required this.status, this.syncState = 0}) : super(key: key);
+  const HeaderStatusChip({Key? key, required this.status, this.syncState = 0})
+      : super(key: key);
 
   String getStatus() {
     if (status == TransactionStatus.suspended) {
@@ -189,7 +188,7 @@ class HeaderStatusChip extends StatelessWidget {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal:4),
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           child: CloudSyncIcon(syncState: syncState),
         ),
         Container(
