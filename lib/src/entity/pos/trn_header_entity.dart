@@ -14,7 +14,10 @@ class TransactionHeaderEntity {
   final int storeId;
   final String storeLocale;
   final String storeCurrency;
-  final String transactionType;
+
+  @Index(type: IndexType.value)
+  @Enumerated(EnumType.name)
+  final TransactionType transactionType;
 
   @Index()
   final DateTime businessDate;
@@ -106,4 +109,16 @@ enum TransactionStatus {
 
   const TransactionStatus(this.value);
   final String value;
+}
+
+enum TransactionType {
+  sale("Sale"),
+  returns("Return"),
+  refund("Refund"),
+  exchange("Exchange"),
+  payment("Payment"),
+  receipt("Receipt");
+
+  final String value;
+  const TransactionType(this.value);
 }

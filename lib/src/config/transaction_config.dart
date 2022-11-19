@@ -23,7 +23,7 @@
 //   static const String partialPayment = 'PARTIAL_PAYMENT';
 // }
 
-class TransactionType {
-  static const String cashSale = "SALE";
-  static const String saleReturn = "RETURN";
-}
+// class TransactionType {
+//   static const String cashSale = "SALE";
+//   static const String saleReturn = "RETURN";
+// }

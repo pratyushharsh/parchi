@@ -203,7 +203,7 @@ class CreateNewReceiptBloc
       storeCurrency: store.currencyId ?? 'INR',
       storeLocale: store.locale ?? 'en_IN',
       storeId: store.rtlLocId,
-      transactionType: TransactionType.cashSale,
+      transactionType: TransactionType.sale,
       total: 0.0,
       taxTotal: 0.0,
       subtotal: 0.0,

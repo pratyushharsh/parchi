@@ -162,6 +162,7 @@ const TransactionHeaderEntitySchema = CollectionSchema(
       id: 27,
       name: r'transactionType',
       type: IsarType.string,
+      enumMap: _TransactionHeaderEntitytransactionTypeEnumValueMap,
     )
   },
   estimateSize: _transactionHeaderEntityEstimateSize,
@@ -178,6 +179,19 @@ const TransactionHeaderEntitySchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'transId',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'transactionType': IndexSchema(
+      id: -8267383906769644232,
+      name: r'transactionType',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'transactionType',
           type: IndexType.value,
           caseSensitive: true,
         )
@@ -368,7 +382,7 @@ int _transactionHeaderEntityEstimateSize(
   bytesCount += 3 + object.storeCurrency.length * 3;
   bytesCount += 3 + object.storeLocale.length * 3;
   bytesCount += 3 + object.transId.length * 3;
-  bytesCount += 3 + object.transactionType.length * 3;
+  bytesCount += 3 + object.transactionType.name.length * 3;
   return bytesCount;
 }
 
@@ -425,7 +439,7 @@ void _transactionHeaderEntitySerialize(
   writer.writeDouble(offsets[24], object.taxTotal);
   writer.writeDouble(offsets[25], object.total);
   writer.writeString(offsets[26], object.transId);
-  writer.writeString(offsets[27], object.transactionType);
+  writer.writeString(offsets[27], object.transactionType.name);
 }
 
 TransactionHeaderEntity _transactionHeaderEntityDeserialize(
@@ -484,7 +498,9 @@ TransactionHeaderEntity _transactionHeaderEntityDeserialize(
     taxTotal: reader.readDouble(offsets[24]),
     total: reader.readDouble(offsets[25]),
     transId: reader.readString(offsets[26]),
-    transactionType: reader.readString(offsets[27]),
+    transactionType: _TransactionHeaderEntitytransactionTypeValueEnumMap[
+            reader.readStringOrNull(offsets[27])] ??
+        TransactionType.sale,
   );
   object.id = id;
   return object;
@@ -574,7 +590,9 @@ P _transactionHeaderEntityDeserializeProp<P>(
     case 26:
       return (reader.readString(offset)) as P;
     case 27:
-      return (reader.readString(offset)) as P;
+      return (_TransactionHeaderEntitytransactionTypeValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          TransactionType.sale) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -597,6 +615,12 @@ const _TransactionHeaderEntitystatusValueEnumMap = {
   r'inProgress': TransactionStatus.inProgress,
   r'cancelled': TransactionStatus.cancelled,
   r'partialPayment': TransactionStatus.partialPayment,
+};
+const _TransactionHeaderEntitytransactionTypeEnumValueMap = {
+  r'sale': r'sale',
+};
+const _TransactionHeaderEntitytransactionTypeValueEnumMap = {
+  r'sale': TransactionType.sale,
 };
 
 Id _transactionHeaderEntityGetId(TransactionHeaderEntity object) {
@@ -685,6 +709,15 @@ extension TransactionHeaderEntityQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'transId'),
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterWhere>
+      anyTransactionType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'transactionType'),
       );
     });
   }
@@ -940,6 +973,150 @@ extension TransactionHeaderEntityQueryWhere on QueryBuilder<
             ))
             .addWhereClause(IndexWhereClause.lessThan(
               indexName: r'transId',
+              upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterWhereClause>
+      transactionTypeEqualTo(TransactionType transactionType) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'transactionType',
+        value: [transactionType],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterWhereClause>
+      transactionTypeNotEqualTo(TransactionType transactionType) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transactionType',
+              lower: [],
+              upper: [transactionType],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transactionType',
+              lower: [transactionType],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transactionType',
+              lower: [transactionType],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'transactionType',
+              lower: [],
+              upper: [transactionType],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transactionTypeGreaterThan(
+    TransactionType transactionType, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transactionType',
+        lower: [transactionType],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transactionTypeLessThan(
+    TransactionType transactionType, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transactionType',
+        lower: [],
+        upper: [transactionType],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transactionTypeBetween(
+    TransactionType lowerTransactionType,
+    TransactionType upperTransactionType, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transactionType',
+        lower: [lowerTransactionType],
+        includeLower: includeLower,
+        upper: [upperTransactionType],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterWhereClause>
+      transactionTypeStartsWith(String TransactionTypePrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'transactionType',
+        lower: [TransactionTypePrefix],
+        upper: ['$TransactionTypePrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transactionTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'transactionType',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> transactionTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'transactionType',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'transactionType',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'transactionType',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'transactionType',
               upper: [''],
             ));
       }
@@ -4244,7 +4421,7 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> transactionTypeEqualTo(
-    String value, {
+    TransactionType value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -4258,7 +4435,7 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> transactionTypeGreaterThan(
-    String value, {
+    TransactionType value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -4274,7 +4451,7 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> transactionTypeLessThan(
-    String value, {
+    TransactionType value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -4290,8 +4467,8 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
       QAfterFilterCondition> transactionTypeBetween(
-    String lower,
-    String upper, {
+    TransactionType lower,
+    TransactionType upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -5481,7 +5658,7 @@ extension TransactionHeaderEntityQueryProperty on QueryBuilder<
     });
   }
 
-  QueryBuilder<TransactionHeaderEntity, String, QQueryOperations>
+  QueryBuilder<TransactionHeaderEntity, TransactionType, QQueryOperations>
       transactionTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'transactionType');

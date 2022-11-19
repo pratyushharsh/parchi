@@ -32,3 +32,15 @@ class SortTransaction extends ListAllReceiptEvent {
 
   SortTransaction(this.sortType);
 }
+
+class AddTransactionTypeForFilter extends ListAllReceiptEvent {
+  final TransactionType type;
+
+  AddTransactionTypeForFilter(this.type);
+}
+
+class RemoveTransactionTypeFromFilter extends ListAllReceiptEvent {
+  final TransactionType type;
+
+  RemoveTransactionTypeFromFilter(this.type);
+}

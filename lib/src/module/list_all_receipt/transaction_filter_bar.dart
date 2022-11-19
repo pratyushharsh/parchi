@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../config/color_config.dart';
 import '../../config/formatter.dart';
 import '../../config/theme_settings.dart';
 import '../../entity/pos/entity.dart';
@@ -47,15 +48,25 @@ class TransactionFilterBar extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(right: 8),
-            child: const Chip(
-              label: Text("Type"),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4),
-                ),
-              ),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
+            child: const TransactionTypeFilterBar(),
+          ),
+          BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
+            builder: (context, state) {
+              if (state.filter.transactionTypes.isEmpty) {
+                return const SizedBox.shrink();
+              }
+
+              return ListView(
+                scrollDirection: Axis.horizontal,
+                primary: false,
+                shrinkWrap: true,
+                children: state.filter.transactionTypes
+                    .map((e) => TransactionTypeChip(
+                  transactionType: e,
+                ))
+                    .toList(),
+              );
+            },
           ),
         ],
       ),
@@ -332,6 +343,130 @@ class TransactionSortByCriteriaChip extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class TransactionTypeFilterBar extends StatelessWidget {
+  const TransactionTypeFilterBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
+      builder: (context, state) {
+        return PopupMenuButton<TransactionType>(
+          tooltip: "Filter by brand",
+          position: PopupMenuPosition.under,
+          offset: const Offset(0, 20),
+          itemBuilder: (context) {
+            return TransactionType.values.map((e) {
+              return PopupMenuItem<TransactionType>(
+                height: 30,
+                value: e,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: ColorConstants.getColorForTransactionType(e),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      e.value,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList();
+          },
+          onSelected: (value) {
+            context.read<ListAllReceiptBloc>().add(AddTransactionTypeForFilter(value));
+          },
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.0),
+            child: Chip(
+              avatar: Icon(Icons.receipt, size: 16,),
+              label: Text("Type"),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(4),
+                ),
+              ),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+class TransactionTypeChip extends StatelessWidget {
+  final TransactionType transactionType;
+  const TransactionTypeChip({Key? key, required this.transactionType})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color color = ColorConstants.getColorForTransactionType(transactionType);
+    return Container(
+      height: 10,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: color,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            transactionType.value,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(
+            width: 6,
+          ),
+          InkWell(
+            onTap: () {
+              context
+                  .read<ListAllReceiptBloc>()
+                  .add(RemoveTransactionTypeFromFilter(transactionType));
+            },
+            child: const Icon(
+              Icons.close,
+              size: 14,
+            ),
+          )
         ],
       ),
     );

@@ -122,7 +122,7 @@ class MockTransactionRepository extends TransactionRepository {
       storeLocale: 'en_IN',
       businessDate: DateTime.now(),
       beginDatetime: DateTime.now(),
-      transactionType: 'SALE',
+      transactionType: TransactionType.sale,
         endDateTime: DateTime.now(),
       isVoid: false,
       shippingAddress: Address(

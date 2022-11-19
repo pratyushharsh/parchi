@@ -1,11 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
-import '../../../config/transaction_config.dart';
-import '../../../database/db_provider.dart';
 import '../../../entity/pos/entity.dart';
 import '../../../repositories/repository.dart';
 
@@ -27,6 +24,8 @@ class ListAllReceiptBloc
     on<UpdateFilterDateRange>(_onUpdateFilterDateRange);
     on<SearchTransactionByText>(_onSearchTransactionById);
     on<SortTransaction>(_onSortTransaction);
+    on<AddTransactionTypeForFilter>(_onAddTransactionType);
+    on<RemoveTransactionTypeFromFilter>(_onRemoveTransactionType);
   }
 
   void _onInitTransactionSearch(
@@ -109,6 +108,31 @@ class ListAllReceiptBloc
       SortTransaction event, Emitter<ListAllReceiptState> emit) async {
     TransactionFilterCriteria criteria = state.filter;
     criteria = criteria.copyWith(sortBy: event.sortType, offset: 0);
+    emit(state.copyWith(filter: criteria));
+    add(LoadAllReceipt());
+  }
+
+  void _onAddTransactionType(
+      AddTransactionTypeForFilter event, Emitter<ListAllReceiptState> emit) async {
+    TransactionFilterCriteria criteria = state.filter;
+    if (state.filter.transactionTypes.contains(event.type)) {
+      return;
+    }
+    criteria = criteria.copyWith(
+        transactionTypes: criteria.transactionTypes + [event.type],
+        offset: 0);
+    emit(state.copyWith(filter: criteria));
+    add(LoadAllReceipt());
+  }
+
+  void _onRemoveTransactionType(
+      RemoveTransactionTypeFromFilter event, Emitter<ListAllReceiptState> emit) async {
+    TransactionFilterCriteria criteria = state.filter;
+    criteria = criteria.copyWith(
+        transactionTypes: criteria.transactionTypes
+            .where((element) => element != event.type)
+            .toList(),
+        offset: 0);
     emit(state.copyWith(filter: criteria));
     add(LoadAllReceipt());
   }

@@ -60,6 +60,24 @@ class TransactionRepository with DatabaseProvider {
       }
     }
 
+    if (criteria.transactionTypes.isNotEmpty) {
+      if (whereQuery != null) {
+       for(var type in criteria.transactionTypes) {
+         whereQuery = whereQuery!.or().transactionTypeEqualTo(type);
+       }
+      } else {
+        bool first = true;
+        for(var type in criteria.transactionTypes) {
+          if (first) {
+            whereQuery = query.where().transactionTypeEqualTo(type);
+            first = false;
+          } else {
+            whereQuery = whereQuery!.or().transactionTypeEqualTo(type);
+          }
+        }
+      }
+    }
+
     QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
         QAfterFilterCondition>? filterQuery;
     if (whereQuery != null) {

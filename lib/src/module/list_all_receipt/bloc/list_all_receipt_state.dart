@@ -37,6 +37,7 @@ class TransactionFilterCriteria {
   final TransactionStatus? status;
   final DateTimeRange? dateRange;
   final String? search;
+  final List<TransactionType> transactionTypes;
   final int limit;
   final int offset;
   final TransactionSortByCriteria sortBy;
@@ -45,6 +46,7 @@ class TransactionFilterCriteria {
       {this.status,
       this.dateRange,
       this.search,
+      this.transactionTypes = const [],
       this.limit = 10,
       this.offset = 0,
       this.sortBy = TransactionSortByCriteria.dateDesc});
@@ -53,6 +55,7 @@ class TransactionFilterCriteria {
     TransactionStatus? status,
     DateTimeRange? dateRange,
     String? search,
+    List<TransactionType>? transactionTypes,
     int? limit,
     int? offset,
     TransactionSortByCriteria? sortBy,
@@ -61,6 +64,7 @@ class TransactionFilterCriteria {
         status: status ?? this.status,
         dateRange: dateRange ?? this.dateRange,
         search: search ?? this.search,
+        transactionTypes: transactionTypes ?? this.transactionTypes,
         limit: limit ?? this.limit,
         offset: offset ?? this.offset,
         sortBy: sortBy ?? this.sortBy);
