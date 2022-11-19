@@ -49,9 +49,6 @@ class _SearchBarState extends State<SearchBar> {
                 onChanged: widget.onChanged,
               ),
             ),
-            const SizedBox(
-              width: 6,
-            ),
           ],
         ),
         if (widget.filterWidget != null)

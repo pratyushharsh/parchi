@@ -132,6 +132,32 @@ const ProductEntitySchema = CollectionSchema(
         )
       ],
     ),
+    r'brand': IndexSchema(
+      id: 6145529221080171523,
+      name: r'brand',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'brand',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'category': IndexSchema(
+      id: -7560358558326323820,
+      name: r'category',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'category',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
     r'lastChangedAt': IndexSchema(
       id: -4409887940193105571,
       name: r'lastChangedAt',
@@ -722,6 +748,117 @@ extension ProductEntityQueryWhere
             .addWhereClause(IndexWhereClause.lessThan(
               indexName: r'product',
               upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<ProductEntity, ProductEntity, QAfterWhereClause> brandIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'brand',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<ProductEntity, ProductEntity, QAfterWhereClause>
+      brandIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'brand',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<ProductEntity, ProductEntity, QAfterWhereClause> brandEqualTo(
+      String? brand) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'brand',
+        value: [brand],
+      ));
+    });
+  }
+
+  QueryBuilder<ProductEntity, ProductEntity, QAfterWhereClause> brandNotEqualTo(
+      String? brand) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [],
+              upper: [brand],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [brand],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [brand],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [],
+              upper: [brand],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<ProductEntity, ProductEntity, QAfterWhereClause> categoryEqualTo(
+      List<String> category) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'category',
+        value: [category],
+      ));
+    });
+  }
+
+  QueryBuilder<ProductEntity, ProductEntity, QAfterWhereClause>
+      categoryNotEqualTo(List<String> category) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
             ));
       }
     });

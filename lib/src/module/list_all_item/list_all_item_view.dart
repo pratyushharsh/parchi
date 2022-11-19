@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../config/color_config.dart';
 import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
 import '../../entity/pos/entity.dart';
@@ -52,7 +53,7 @@ class AllProductsList extends StatelessWidget {
             }
             return RefreshIndicator(
               onRefresh: () async {
-                BlocProvider.of<ListAllItemBloc>(context).add(LoadAllItems());
+                BlocProvider.of<ListAllItemBloc>(context).add(RefreshProduct());
               },
               child: state.products.isEmpty
                   ? const WidgetNoItems()
@@ -219,17 +220,10 @@ class ProductCategoryChip extends StatelessWidget {
   final String category;
   final FontWeight fontWeight;
   const ProductCategoryChip({Key? key, required this.category, this.fontWeight = FontWeight.normal}) : super(key: key);
-  static Map<String, Color> categoryColor = {};
 
   @override
   Widget build(BuildContext context) {
-    late Color color;
-
-    if (!categoryColor.containsKey(category)) {
-      // categoryColor[category] = Colors.primaries[Random().nextInt(Colors.primaries.length)];
-      categoryColor[category] = Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
-    }
-     color = categoryColor[category]!;
+    Color color = ColorConstants.getCategoryColor(category);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

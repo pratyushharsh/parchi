@@ -7,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../config/theme_settings.dart';
+import '../../database/db_provider.dart';
 import '../../widgets/appbar_leading.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -51,7 +52,7 @@ class AboutView extends StatelessWidget {
   }
 }
 
-class AboutScreenComponentList extends StatelessWidget {
+class AboutScreenComponentList extends StatelessWidget with DatabaseProvider {
   const AboutScreenComponentList({Key? key}) : super(key: key);
 
   Future<String> calculateSizeOfDirectory(BuildContext context) async {
@@ -97,8 +98,7 @@ class AboutScreenComponentList extends StatelessWidget {
   }
 
   Future<String> calculateDatabaseSize(BuildContext context) async {
-    final repo = RepositoryProvider.of<Isar>(context);
-    final size = await repo.getSize(includeIndexes: true, includeLinks: true);
+    final size = await db.getSize(includeIndexes: true, includeLinks: true);
     return "${(size / (1024 * 1024)).toStringAsFixed(2)} MB";
   }
 

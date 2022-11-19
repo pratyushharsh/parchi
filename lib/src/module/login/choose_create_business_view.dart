@@ -189,7 +189,7 @@ class NewBusinessButton extends StatelessWidget {
         child: Center(
           child: Column(
             children: const [
-              Icon(Icons.add),
+              Icon(Icons.add_business),
               Text("Add New Business")
             ],
           )

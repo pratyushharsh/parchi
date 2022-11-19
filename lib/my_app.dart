@@ -160,7 +160,6 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider(
             create: (context) => LoadItemBulkBloc(
-                db: RepositoryProvider.of(context),
                 auth: BlocProvider.of(context),
                 sequenceRepository: RepositoryProvider.of(context)),
           ),

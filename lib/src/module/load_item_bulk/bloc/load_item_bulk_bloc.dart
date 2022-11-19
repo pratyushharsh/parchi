@@ -7,6 +7,7 @@ import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
+import '../../../database/db_provider.dart';
 import '../../../entity/pos/entity.dart';
 import '../../../repositories/repository.dart';
 import '../../authentication/bloc/authentication_bloc.dart';
@@ -15,13 +16,12 @@ import '../../authentication/bloc/authentication_bloc.dart';
 part 'load_item_bulk_event.dart';
 part 'load_item_bulk_state.dart';
 
-class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> {
+class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> with DatabaseProvider {
   final log = Logger('LoadItemBulkBloc');
-  final Isar db;
   final AuthenticationBloc auth;
   final SequenceRepository sequenceRepository;
   LoadItemBulkBloc(
-      {required this.db, required this.sequenceRepository, required this.auth})
+      {required this.sequenceRepository, required this.auth})
       : super(LoadItemBulkState()) {
     on<ProcessFile>(_onLoadFile);
   }

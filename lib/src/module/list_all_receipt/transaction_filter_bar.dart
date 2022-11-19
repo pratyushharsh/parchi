@@ -39,7 +39,7 @@ class TransactionFilterBar extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: TransactionDateTimeRangePicker(),
+            child: const TransactionDateTimeRangePicker(),
           ),
           Container(
             margin: const EdgeInsets.only(right: 8),

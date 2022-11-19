@@ -20,10 +20,14 @@ class ProductEntity {
   double? salePrice;
   String uom;
   bool enable;
+
+  @Index()
   String? brand;
   String? skuCode;
   String? hsn;
   String? taxGroupId;
+
+  @Index()
   List<String> category;
   List<String> imageUrl;
   late DateTime createTime;
