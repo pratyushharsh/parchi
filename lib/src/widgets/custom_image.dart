@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../config/cache_manager.dart';
 import '../config/constants.dart';
 
 class CustomImage extends StatelessWidget {
@@ -28,7 +30,6 @@ class CustomImage extends StatelessWidget {
           url = '$url?tr=h-$imageDim';
         }
       }
-      print(url);
     }
 
     return SizedBox(
@@ -97,24 +98,30 @@ class _CustomImage extends StatelessWidget {
     // Check if url is file image or network image
     if (url.startsWith('http:') || url.startsWith('https:')) {
       imageUrl = url;
-      return Image.network(
-        imageUrl,
-        fit: BoxFit.contain,
-        height: height,
-        width: width,
-        errorBuilder: (context, obj, trace) {
-          return SizedBox(
-            height: height,
-            width: width,
-            child: const Center(
-              child: Icon(
-                Icons.error,
-                color: Colors.red,
-              ),
+      return CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.contain,
+          height: height,
+          width: width,
+          cacheManager: ParchiImageCacheManger(),
+          progressIndicatorBuilder: (context, url, progress) => Center(
+            child: CircularProgressIndicator(
+              value: progress.progress,
             ),
-          );
-        },
-      );
+          ),
+          errorWidget: (context, obj, trace) {
+            return SizedBox(
+              height: height,
+              width: width,
+              child: const Center(
+                child: Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+              ),
+            );
+          },
+        );
     } else if (url.startsWith('file:')) {
       imageUrl = Constants.baseImagePath + url.substring(6);
       return Image.file(File(imageUrl),

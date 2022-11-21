@@ -41,7 +41,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
     productSync,
     taxGroupSync,
     reportConfigSync,
-    // sequenceSync
+    sequenceSync
   ];
 
   late BackgroundTransactionSync bckTrnSync;
@@ -176,6 +176,13 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       }
       // ***************** Import ReportConfig End   *****************
 
+      // ***************** Import Sequence Start *****************
+      if (data['config'] != null && data['config']['sequenceConfig'] != null) {
+        await bckSeqSync.importData(
+            data['config']['sequenceConfig']['data'] ?? [],
+            data['config']['sequenceConfig']['to']);
+      }
+
       // ***************** Import Process End *****************
 
       // ***************** Export Process Start *****************
@@ -185,6 +192,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       var unsyncedProducts = await bckProdSync.exportData();
       var unsyncedTaxGroups = await bckTaxSync.exportData();
       var unsyncedReportConfig = await bckRptSync.exportData();
+      var unsyncedSequences = await bckSeqSync.exportData();
 
       Map<String, dynamic> rawRequestBody = {
         'transactions': unsyncedTransactions,
@@ -192,7 +200,8 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
         'products': unsyncedProducts,
         'config': {
           'taxConfig': unsyncedTaxGroups,
-          'invoiceConfig': unsyncedReportConfig
+          'invoiceConfig': unsyncedReportConfig,
+          'sequenceConfig': unsyncedSequences,
         }
       };
 
@@ -200,7 +209,8 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
           unsyncedCustomers.isNotEmpty ||
           unsyncedProducts.isNotEmpty ||
           unsyncedTaxGroups.isNotEmpty ||
-          unsyncedReportConfig.isNotEmpty)) {
+          unsyncedReportConfig.isNotEmpty ||
+          unsyncedSequences.isNotEmpty)) {
         log.info('No data to sync');
         return;
       }
@@ -216,6 +226,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       await bckProdSync.importData(unsyncedProducts, syncTimeInMicroseconds);
       await bckTaxSync.importData(unsyncedTaxGroups, syncTimeInMicroseconds);
       await bckRptSync.importData(unsyncedReportConfig, syncTimeInMicroseconds);
+      await bckSeqSync.importData(unsyncedSequences, syncTimeInMicroseconds);
     } catch (e, st) {
       log.severe('Error while syncing data: $e', e, st);
     }
