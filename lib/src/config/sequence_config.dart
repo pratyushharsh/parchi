@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+import '../database/db_provider.dart';
 import '../entity/pos/entity.dart';
 
 mixin SequenceConfig {

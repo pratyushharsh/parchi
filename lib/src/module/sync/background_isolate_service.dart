@@ -32,7 +32,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
   String tmpDir;
   String imageDir;
 
-  final String _baseUrl =
+  static const String _baseUrl =
       'https://mr4f4gk1n3.execute-api.ap-south-1.amazonaws.com/dev';
 
   List<String> toSyncEntity = [
@@ -44,15 +44,22 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
     // sequenceSync
   ];
 
-  BackgroundTransactionSync bckTrnSync = BackgroundTransactionSync();
-  BackgroundCustomerSync bckCustSync = BackgroundCustomerSync();
-  BackgroundProductSync bckProdSync = BackgroundProductSync();
-  BackgroundTaxGroupSync bckTaxSync = BackgroundTaxGroupSync();
-  BackgroundReportConfigSync bckRptSync = BackgroundReportConfigSync();
-  BackgroundSequenceSync bckSeqSync = BackgroundSequenceSync();
+  late BackgroundTransactionSync bckTrnSync;
+  late BackgroundCustomerSync bckCustSync;
+  late BackgroundProductSync bckProdSync;
+  late BackgroundTaxGroupSync bckTaxSync;
+  late BackgroundReportConfigSync bckRptSync;
+  late BackgroundSequenceSync bckSeqSync;
 
   BackgroundSyncServiceFromIso(
-      {required this.storeId, required this.tmpDir, required this.imageDir});
+      {required this.storeId, required this.tmpDir, required this.imageDir}) {
+    bckTrnSync = BackgroundTransactionSync();
+    bckCustSync = BackgroundCustomerSync();
+    bckProdSync = BackgroundProductSync(baseUrl: _baseUrl, storeId: storeId.toString());
+    bckTaxSync = BackgroundTaxGroupSync();
+    bckRptSync = BackgroundReportConfigSync();
+    bckSeqSync = BackgroundSequenceSync();
+  }
 
   initIsar() async {
     await DatabaseProvider.ensureInitialized(
@@ -100,6 +107,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
 
   Future<void> syncAllData() async {
     // Fetch all the SyncEntity from the database
+    bckProdSync.getProductImageToSync(imageDir);
     try {
       var rawSyncData = await db.syncEntitys.where().findAll();
       // Filter the records to sync.
@@ -208,10 +216,6 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       await bckProdSync.importData(unsyncedProducts, syncTimeInMicroseconds);
       await bckTaxSync.importData(unsyncedTaxGroups, syncTimeInMicroseconds);
       await bckRptSync.importData(unsyncedReportConfig, syncTimeInMicroseconds);
-
-      // Get all the image to upload.
-      await bckProdSync.createZipForProductImages(unsyncedProducts, imageDir, tmpDir);
-      // Upload the image
     } catch (e, st) {
       log.severe('Error while syncing data: $e', e, st);
     }

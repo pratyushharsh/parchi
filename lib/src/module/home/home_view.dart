@@ -124,7 +124,7 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
   @override
   Widget build(BuildContext context) {
 
-    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.spaceEvenly;
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.spaceBetween;
     if (Platform.isMacOS || Platform.isWindows) {
       mainAxisAlignment = MainAxisAlignment.center;
     }

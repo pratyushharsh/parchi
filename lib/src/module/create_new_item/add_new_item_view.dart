@@ -246,7 +246,6 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
         if (state.status == AddNewItemStatus.existingProduct) {
           _productNameController.text = state.displayName ?? "";
           _productDescriptionController.text = state.description ?? "";
-          // @TODO Format the sale price based on the current locale formatter.
           _salePriceController.text = state.salePrice?.toString() ?? "";
           _listPriceController.text = state.listPrice?.toString() ?? "";
           _brandController.text = state.brand ?? "";
@@ -477,7 +476,10 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
           height: 400,
           width: 400,
           child: selectedUrl.isNotEmpty
-              ? CustomImage(url: selectedUrl)
+              ? CustomImage(
+                  url: selectedUrl,
+                  imageDim: 600,
+                )
               : Container(),
         ),
         const SizedBox(
@@ -526,6 +528,7 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
                 url: selectedUrl,
                 height: width * 0.8,
                 width: width,
+                imageDim: 600,
               )
             : Container(),
         const SizedBox(
@@ -572,7 +575,8 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
 class AddNewItemImage extends StatelessWidget {
   final double height;
   final double width;
-  const AddNewItemImage({Key? key, this.height = 60, this.width = 60}) : super(key: key);
+  const AddNewItemImage({Key? key, this.height = 60, this.width = 60})
+      : super(key: key);
 
   onImagePick(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform

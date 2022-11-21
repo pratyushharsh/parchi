@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 
@@ -17,9 +19,10 @@ class SequenceRepository with DatabaseProvider {
       var seq = await db.sequenceEntitys.getByName(type);
       if (seq != null) {
         seq.nextSeq++;
+        seq.lastSeqCreatedAt = DateTime.now();
         await db.sequenceEntitys.put(seq);
       } else {
-        await db.sequenceEntitys.put(SequenceEntity(name: type, nextSeq: 1, pattern: '{counter}', createAt: DateTime.now()));
+        await db.sequenceEntitys.put(SequenceEntity(name: type, nextSeq: 1, pattern: '{counter}', createAt: DateTime.now())..lastSeqCreatedAt = DateTime.now());
       }
     });
     // Use the pattern to generate the sequence

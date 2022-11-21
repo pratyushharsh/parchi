@@ -143,6 +143,7 @@ class ItemCard extends StatelessWidget {
                     child: product.imageUrl.isNotEmpty
                         ? CustomImage(
                             url: product.imageUrl[0],
+                            imageDim: 200,
                           )
                         : Container(),
                   ),

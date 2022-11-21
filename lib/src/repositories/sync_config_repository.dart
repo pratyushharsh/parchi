@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:csv/csv.dart';
@@ -163,21 +165,29 @@ class SyncConfigRepository with DatabaseProvider {
       log.info("Loading sample product image data");
       final response =
           await http.get(Uri.parse(url));
+      // final rawFile = File('${Constants.baseImagePath}/sample_product_images.zip');
+      // rawFile.createSync(recursive: true);
+      // rawFile.writeAsBytes(response.bodyBytes);
+
       final archive = ZipDecoder().decodeBytes(response.bodyBytes);
-      // Write the file to the disk
+      log.info("Loading images on : ${Constants.baseImagePath}");
+      log.info(archive);
+      // extractArchiveToDisk(archive, Constants.baseImagePath);
+      // // Write the file to the disk
       for (var file in archive.files) {
         // If it's a file and not a directory
         if (file.isFile) {
           final outputStream =
               OutputFileStream('${Constants.baseImagePath}/${file.name}');
+          file.content;
           file.writeContent(outputStream);
           outputStream.close();
         }
       }
       log.info("Loading sample product image data success");
-    } catch (e) {
+    } catch (e, st) {
       log.severe("Error loading sample product data");
-      log.severe(e.toString());
+      log.severe(e.toString(), e, st);
     }
   }
 

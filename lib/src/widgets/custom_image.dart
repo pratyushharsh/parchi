@@ -8,12 +8,29 @@ class CustomImage extends StatelessWidget {
   final String url;
   final double width;
   final double height;
+  final int imageDim;
   const CustomImage(
-      {Key? key, required this.url, this.height = 70, this.width = 70})
+      {Key? key, required this.url, this.height = 70, this.width = 70, this.imageDim = 150})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    String url = this.url;
+    if (url.startsWith('imagekit:/')) {
+      url = url.replaceFirst('imagekit:/', 'https://ik.imagekit.io/6z4jinkib');
+
+      // Based on the size build the url
+      if (width > 0 && height > 0) {
+        if (width > height) {
+          url = '$url?tr=w-$imageDim';
+        } else {
+          url = '$url?tr=h-$imageDim';
+        }
+      }
+      print(url);
+    }
+
     return SizedBox(
       width: width,
       height: height,
@@ -21,7 +38,7 @@ class CustomImage extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           _CustomImage(url: url, width: width, height: height),
-          if (url.startsWith('http:/'))
+          if (url.startsWith('https:/'))
             Positioned(
               bottom: 0,
               right: 0,
@@ -82,7 +99,7 @@ class _CustomImage extends StatelessWidget {
       imageUrl = url;
       return Image.network(
         imageUrl,
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
         height: height,
         width: width,
         errorBuilder: (context, obj, trace) {
