@@ -46,7 +46,13 @@ class BaseInvoice extends IInvoice with InvoiceUtil {
         fontFallback: [
           await PdfGoogleFonts.robotoRegular(),
           await PdfGoogleFonts.robotoBold(),
-          await PdfGoogleFonts.robotoBoldItalic()
+          await PdfGoogleFonts.robotoBoldItalic(),
+          await PdfGoogleFonts.notoSansArabicThin(),
+          await PdfGoogleFonts.notoSansArabicRegular(),
+          await PdfGoogleFonts.notoSansArabicMedium(),
+          await PdfGoogleFonts.notoSansArabicBlack(),
+          await PdfGoogleFonts.notoSansArabicBold(),
+          await PdfGoogleFonts.notoColorEmoji(),
         ],
       ),
     );
@@ -205,12 +211,16 @@ class BaseInvoice extends IInvoice with InvoiceUtil {
 
   @override
   ImageProvider? getStoreLogo(Context context) {
-    if (config.logo != null && config.logo != null) {
-      if (config.logo!.startsWith("file://") &&
-          config.logo!.substring(6).isNotEmpty) {
-        File file = File(config.logo!.replaceAll("file://", ""));
-        return MemoryImage(file.readAsBytesSync());
+    try {
+      if (config.logo != null && config.logo != null) {
+        if (config.logo!.startsWith("file://") &&
+            config.logo!.substring(6).isNotEmpty) {
+          File file = File(config.logo!.replaceAll("file://", ""));
+          return MemoryImage(file.readAsBytesSync());
+        }
       }
+    } catch (e) {
+      print(e);
     }
     return null;
   }

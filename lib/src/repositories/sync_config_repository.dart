@@ -12,12 +12,17 @@ import 'package:http/http.dart' as http;
 import '../config/constants.dart';
 import '../database/db_provider.dart';
 import '../entity/config/code_value_entity.dart';
+import '../entity/pos/country_entity.dart';
 import '../entity/pos/entity.dart';
 
 class SyncConfigRepository with DatabaseProvider {
   final log = Logger('SyncConfigRepository');
 
   SyncConfigRepository();
+
+  Future<void> _saveCountry(List<int> data) async {
+    await defaultInstance.countryEntitys.importJsonRaw(Uint8List.fromList(data));
+  }
 
   Future<void> getDataFromServer() async {
     String url =
@@ -31,20 +36,25 @@ class SyncConfigRepository with DatabaseProvider {
       final filename = file.name;
       log.info(filename);
       final data = file.content as List<int>;
-      Stream<List<int>> input = Stream.fromIterable(data.map((e) => [e]));
-      final fields = await input
-          .transform(utf8.decoder)
-          .transform(const CsvToListConverter())
-          .toList();
 
-      // Route Based on the filename
-      if (filename.startsWith("CONFIG_")) {
-        String name = filename.replaceFirst("CONFIG_", "");
-        await _loadConfiguration(name, fields);
-      } else if (filename.startsWith("REASON_CODE")) {
-        await _loadReasonCode(fields);
-      } else if (filename.startsWith("CODE_")) {
-        await _loadConfigCode(fields);
+      if (filename == 'country.json') {
+        await defaultInstance.writeTxn(() => _saveCountry(data));
+      } else if (filename.endsWith('.csv')) {
+        Stream<List<int>> input = Stream.fromIterable(data.map((e) => [e]));
+        final fields = await input
+            .transform(utf8.decoder)
+            .transform(const CsvToListConverter())
+            .toList();
+
+        // Route Based on the filename
+        if (filename.startsWith("CONFIG_")) {
+          String name = filename.replaceFirst("CONFIG_", "");
+          await _loadConfiguration(name, fields);
+        } else if (filename.startsWith("REASON_CODE")) {
+          await _loadReasonCode(fields);
+        } else if (filename.startsWith("CODE_")) {
+          await _loadConfigCode(fields);
+        }
       }
     }
 

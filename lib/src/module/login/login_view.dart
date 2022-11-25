@@ -8,10 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../config/theme_settings.dart';
+import '../../widgets/app_logo.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/my_loader.dart';
 import 'bloc/login_bloc.dart';
-
+import 'phone_email_widget.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -26,6 +27,14 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      width = min(MediaQuery.of(context).size.width, 600);
+      height = min(MediaQuery.of(context).size.height, 600);
+    }
+
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -58,11 +67,9 @@ class LoginView extends StatelessWidget {
               if (Platform.isMacOS || Platform.isWindows || Platform.isLinux)
                 Positioned(
                   child: Align(
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: min(MediaQuery.of(context).size.width, 600),
-                        maxHeight: min(MediaQuery.of(context).size.height, 600),
-                      ),
+                    child: SizedBox(
+                      height: height,
+                      width: width,
                       child: const LoginForm(),
                     ),
                   ),
@@ -85,135 +92,86 @@ class LoginView extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends StatelessWidget {
   const LoginForm({Key? key}) : super(key: key);
-
-  @override
-  State<LoginForm> createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<LoginForm> {
-  late TextEditingController _phoneController;
-  late String phoneNumber;
-
-  @override
-  void initState() {
-    super.initState();
-    _phoneController = TextEditingController();
-    phoneNumber = '';
-  }
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
       elevation: 10,
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
-          return Center(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const Text(
-                      'loginHeader',
-                      style: TextStyle(
-                          fontSize: 30,
-                          letterSpacing: 1.4,
-                          fontWeight: FontWeight.bold),
-                    ).tr(),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    const Text(
-                      "loginHeaderDescription",
-                      style: TextStyle(
-                          color: AppColor.color5, fontWeight: FontWeight.w600),
-                    ).tr(),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    TextField(
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 35,
-                          letterSpacing: 1.4),
-                      maxLength: 10,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "9999900000",
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.all(4),
-                          // @TODO Dynamically change the country code
-                          child: Text(
-                            '+91 ',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 35,
-                                letterSpacing: 1.4),
-                          ),
-                        ),
-                        hintStyle: TextStyle(color: AppColor.subtitleColorPrimary),
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          phoneNumber = val;
-                        });
-                      },
-                    ),
-                    const SizedBox(
-                      height: 250,
-                    ),
-                    Row(children: [
-                      if (state.status == LoginStatus.loadingLogin)
-                        const Expanded(
-                            child: MyLoader(
-                          color: AppColor.primary,
-                        )),
-                      if (state.status != LoginStatus.loadingLogin)
-                        Expanded(
-                          child: AcceptButton(
-                            label: "Sign In",
-                            onPressed: phoneNumber.length == 10
-                                ? () {
-                                    // FocusScope.of(context).unfocus();
-                                    BlocProvider.of<LoginBloc>(context)
-                                        .add(LoginUserWithPhone("+91$phoneNumber"));
-                                  }
-                                : null,
-                          ),
-                        )
-                    ]),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "termsOfService",
-                          style: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline,
-                              color: AppColor.color5),
-                        ).tr())
-                  ],
-                ),
-              ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 25),
+              child: AppLogo(),
             ),
-          );
-        },
+            const SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: const Text(
+                'What\'s your phone number or email?',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.normal),
+              ).tr(),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: PhoneOrEmailWidget(),
+            ),
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: state.status == LoginStatus.loadingLogin
+                        ? const Center(
+                            child: MyLoader(
+                              color: AppColor.primary,
+                            ),
+                          )
+                        : Row(children: [
+                            Expanded(
+                              child: AcceptButton(
+                                label: "Sign In",
+                                onPressed: (state.validation.isEmpty &&
+                                        state.username.length > 3)
+                                    ? () {
+                                        context.read<LoginBloc>().add(
+                                            LoginUserWithPhone(state.validUserName));
+                                      }
+                                    : null,
+                              ),
+                            )
+                          ]),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    "termsOfService",
+                    style: TextStyle(
+                        height: 1.3, wordSpacing: 1.3, color: AppColor.color5),
+                  ).tr()),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -23,4 +23,14 @@ class RemoveDevice extends LoginEvent {
 
 class LogOutUserEvent extends LoginEvent {}
 
+class OnCountryChange extends LoginEvent {
+  final CountryEntity country;
 
+  OnCountryChange(this.country);
+}
+
+class OnUsernameChange extends LoginEvent {
+  final String username;
+
+  OnUsernameChange(this.username);
+}

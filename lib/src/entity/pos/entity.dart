@@ -20,3 +20,4 @@ export 'reason_code_entity.dart';
 export 'employee_role_entity.dart';
 export 'collection.dart';
 export 'tax_rule_entity.dart';
+export 'country_entity.dart';

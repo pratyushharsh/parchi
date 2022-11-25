@@ -129,16 +129,15 @@ class _MyAppState extends State<MyApp> {
                 taxRepository: RepositoryProvider.of(context)),
           ),
           RepositoryProvider(
-            create: (context) =>
-                InvoiceRepository(),
+            create: (context) => InvoiceRepository(),
           ),
         ],
         child: MultiBlocProvider(providers: [
           BlocProvider(
             lazy: false,
             create: (context) => BackgroundSyncBloc(
-                syncRepository: RepositoryProvider.of(context),
-                syncConfigRepository: RepositoryProvider.of(context),
+              syncRepository: RepositoryProvider.of(context),
+              syncConfigRepository: RepositoryProvider.of(context),
               invoiceRepository: RepositoryProvider.of(context),
               productRepository: RepositoryProvider.of(context),
             ),
@@ -154,20 +153,23 @@ class _MyAppState extends State<MyApp> {
               ),
           ),
           BlocProvider(
+            create: (context) => ErrorNotificationBloc(
+              checkListHelper: RepositoryProvider.of(context),
+              authenticationBloc: BlocProvider.of(context),
+            )..add(ValidateStoreSetup()),
+          ),
+          BlocProvider(
             create: (context) => LoginBloc(
-                userPool: RepositoryProvider.of(context),
-                authenticationBloc: BlocProvider.of(context)),
+              userPool: RepositoryProvider.of(context),
+              authenticationBloc: BlocProvider.of(context),
+              errorNotificationBloc: BlocProvider.of(context),
+            ),
           ),
           BlocProvider(
             create: (context) => LoadItemBulkBloc(
                 auth: BlocProvider.of(context),
                 sequenceRepository: RepositoryProvider.of(context)),
           ),
-          BlocProvider(
-              create: (context) => ErrorNotificationBloc(
-                    checkListHelper: RepositoryProvider.of(context),
-                    authenticationBloc: BlocProvider.of(context),
-                  )..add(ValidateStoreSetup())),
           BlocProvider(
             create: (context) => SettingsBloc(
                 employeeRepository: RepositoryProvider.of(context),

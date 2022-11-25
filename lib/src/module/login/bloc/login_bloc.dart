@@ -1,12 +1,16 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
-import 'package:bloc/bloc.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 
+import '../../../entity/pos/entity.dart';
 import '../../authentication/bloc/authentication_bloc.dart';
+import '../../error/bloc/error_notification_bloc.dart';
+import '../LoginValidator.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -16,20 +20,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   final CognitoUserPool userPool;
   final AuthenticationBloc authenticationBloc;
+  final ErrorNotificationBloc errorNotificationBloc;
 
-  LoginBloc({required this.userPool, required this.authenticationBloc}) : super(LoginState()) {
+  LoginBloc({required this.userPool, required this.authenticationBloc, required this.errorNotificationBloc}) : super(LoginState()) {
     on<LoginUserWithPhone>(_onLoginUserWithPhone);
     on<VerifyUserOtp>(_onVerifyUserOtp);
     on<RemoveDevice>(_onRemoveDeviceEvent);
+    on<OnCountryChange>(_onCountryChange);
+    on<OnUsernameChange>(_onUsernameChange);
   }
 
 
-  void _signUpUser(String phoneNumber) async {
+  Future<void> _signUpUser(String phoneNumber) async {
     try {
       await userPool.signUp(phoneNumber, phoneNumber);
       add(LoginUserWithPhone(phoneNumber));
+    } on CognitoClientException catch (e) {
+      errorNotificationBloc.add(ErrorEvent(e.message ?? e.name ?? 'Contact support'));
+      rethrow;
     } catch (e) {
-      log.severe(e);
+      rethrow;
     }
   }
 
@@ -53,10 +63,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         deviceName = '${info.computerName} | ${info.osRelease}';
       } else if (Platform.isWindows) {
         WindowsDeviceInfo info = await deviceInfo.windowsInfo;
-        deviceName = '${info.computerName}:${info.numberOfCores}:${info.systemMemoryInMegabytes}';
+        deviceName = '${info.registeredOwner}:${info.numberOfCores}:${info.systemMemoryInMegabytes}';
       }
       log.info("Logging to $deviceName}");
-
 
       final cognitoUser = CognitoUser(event.phoneNumber, userPool, deviceName: deviceName);
       cognitoUser.setAuthenticationFlowType('CUSTOM_AUTH');
@@ -73,7 +82,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     } on CognitoClientException catch (e) {
       if (e.code == "UserNotFoundException") {
-        _signUpUser(event.phoneNumber);
+        try {
+          await _signUpUser(event.phoneNumber);
+        } catch (e) {
+          emit(state.copyWith(status: LoginStatus.failure, error: e.toString()));
+          log.severe(e);
+          return;
+        }
       }
     } catch (e) {
       log.severe(e);
@@ -136,5 +151,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       log.severe(e);
       emit(state.copyWith(status: LoginStatus.failure));
     }
+  }
+
+  void _onCountryChange(
+      OnCountryChange event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(country: event.country));
+  }
+
+  void _onUsernameChange(
+      OnUsernameChange event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(username: event.username));
   }
 }

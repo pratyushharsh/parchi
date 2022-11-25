@@ -618,9 +618,19 @@ const _TransactionHeaderEntitystatusValueEnumMap = {
 };
 const _TransactionHeaderEntitytransactionTypeEnumValueMap = {
   r'sale': r'sale',
+  r'returns': r'returns',
+  r'refund': r'refund',
+  r'exchange': r'exchange',
+  r'payment': r'payment',
+  r'receipt': r'receipt',
 };
 const _TransactionHeaderEntitytransactionTypeValueEnumMap = {
   r'sale': TransactionType.sale,
+  r'returns': TransactionType.returns,
+  r'refund': TransactionType.refund,
+  r'exchange': TransactionType.exchange,
+  r'payment': TransactionType.payment,
+  r'receipt': TransactionType.receipt,
 };
 
 Id _transactionHeaderEntityGetId(TransactionHeaderEntity object) {

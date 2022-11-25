@@ -30,5 +30,4 @@ class ErrorNotificationBloc extends Bloc<ErrorNotificationEvent, ErrorNotificati
     List<String> errors = [event.error];
     emit(ErrorNotificationState(errors: errors));
   }
-
 }

@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../entity/config/code_value_entity.dart';
+import '../entity/pos/country_entity.dart';
 import '../entity/pos/entity.dart';
 
 mixin DatabaseProvider {
@@ -48,6 +49,7 @@ mixin DatabaseProvider {
       ReasonCodeEntitySchema,
       TaxGroupEntitySchema,
       ReportConfigEntitySchema,
+      CountryEntitySchema
     ], inspector: inspector, directory: path, name: name);
   }
 
