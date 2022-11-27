@@ -6,7 +6,9 @@ import 'package:logging/logging.dart';
 
 import '../database/db_provider.dart';
 import '../entity/pos/entity.dart';
+import '../model/api/image_upload_response.dart';
 import '../module/receipt_display/template/invoice_config.dart';
+import '../util/helper/rest_api.dart';
 
 enum InvoiceField {
   item("ITEM"),
@@ -32,6 +34,10 @@ enum InvoiceField {
 
 class InvoiceRepository with DatabaseProvider {
   final log = Logger('InvoiceRepository');
+
+  final RestApiClient restClient;
+
+  InvoiceRepository({required this.restClient});
 
   Future<void> saveInvoiceSetting(InvoiceConfig setting) async {
     List<ReportColumn> columns = [];
@@ -92,7 +98,7 @@ class InvoiceRepository with DatabaseProvider {
 
     await db.writeTxn(() async {
       db.reportConfigEntitys.putByTypeSubtype(ReportConfigEntity(
-        type: 'INVOICE',
+        type: 'INV',
         subtype: 'INVOICE',
         columns: columns,
         properties: [
@@ -140,7 +146,7 @@ class InvoiceRepository with DatabaseProvider {
   Future<InvoiceConfig> getInvoiceSettingByName(String name) async {
     final config = await db.reportConfigEntitys
         .where()
-        .typeSubtypeEqualTo('INVOICE', name)
+        .typeSubtypeEqualTo('INV', name)
         .findFirst();
     if (config == null) {
       return InvoiceConfig.defaultValue;
@@ -229,28 +235,24 @@ class InvoiceRepository with DatabaseProvider {
       taxFieldConfig: config.columns
               .firstWhere(
                   (element) => element.id == InvoiceField.taxFields.value,
-                  orElse: () =>
-                      ReportColumn(id: InvoiceField.taxFields.value))
+                  orElse: () => ReportColumn(id: InvoiceField.taxFields.value))
               .fields ??
           [],
-taxGroupType: TaxGroupType.values.firstWhere(
-          (element) => element.value ==
-              config.properties
-                  .firstWhere(
-                      (element) => element.key == InvoiceField.taxGroupType.value,
-                      orElse: () =>
-                          ReportProperty(key: InvoiceField.taxGroupType.value))
-                  .stringValue,
-          orElse: () => TaxGroupType.hsn,
-        ),
+      taxGroupType: TaxGroupType.values.firstWhere(
+        (element) =>
+            element.value ==
+            config.properties
+                .firstWhere(
+                    (element) => element.key == InvoiceField.taxGroupType.value,
+                    orElse: () =>
+                        ReportProperty(key: InvoiceField.taxGroupType.value))
+                .stringValue,
+        orElse: () => TaxGroupType.hsn,
+      ),
     );
   }
 
-  Future<String> uploadLogo(String path, Uint8List logo) async {
-    // Create local file
-    File file = File(path);
-    file.createSync(recursive: true);
-    await file.writeAsBytes(logo);
-    return path;
+  Future<ImageUploadResponse> uploadLogo(String path, fileName, storeId, type) async {
+    return restClient.uploadImage(path, fileName, storeId, type);
   }
 }

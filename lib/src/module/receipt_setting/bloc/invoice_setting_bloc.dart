@@ -136,22 +136,23 @@ class InvoiceSettingBloc
   void _onSaveInvoiceSettingEvent(OnSaveInvoiceSettingEvent event,
       Emitter<InvoiceSettingState> emit) async {
     try {
+      // Loading invoice
+      emit(state.copyWith(status: InvoiceSettingStatus.saving));
+
       String? logoPath;
 
       if (state.rawLogo != null && state.rawLogo!.path != null) {
-        final dir = await getApplicationDocumentsDirectory();
-        File tmp = File(state.rawLogo!.path!);
-        logoPath = '${dir.path}/invoice/${state.rawLogo!.name}';
-        logoPath =
-            await invoiceRepo.uploadLogo(logoPath, await tmp.readAsBytes());
-        log.info('Logo uploaded to $logoPath');
+        var resp = await invoiceRepo.uploadLogo(state.rawLogo!.path!, 'invoice_image.jpg', '${authBloc.state.store?.rtlLocId ?? 'default'}', 'config');
+        logoPath = 'imagekit:/${resp.outputFilePath}';
+        log.info('Logo uploaded to $resp');
       }
 
-      await invoiceRepo.saveInvoiceSetting(InvoiceConfig(
+      await invoiceRepo.saveInvoiceSetting(
+        InvoiceConfig(
           code: 'INVOICE',
           columnConfig: state.columns,
           paymentColumnConfig: state.paymentColumns,
-          logo: state.rawLogo != null ? 'file://$logoPath' : state.logo,
+          logo: state.rawLogo != null ? logoPath : state.logo,
           showTaxSummary: state.showTaxSummary,
           showPaymentDetails: state.showPaymentDetails,
           showTermsAndCondition: state.showTermsAndCondition,
@@ -162,9 +163,10 @@ class InvoiceSettingBloc
           headerFieldConfig: state.headerFields,
           shippingAddFieldConfig: state.shippingAddressFields,
           billingAddFieldConfig: state.billingAddressFields,
-        taxFieldConfig: state.taxFields,
-      ),
+          taxFieldConfig: state.taxFields,
+        ),
       );
+      emit(state.copyWith(status: InvoiceSettingStatus.saved));
     } catch (e) {
       log.severe(e);
     }
@@ -394,7 +396,6 @@ class InvoiceSettingBloc
   void _onChangeTaxGroupType(
       ChangeTaxGroupType event, Emitter<InvoiceSettingState> emit) {
     emit(state.copyWith(
-        taxGroupType: event.type,
-        status: InvoiceSettingStatus.modified));
+        taxGroupType: event.type, status: InvoiceSettingStatus.modified));
   }
 }

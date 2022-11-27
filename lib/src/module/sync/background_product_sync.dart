@@ -125,7 +125,7 @@ class BackgroundProductSync extends BackgroundEntitySync {
       ..fields['expire'] = '${responseJson['expires']}'
       ..fields['token'] = responseJson['token']
       ..fields['fileName'] = fileName.split("/").last
-      ..fields['folder'] = 'parchi-dev/$storeId/$imageId'
+      ..fields['folder'] = 'parchi-dev/$storeId/product/$imageId'
       ..files.add(await http.MultipartFile.fromPath(
         'file',
         '$imageDir/$fileName',

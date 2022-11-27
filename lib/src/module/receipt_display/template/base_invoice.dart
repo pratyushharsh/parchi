@@ -10,10 +10,12 @@ import '../../../entity/pos/entity.dart';
 import 'invoice.dart';
 import 'invoice_config.dart';
 
-class BaseInvoice extends IInvoice with InvoiceUtil {
+class BaseInvoice extends IInvoice {
   final TransactionHeaderEntity order;
   final RetailLocationEntity store;
   final InvoiceConfig config;
+
+  ImageProvider? logo;
 
   BaseInvoice({required this.order, required this.store, required this.config});
 
@@ -32,6 +34,24 @@ class BaseInvoice extends IInvoice with InvoiceUtil {
       ],
     );
   }
+
+  Future<void> _loadLogo() async {
+    if (config.logo != null && config.logo != null) {
+      String logo = getImageUrl(config.logo!);
+      if (logo.startsWith("file://") &&
+          logo.substring(6).isNotEmpty) {
+        File file = File(config.logo!.replaceAll("file://", ""));
+        if (await file.exists()) {
+          logo = file.path;
+          Uint8List data = await file.readAsBytes();
+          this.logo = MemoryImage(data);
+        }
+      } else if (logo.startsWith("http") || logo.startsWith("https")) {
+        this.logo = await networkImage(logo);
+      }
+    }
+  }
+
 
   @override
   Future<PageTheme> buildPageTheme(PdfPageFormat pageFormat) async {
@@ -91,6 +111,9 @@ class BaseInvoice extends IInvoice with InvoiceUtil {
   @override
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
     final doc = Document();
+
+    await _loadLogo();
+
     doc.addPage(
       MultiPage(
         pageTheme: await buildPageTheme(pageFormat),
@@ -211,16 +234,8 @@ class BaseInvoice extends IInvoice with InvoiceUtil {
 
   @override
   ImageProvider? getStoreLogo(Context context) {
-    try {
-      if (config.logo != null && config.logo != null) {
-        if (config.logo!.startsWith("file://") &&
-            config.logo!.substring(6).isNotEmpty) {
-          File file = File(config.logo!.replaceAll("file://", ""));
-          return MemoryImage(file.readAsBytesSync());
-        }
-      }
-    } catch (e) {
-      print(e);
+    if (logo != null) {
+      return logo;
     }
     return null;
   }

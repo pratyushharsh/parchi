@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
+import 'package:parchi/src/config/cache_manager.dart';
 
 import 'src/config/route_config.dart';
 import 'src/module/authentication/bloc/authentication_bloc.dart';
@@ -31,7 +32,7 @@ import 'src/module/settings/bloc/settings_bloc.dart';
 import 'src/repositories/checklist_helper.dart';
 import 'src/repositories/repository.dart';
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   final CognitoUserPool userPool;
   final RestApiClient restClient;
   const MyApp({
@@ -41,36 +42,23 @@ class MyApp extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late Isar database;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
         providers: [
-          // RepositoryProvider(lazy: false, create: (context) => database),
           RepositoryProvider(
-              lazy: false, create: (context) => widget.restClient),
+              lazy: false, create: (context) => restClient),
           RepositoryProvider(
               lazy: false, create: (context) => CheckListHelper()),
           RepositoryProvider(create: (context) => ContactRepository()),
-          RepositoryProvider(create: (context) => widget.userPool),
+          RepositoryProvider(create: (context) => userPool),
           RepositoryProvider(
             create: (context) => BusinessRepository(
-              restClient: widget.restClient,
+              restClient: restClient,
             ),
           ),
           RepositoryProvider(
             create: (context) => SyncRepository(
-              restClient: widget.restClient,
+              restClient: restClient,
             ),
           ),
           RepositoryProvider(
@@ -78,37 +66,37 @@ class _MyAppState extends State<MyApp> {
           ),
           RepositoryProvider(
             create: (context) =>
-                SettingsRepository(restClient: widget.restClient),
+                SettingsRepository(restClient: restClient),
           ),
           RepositoryProvider(
             create: (context) =>
-                SequenceRepository(restClient: widget.restClient),
+                SequenceRepository(restClient: restClient),
           ),
           RepositoryProvider(
             create: (context) =>
-                TransactionRepository(restClient: widget.restClient),
+                TransactionRepository(restClient: restClient),
           ),
           RepositoryProvider(
             create: (context) => ConfigRepository(),
           ),
           RepositoryProvider(
             create: (context) =>
-                ReasonCodeRepository(restClient: widget.restClient),
+                ReasonCodeRepository(restClient: restClient),
           ),
           RepositoryProvider(
-            create: (context) => TaxRepository(restClient: widget.restClient),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                EmployeeRepository(restClient: widget.restClient),
+            create: (context) => TaxRepository(restClient: restClient),
           ),
           RepositoryProvider(
             create: (context) =>
-                CustomerRepository(restClient: widget.restClient),
+                EmployeeRepository(restClient: restClient),
           ),
           RepositoryProvider(
             create: (context) =>
-                ProductRepository(restClient: widget.restClient),
+                CustomerRepository(restClient: restClient),
+          ),
+          RepositoryProvider(
+            create: (context) =>
+                ProductRepository(restClient: restClient),
           ),
           RepositoryProvider(
             lazy: false,
@@ -129,7 +117,9 @@ class _MyAppState extends State<MyApp> {
                 taxRepository: RepositoryProvider.of(context)),
           ),
           RepositoryProvider(
-            create: (context) => InvoiceRepository(),
+            create: (context) => InvoiceRepository(
+              restClient: restClient,
+            ),
           ),
         ],
         child: MultiBlocProvider(providers: [
@@ -163,7 +153,7 @@ class _MyAppState extends State<MyApp> {
               userPool: RepositoryProvider.of(context),
               authenticationBloc: BlocProvider.of(context),
               errorNotificationBloc: BlocProvider.of(context),
-            ),
+            )..add(OnCountryChange(SettingsCacheManager().getDefaultElement(SettingsType.country))),
           ),
           BlocProvider(
             create: (context) => LoadItemBulkBloc(

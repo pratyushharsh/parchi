@@ -28,6 +28,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<RemoveDevice>(_onRemoveDeviceEvent);
     on<OnCountryChange>(_onCountryChange);
     on<OnUsernameChange>(_onUsernameChange);
+    on<OnOtpChange>(_onOtpChange);
   }
 
 
@@ -124,16 +125,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       log.info(res);
     } on CognitoUserCustomChallengeException catch(e) {
       // log.severe(e);
-      log.severe('Custom Challenge exception', e);
-      log.severe(e.challengeParameters);
-      var deviceList = json.decode(e.challengeParameters['device_list']) as List<dynamic>;
-      authenticationBloc.add(VerifyUserDeviceStep(e.challengeParameters));
-
-      CognitoUser user = state.user!;
-      String deviceKeyPrefix = '${user.keyPrefix}.deviceKey';
-      var deviceKey = await userPool.storage.getItem(deviceKeyPrefix);
-      log.info("Current device key: $deviceKey");
-      emit(state.copyWith(status: LoginStatus.verifyDevice, deviceList: deviceList, deviceKey: deviceKey));
+      // Check if Custom Challenge is for OTP then it is error
+      Map<String, dynamic> challengeParameters = e.challengeParameters;
+      String? challengeStep = challengeParameters['challenge_step'];
+      if (challengeStep != null && challengeStep == 'VERIFY_OTP') {
+        errorNotificationBloc.add(ErrorEvent('Invalid OTP'));
+        emit(state.copyWith(status: LoginStatus.verifyOtp, retryCount: state.retryCount + 1));
+      } else if (challengeStep != null && challengeStep == 'VERIFY_DEVICE') {
+        var deviceList = json.decode(e.challengeParameters['device_list']) as List<dynamic>;
+        authenticationBloc.add(VerifyUserDeviceStep(e.challengeParameters));
+        CognitoUser user = state.user!;
+        String deviceKeyPrefix = '${user.keyPrefix}.deviceKey';
+        var deviceKey = await userPool.storage.getItem(deviceKeyPrefix);
+        log.info("Current device key: $deviceKey");
+        emit(state.copyWith(status: LoginStatus.verifyDevice, deviceList: deviceList, deviceKey: deviceKey));
+      }
     } catch (e) {
       log.severe(e);
     }
@@ -161,5 +167,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _onUsernameChange(
       OnUsernameChange event, Emitter<LoginState> emit) async {
     emit(state.copyWith(username: event.username));
+  }
+
+  void _onOtpChange(
+      OnOtpChange event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(otp: event.otp));
   }
 }

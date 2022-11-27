@@ -34,3 +34,9 @@ class OnUsernameChange extends LoginEvent {
 
   OnUsernameChange(this.username);
 }
+
+class OnOtpChange extends LoginEvent {
+  final String otp;
+
+  OnOtpChange(this.otp);
+}

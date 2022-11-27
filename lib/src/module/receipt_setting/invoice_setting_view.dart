@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:isar/isar.dart';
 
+import '../../config/image_util.dart';
 import '../../config/theme_settings.dart';
 import '../../database/db_provider.dart';
 import '../../entity/pos/entity.dart';
@@ -13,6 +14,7 @@ import '../../widgets/appbar_leading.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/invoice/widget.dart';
+import '../../widgets/my_loader.dart';
 import '../receipt_display/template/invoice_config.dart';
 import 'bloc/invoice_setting_bloc.dart';
 import 'mock_invoice_view.dart';
@@ -185,6 +187,22 @@ class _InvoiceSettingFormState extends State<InvoiceSettingForm> {
                   },
                 ),
               ),
+            BlocBuilder<InvoiceSettingBloc, InvoiceSettingState>(
+              builder: (context, state) {
+                if (state.status == InvoiceSettingStatus.saving) {
+                  return Positioned.fill(
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                      child: const Center(
+                        child: MyLoader(),
+                      ),
+                    ),
+                  );
+                }
+
+                return Container();
+              },
+            )
           ],
         ),
       ),
@@ -199,7 +217,8 @@ class InvoiceSettingInput extends StatefulWidget {
   State<InvoiceSettingInput> createState() => _InvoiceSettingInputState();
 }
 
-class _InvoiceSettingInputState extends State<InvoiceSettingInput> with DatabaseProvider {
+class _InvoiceSettingInputState extends State<InvoiceSettingInput>
+    with DatabaseProvider {
   late TextEditingController _termsConditionController;
   late TextEditingController _declarationController;
   late List<ReportFieldConfigEntity> _taxFields;
@@ -499,12 +518,14 @@ class _InvoiceSettingInputState extends State<InvoiceSettingInput> with Database
                           field: val, type: FieldType.tax));
                 },
                 onSelect: (val) {
-                  context.read<InvoiceSettingBloc>().add(
-                      AddNewConfigField(field: val, type: FieldType.tax));
+                  context
+                      .read<InvoiceSettingBloc>()
+                      .add(AddNewConfigField(field: val, type: FieldType.tax));
                 },
                 onDeselect: (val) {
-                  context.read<InvoiceSettingBloc>().add(
-                      RemoveConfigField(field: val, type: FieldType.tax));
+                  context
+                      .read<InvoiceSettingBloc>()
+                      .add(RemoveConfigField(field: val, type: FieldType.tax));
                 },
                 label: "Select Tax Columns to display.",
               ),
@@ -583,15 +604,17 @@ class UploadViewImage extends StatelessWidget {
 
   onUpload(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform
-        .pickFiles(type: FileType.image, allowMultiple: false);
-    if (result != null) {
-      context
-          .read<InvoiceSettingBloc>()
-          .add(UploadLogoFromPlatform(result.files.single));
-    } else {
-      // User canceled the picker
-      // print("User Cancelled");
-    }
+        .pickFiles(type: FileType.image, allowMultiple: false)
+        .then(
+      (value) {
+        if (value != null) {
+          context
+              .read<InvoiceSettingBloc>()
+              .add(UploadLogoFromPlatform(value.files.single));
+        }
+        return null;
+      },
+    );
   }
 
   bool isValidImage(String? path) {
@@ -636,12 +659,13 @@ class UploadViewImage extends StatelessWidget {
   }
 }
 
-class ImageFromFileOrNetwork extends StatelessWidget {
+class ImageFromFileOrNetwork extends StatelessWidget with ImageMixinConfig {
   final String url;
   const ImageFromFileOrNetwork({Key? key, required this.url}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String url = getImageUrl(this.url, height: 200);
     if (url.startsWith('file://')) {
       return Image.file(File(url.replaceFirst('file://', '')));
     } else if (url.startsWith('http') || url.startsWith('https')) {

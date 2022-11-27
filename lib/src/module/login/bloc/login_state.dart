@@ -24,9 +24,10 @@ class LoginState extends Equatable {
   final String? deviceKey;
   final CountryEntity? country;
   final String username;
+  final String otp;
   // final List<dynamic> businessList;
 
-  LoginState({
+  const LoginState({
     this.status = LoginStatus.initial,
     this.user,
     this.retryCount = 0,
@@ -35,7 +36,20 @@ class LoginState extends Equatable {
     this.deviceKey,
     this.country,
     this.username = '',
+    this.otp = '',
   });
+
+  String get loginType {
+    if (username.contains('@')) {
+      return 'email';
+    } else {
+      return 'phone';
+    }
+  }
+
+  bool get validOtp {
+    return otp.length == 6;
+  }
 
   String get validation {
     return LoginInputValidator.validateUsername(username) ?? '';
@@ -64,7 +78,8 @@ class LoginState extends Equatable {
       String? error,
       String? deviceKey,
       CountryEntity? country,
-      String? username}) {
+      String? username,
+      String? otp}) {
     return LoginState(
         status: status ?? this.status,
         user: user ?? this.user,
@@ -73,7 +88,8 @@ class LoginState extends Equatable {
         error: error ?? this.error,
         deviceKey: deviceKey ?? this.deviceKey,
         country: country ?? this.country,
-        username: username ?? this.username);
+        username: username ?? this.username,
+        otp: otp ?? this.otp);
   }
 
   @override
@@ -85,7 +101,8 @@ class LoginState extends Equatable {
         error,
         deviceKey,
         country,
-        username
+        username,
+        otp
       ];
 
   @override

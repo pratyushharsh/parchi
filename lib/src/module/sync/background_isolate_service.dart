@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import '../../../log.dart';
 import '../../database/db_provider.dart';
 import '../../entity/pos/entity.dart';
-import '../../repositories/repository.dart';
 import 'background_customer_sync.dart';
 import 'background_product_sync.dart';
 import 'background_rptconfig_sync.dart';
@@ -27,7 +26,7 @@ import 'background_sequence_sync.dart';
 
 class BackgroundSyncServiceFromIso with DatabaseProvider {
   final log = Logger('BackgroundSyncServiceFromIso');
-  InvoiceRepository invoiceRepository = InvoiceRepository();
+  // InvoiceRepository invoiceRepository = InvoiceRepository();
   final int storeId;
   String tmpDir;
   String imageDir;

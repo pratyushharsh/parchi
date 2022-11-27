@@ -6,12 +6,14 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 
+import '../../model/api/image_upload_response.dart';
+
 class RestApiClient {
   final log = Logger('ApiLogger');
   final String baseUrl;
   final CognitoUserPool userPool;
 
-  RestApiClient({ required this.baseUrl, required this.userPool });
+  RestApiClient({required this.baseUrl, required this.userPool});
 
   Future<CognitoUserSession> getCurrentSession() async {
     try {
@@ -34,6 +36,47 @@ class RestApiClient {
     }
   }
 
+  Future<ImageUploadResponse> uploadImage(
+      String path, String fileName, String storeId, String type) async {
+    // Fetch the file
+    final tokenResp = await http.get(
+      Uri.parse('$baseUrl/business/$storeId/image/token'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    log.info('Response: ${tokenResp.body}');
+    Map<String, dynamic> responseJson;
+    if (tokenResp.statusCode == 200) {
+      responseJson = json.decode(tokenResp.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+
+    // construct the request
+    var uri = Uri.https('upload.imagekit.io', '/api/v1/files/upload');
+    var request = http.MultipartRequest('POST', uri)
+      ..fields['publicKey'] = 'public_Meql/vuDgEH948bofreYb2IpHCc='
+      ..fields['signature'] = responseJson['signature']
+      ..fields['expire'] = '${responseJson['expires']}'
+      ..fields['token'] = responseJson['token']
+      ..fields['fileName'] = fileName.split("/").last
+      ..fields['folder'] = 'parchi-dev/$storeId/$type'
+      ..files.add(await http.MultipartFile.fromPath(
+        'file',
+        path,
+      ));
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      var resp = await response.stream.bytesToString();
+      var jsonResp = json.decode(resp);
+      return ImageUploadResponse(
+          inputFileName: fileName, outputFilePath: jsonResp['filePath']);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   // Future<String> getAuthToken() async {
   //   try {
   //     AuthSession token = await Amplify.Auth.fetchAuthSession(
@@ -47,7 +90,8 @@ class RestApiClient {
   //   return "";
   // }
 
-  Future<Map<String, String>> buildAuthHeader(CognitoUserSession session) async {
+  Future<Map<String, String>> buildAuthHeader(
+      CognitoUserSession session) async {
     Map<String, String> map = {
       "Authorization": "${session.idToken.jwtToken}",
       "x-api-key": 'API_KEY',
@@ -66,8 +110,7 @@ class RestApiClient {
     // print('************************');
     // print(header);
     // print('************************');
-    final response =
-    await http.get(_url, headers: header);
+    final response = await http.get(_url, headers: header);
     log.info("GET Response: ${response.statusCode}");
     log.info(response.body);
     return response;
@@ -81,7 +124,7 @@ class RestApiClient {
     log.info("Post Request: ");
     log.info(restOptions);
     final response =
-    await http.post(_url, headers: header, body: restOptions.body);
+        await http.post(_url, headers: header, body: restOptions.body);
     log.info("Post Response: ${response.statusCode} | ${response.headers}");
     log.info(response.body);
     return response;
@@ -113,13 +156,12 @@ class RestApiClient {
     var _url = Uri.parse(restOptions.url!);
     log.info("RawPut Request: ");
     log.info(restOptions);
-    final response =
-    await http.put(_url, headers: restOptions.headers, body: restOptions.body);
+    final response = await http.put(_url,
+        headers: restOptions.headers, body: restOptions.body);
     log.info("RawPut Response: ${response.statusCode} | ${response.headers}");
     log.info(response.body);
     return response;
   }
-
 
   dynamic parsedResponse(Response response) {
     switch (response.statusCode) {
@@ -158,13 +200,11 @@ class FetchDataException extends AppException {
 }
 
 class UnauthorisedException extends AppException {
-  UnauthorisedException(String message)
-      : super(message, "Unauthorised: ");
+  UnauthorisedException(String message) : super(message, "Unauthorised: ");
 }
 
 class BadRequestException extends AppException {
-  BadRequestException(String message)
-      : super(message, "Invalid Request: ");
+  BadRequestException(String message) : super(message, "Invalid Request: ");
 }
 
 class RestOptions {
@@ -180,7 +220,7 @@ class RestOptions {
     this.url,
     this.queryParameters,
     this.headers,
-  }): assert(path.isNotEmpty || url != null);
+  }) : assert(path.isNotEmpty || url != null);
 
   @override
   String toString() {
@@ -188,9 +228,7 @@ class RestOptions {
   }
 }
 
-class RestResponse {
-
-}
+class RestResponse {}
 
 class ApiExceptionMessage {
   late final String timestamp;

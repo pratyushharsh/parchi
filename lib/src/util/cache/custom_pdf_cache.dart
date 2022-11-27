@@ -14,7 +14,7 @@ class CustomPdfCache extends PdfBaseCache {
 
   init() async {
     final dir = await getApplicationSupportDirectory();
-    basePath = dir.path + "/pdf_cache/";
+    basePath = "${dir.path}/pdf_cache/";
     Directory cacheDir = Directory(basePath);
     if (!await cacheDir.exists()) {
       await cacheDir.create(recursive: true);

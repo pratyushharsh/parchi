@@ -16,6 +16,16 @@ class ParchiImageCacheManger extends CacheManager {
   ParchiImageCacheManger._() : super(Config(key, stalePeriod: const Duration(days: 7)));
 }
 
+CountryEntity unknownCountry = CountryEntity(
+  name: 'India',
+  continent: 'N/A',
+  iso2: 'NA',
+  iso3: 'NAV',
+  isoNumeric: "0",
+  phoneCode: '00',
+  flag: '🏳️', languages: ['en_us'], currencies: ['USD'],
+);
+
 enum SettingsType {
   country
 }
@@ -42,6 +52,9 @@ class SettingsCacheManager with DatabaseProvider {
     switch (type) {
       case SettingsType.country:
         var defaultCountry = defaultInstance.countryEntitys.filter().iso2EqualTo('IN').findFirstSync();
+        if (defaultCountry == null) {
+          return unknownCountry;
+        }
         _default[type] = defaultCountry;
         return defaultCountry;
     }

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
+import '../../../config/image_util.dart';
 import '../../../entity/pos/entity.dart';
 import 'base_invoice.dart';
 import 'invoice_config.dart';
@@ -167,7 +168,7 @@ typedef ColumnBuilder<T> = String Function(
 typedef ColumnSummaryBuilder = String Function(
     ReportFieldConfigEntity config);
 
-abstract class IInvoice with InvoiceUtil {
+abstract class IInvoice with InvoiceUtil, ImageMixinConfig {
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat);
   ImageProvider? getStoreLogo(Context context);
   Widget buildStoreDetail(Context context);

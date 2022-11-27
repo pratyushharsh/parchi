@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../config/theme_settings.dart';
+import '../../widgets/app_logo.dart';
 import '../../widgets/appbar_leading.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/my_loader.dart';
@@ -19,6 +22,15 @@ class VerifyUserDeviceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      width = min(MediaQuery.of(context).size.width, 600);
+      height = min(MediaQuery.of(context).size.height, 600);
+    }
+
     return Container(
       color: AppColor.background,
       child: SafeArea(
@@ -26,13 +38,16 @@ class VerifyUserDeviceView extends StatelessWidget {
           backgroundColor: AppColor.background,
           body: Stack(
             children: [
+              if (Platform.isIOS || Platform.isAndroid)
+                const Positioned(
+                  child: VerifyUserDeviceForm(),
+                ),
+              if (Platform.isMacOS || Platform.isWindows || Platform.isLinux)
               Positioned(
                 child: Align(
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: min(MediaQuery.of(context).size.width, 600),
-                      maxHeight: min(MediaQuery.of(context).size.height, 600),
-                    ),
+                  child: SizedBox(
+                    height: height,
+                    width: width,
                     child: const VerifyUserDeviceForm(),
                   ),
                 ),
@@ -83,24 +98,27 @@ class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColor.background,
+          color: AppColor.background.withOpacity(0.8),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
             Checkbox(
               value: _selectedDeviceIds.contains(device['device_key']),
-              onChanged: device['device_key'] != currentDeviceKey ? (val) {
-                setState(
-                  () {
-                    if (_selectedDeviceIds.contains(device['device_key'])) {
-                      _selectedDeviceIds.remove(device['device_key']);
-                    } else {
-                      _selectedDeviceIds.add(device['device_key']);
+              onChanged: device['device_key'] != currentDeviceKey
+                  ? (val) {
+                      setState(
+                        () {
+                          if (_selectedDeviceIds
+                              .contains(device['device_key'])) {
+                            _selectedDeviceIds.remove(device['device_key']);
+                          } else {
+                            _selectedDeviceIds.add(device['device_key']);
+                          }
+                        },
+                      );
                     }
-                  },
-                );
-              } : null,
+                  : null,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -135,6 +153,10 @@ class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
       child: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           // if (state.deviceList.isEmpty) {
@@ -143,58 +165,104 @@ class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> {
           // }
         },
         builder: (context, state) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Check your existing device',
-                style: TextStyle(
-                    fontSize: 30,
-                    letterSpacing: 1.4,
-                    fontWeight: FontWeight.bold),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: AppLogo(),
+                ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
-              const Text(
-                "  Select the device to remove from saved history.",
-                style: TextStyle(
-                    color: AppColor.color5, fontWeight: FontWeight.w600),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Check your existing device',
+                      style: TextStyle(
+                          fontSize: 18,
+                          letterSpacing: 1.1,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Select the device to remove from saved history.",
+                      style: TextStyle(
+                          color: AppColor.color5, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 20,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: state.deviceList.length,
-                  itemBuilder: (context, index) {
-                    return _buildDeviceList(
-                        state.deviceList[index], state.deviceKey);
-                  },
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            "assets/image/undraw_secure_login_pdn4.svg",
+                            alignment: Alignment.center,
+                            height: 200,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListView.builder(
+                        itemCount: state.deviceList.length,
+                        itemBuilder: (context, index) {
+                          return _buildDeviceList(
+                              state.deviceList[index], state.deviceKey);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Row(children: [
-                if (state.status == LoginStatus.verifyDeviceLoading)
-                  const Expanded(
-                      child: MyLoader(
-                    color: AppColor.primary,
-                  )),
-                if (state.status != LoginStatus.verifyDeviceLoading)
-                  Expanded(
-                    child: AcceptButton(
-                      label: "Continue",
-                      onPressed: state.deviceList.where((e) => e['device_key'] != state.deviceKey).toList().length - _selectedDeviceIds.length < 3
-                          ? () {
-                              BlocProvider.of<LoginBloc>(context).add(
-                                  RemoveDevice(_selectedDeviceIds.toList()));
-                            }
-                          : null,
-                    ),
-                  )
-              ])
-            ]),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8, bottom: 16),
+                child: Row(
+                  children: [
+                    if (state.status == LoginStatus.verifyDeviceLoading)
+                      const Expanded(
+                          child: MyLoader(
+                        color: AppColor.primary,
+                      )),
+                    if (state.status != LoginStatus.verifyDeviceLoading)
+                      Expanded(
+                        child: AcceptButton(
+                          label: "Continue",
+                          onPressed: state.deviceList
+                                          .where((e) =>
+                                              e['device_key'] !=
+                                              state.deviceKey)
+                                          .toList()
+                                          .length -
+                                      _selectedDeviceIds.length <
+                                  3
+                              ? () {
+                                  BlocProvider.of<LoginBloc>(context).add(
+                                      RemoveDevice(
+                                          _selectedDeviceIds.toList()));
+                                }
+                              : null,
+                        ),
+                      )
+                  ],
+                ),
+              )
+            ],
           );
         },
       ),

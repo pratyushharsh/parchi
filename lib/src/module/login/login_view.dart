@@ -169,6 +169,14 @@ class LoginForm extends StatelessWidget {
                     style: TextStyle(
                         height: 1.3, wordSpacing: 1.3, color: AppColor.color5),
                   ).tr()),
+            ),
+            Center(
+              heightFactor: 1.8,
+              child: SvgPicture.asset(
+                "assets/image/undraw_authentication_re_svpt.svg",
+                alignment: Alignment.center,
+                height: 150,
+              ),
             )
           ],
         ),

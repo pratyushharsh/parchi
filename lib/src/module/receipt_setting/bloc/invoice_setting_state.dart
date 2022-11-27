@@ -1,6 +1,6 @@
 part of 'invoice_setting_bloc.dart';
 
-enum InvoiceSettingStatus { initial, preLoad, modified, saved }
+enum InvoiceSettingStatus { initial, preLoad, modified, saving, saved }
 
 enum FieldType { header, billingAddress, shippingAddress, item, payment, tax }
 
