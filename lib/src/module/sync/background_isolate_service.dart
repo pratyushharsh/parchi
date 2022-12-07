@@ -106,7 +106,12 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
 
   Future<void> syncAllData() async {
     // Fetch all the SyncEntity from the database
-    bckProdSync.getProductImageToSync(imageDir);
+    // try {
+    //   bckProdSync.getProductImageToSync(imageDir);
+    // } catch (e) {
+    //   log.severe(e);
+    // }
+
     try {
       var rawSyncData = await db.syncEntitys.where().findAll();
       // Filter the records to sync.
