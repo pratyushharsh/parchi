@@ -35,12 +35,12 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       'https://mr4f4gk1n3.execute-api.ap-south-1.amazonaws.com/dev';
 
   List<String> toSyncEntity = [
-    transactionSync,
-    customerSync,
-    productSync,
+    // transactionSync,
+    // customerSync,
+    // productSync,
     taxGroupSync,
-    reportConfigSync,
-    sequenceSync
+    // reportConfigSync,
+    // sequenceSync
   ];
 
   late BackgroundTransactionSync bckTrnSync;
@@ -69,6 +69,7 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       Map<String, dynamic> input) async {
     var body = json.encode(input);
     log.info('Uploading Sync Data: $body');
+    print(body);
     final response = await http.post(
       Uri.parse('$_baseUrl/business/$storeId/sync'),
       headers: <String, String>{

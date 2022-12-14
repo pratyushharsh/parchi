@@ -48,39 +48,54 @@ const TaxRuleEntitySchema = Schema(
       name: r'groupId',
       type: IsarType.string,
     ),
-    r'locationId': PropertySchema(
+    r'lastChangedAt': PropertySchema(
       id: 7,
+      name: r'lastChangedAt',
+      type: IsarType.dateTime,
+    ),
+    r'lastSyncAt': PropertySchema(
+      id: 8,
+      name: r'lastSyncAt',
+      type: IsarType.dateTime,
+    ),
+    r'locationId': PropertySchema(
+      id: 9,
       name: r'locationId',
       type: IsarType.string,
     ),
     r'maximumTaxableAmount': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'maximumTaxableAmount',
       type: IsarType.double,
     ),
     r'minimumTaxableAmount': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'minimumTaxableAmount',
       type: IsarType.double,
     ),
     r'percent': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'percent',
       type: IsarType.double,
     ),
     r'ruleId': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'ruleId',
       type: IsarType.string,
     ),
     r'ruleName': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'ruleName',
       type: IsarType.string,
     ),
     r'ruleSequence': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'ruleSequence',
+      type: IsarType.long,
+    ),
+    r'syncState': PropertySchema(
+      id: 16,
+      name: r'syncState',
       type: IsarType.long,
     )
   },
@@ -154,13 +169,16 @@ void _taxRuleEntitySerialize(
   writer.writeDateTime(offsets[4], object.effectiveDateTimeStamp);
   writer.writeDateTime(offsets[5], object.expirationDateTimeStamp);
   writer.writeString(offsets[6], object.groupId);
-  writer.writeString(offsets[7], object.locationId);
-  writer.writeDouble(offsets[8], object.maximumTaxableAmount);
-  writer.writeDouble(offsets[9], object.minimumTaxableAmount);
-  writer.writeDouble(offsets[10], object.percent);
-  writer.writeString(offsets[11], object.ruleId);
-  writer.writeString(offsets[12], object.ruleName);
-  writer.writeLong(offsets[13], object.ruleSequence);
+  writer.writeDateTime(offsets[7], object.lastChangedAt);
+  writer.writeDateTime(offsets[8], object.lastSyncAt);
+  writer.writeString(offsets[9], object.locationId);
+  writer.writeDouble(offsets[10], object.maximumTaxableAmount);
+  writer.writeDouble(offsets[11], object.minimumTaxableAmount);
+  writer.writeDouble(offsets[12], object.percent);
+  writer.writeString(offsets[13], object.ruleId);
+  writer.writeString(offsets[14], object.ruleName);
+  writer.writeLong(offsets[15], object.ruleSequence);
+  writer.writeLong(offsets[16], object.syncState);
 }
 
 TaxRuleEntity _taxRuleEntityDeserialize(
@@ -177,14 +195,17 @@ TaxRuleEntity _taxRuleEntityDeserialize(
     effectiveDateTimeStamp: reader.readDateTimeOrNull(offsets[4]),
     expirationDateTimeStamp: reader.readDateTimeOrNull(offsets[5]),
     groupId: reader.readStringOrNull(offsets[6]),
-    locationId: reader.readStringOrNull(offsets[7]),
-    maximumTaxableAmount: reader.readDoubleOrNull(offsets[8]),
-    minimumTaxableAmount: reader.readDoubleOrNull(offsets[9]),
-    percent: reader.readDoubleOrNull(offsets[10]),
-    ruleId: reader.readStringOrNull(offsets[11]),
-    ruleName: reader.readStringOrNull(offsets[12]),
-    ruleSequence: reader.readLongOrNull(offsets[13]),
+    locationId: reader.readStringOrNull(offsets[9]),
+    maximumTaxableAmount: reader.readDoubleOrNull(offsets[10]),
+    minimumTaxableAmount: reader.readDoubleOrNull(offsets[11]),
+    percent: reader.readDoubleOrNull(offsets[12]),
+    ruleId: reader.readStringOrNull(offsets[13]),
+    ruleName: reader.readStringOrNull(offsets[14]),
+    ruleSequence: reader.readLongOrNull(offsets[15]),
   );
+  object.lastChangedAt = reader.readDateTimeOrNull(offsets[7]);
+  object.lastSyncAt = reader.readDateTimeOrNull(offsets[8]);
+  object.syncState = reader.readLongOrNull(offsets[16]);
   return object;
 }
 
@@ -210,18 +231,24 @@ P _taxRuleEntityDeserializeProp<P>(
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 8:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 9:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 10:
       return (reader.readDoubleOrNull(offset)) as P;
     case 11:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 12:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 13:
+      return (reader.readStringOrNull(offset)) as P;
+    case 14:
+      return (reader.readStringOrNull(offset)) as P;
+    case 15:
+      return (reader.readLongOrNull(offset)) as P;
+    case 16:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1079,6 +1106,154 @@ extension TaxRuleEntityQueryFilter
   }
 
   QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastChangedAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastChangedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastChangedAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastChangedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastChangedAtEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastChangedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastChangedAtGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastChangedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastChangedAtLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastChangedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastChangedAtBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastChangedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastSyncAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastSyncAt',
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastSyncAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastSyncAt',
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastSyncAtEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastSyncAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastSyncAtGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastSyncAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastSyncAtLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastSyncAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      lastSyncAtBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastSyncAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
       locationIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1858,6 +2033,80 @@ extension TaxRuleEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'ruleSequence',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      syncStateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'syncState',
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      syncStateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'syncState',
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      syncStateEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'syncState',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      syncStateGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'syncState',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      syncStateLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'syncState',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaxRuleEntity, TaxRuleEntity, QAfterFilterCondition>
+      syncStateBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'syncState',
         lower: lower,
         includeLower: includeLower,
         upper: upper,

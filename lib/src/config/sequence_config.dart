@@ -1,10 +1,10 @@
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import '../database/db_provider.dart';
 import '../entity/pos/entity.dart';
 
 mixin SequenceConfig {
-
   String generateSequence(SequenceEntity sequence) {
 
     String pattern = sequence.pattern;
@@ -17,6 +17,9 @@ mixin SequenceConfig {
         String format = key.substring(5, key.length - 1);
         DateFormat dateFormatter = DateFormat(format);
         return dateFormatter.format(DateTime.now());
+      } else if (key == "uuid") {
+        const uuid = Uuid();
+        return uuid.v1();
       }
       return key;
     });

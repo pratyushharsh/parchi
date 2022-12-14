@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
-import 'package:parchi/src/config/cache_manager.dart';
+import 'src/config/cache_manager.dart';
 
 import 'src/config/route_config.dart';
 import 'src/module/authentication/bloc/authentication_bloc.dart';
 import 'src/module/business/business_view.dart';
 import 'src/module/home/home_view.dart';
+import 'src/module/landing/landing_screen.dart';
 import 'src/module/load_item_bulk/bloc/load_item_bulk_bloc.dart';
 import 'src/module/login/bloc/login_bloc.dart';
 import 'src/module/login/login_view.dart';
@@ -20,8 +21,6 @@ import 'src/pos/calculator/tax_calculator.dart';
 import 'src/pos/helper/discount_helper.dart';
 import 'src/pos/helper/price_helper.dart';
 import 'src/pos/helper/tax_helper.dart';
-import 'src/repositories/sync_config_repository.dart';
-import 'src/repositories/sync_repository.dart';
 import 'src/util/helper/rest_api.dart';
 import 'src/widgets/my_loader.dart';
 import 'src/config/theme_settings.dart';
@@ -226,9 +225,14 @@ class _MyAppViewState extends State<MyAppView> {
                   );
                   break;
                 case AuthenticationStatus.unauthenticated:
-                case AuthenticationStatus.unknown:
                   _navigator.pushAndRemoveUntil<void>(
                     LoginView.route(),
+                        (route) => false,
+                  );
+                  break;
+                case AuthenticationStatus.unknown:
+                  _navigator.pushAndRemoveUntil<void>(
+                    LandingScreen.route(),
                     (route) => false,
                   );
                   break;

@@ -24,6 +24,10 @@ class TaxRuleEntity {
   String? authorityName;
   String? authorityType;
 
+  DateTime? lastChangedAt;
+  DateTime? lastSyncAt;
+  int? syncState;
+
   TaxRuleEntity(
       {this.groupId,
       this.ruleId,

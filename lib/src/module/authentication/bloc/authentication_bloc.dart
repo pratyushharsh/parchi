@@ -52,6 +52,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         // He owns multiple business need to choose which one to login. @TODO
         // Only one business directly login to system.
         var session = await user.getSession();
+        if (session == null) {
+          emit(AuthenticationState.unknown());
+          return;
+        }
+
         var validSession = session?.isValid() ?? false;
         if (!validSession) {
           emit(AuthenticationState.unauthenticated());
@@ -76,7 +81,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           sync.add(StartSyncEvent(int.parse(curStore)));
         }
       } else {
-        emit(AuthenticationState.unauthenticated());
+        emit(AuthenticationState.unknown());
       }
     } catch (e, st) {
       log.severe(e.toString(), e, st);

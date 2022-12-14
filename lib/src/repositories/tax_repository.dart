@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import '../database/db_provider.dart';
 import '../entity/pos/tax_group_entity.dart';
 import '../entity/pos/tax_rule_entity.dart';
+import '../module/sync/sync_config.dart';
 import '../util/helper/rest_api.dart';
 
 class TaxRepository with DatabaseProvider {
@@ -30,6 +31,8 @@ class TaxRepository with DatabaseProvider {
 
   Future<int> createNewTaxGroup(TaxGroupEntity taxGroup) async {
     taxGroup.lastChangedAt = DateTime.now();
+    // Set the syncState based on the existing syncState or the default value.
+    taxGroup.syncState = taxGroup.syncState ?? localCreated;
     return db.writeTxn(() => db.taxGroupEntitys.put(taxGroup));
   }
 
@@ -47,17 +50,16 @@ class TaxRepository with DatabaseProvider {
       return;
     }
 
+    taxRule.syncState = localCreated;
+    taxRule.lastChangedAt = DateTime.now();
+
     tg.taxRules = [...tg.taxRules, taxRule];
 
     await db.writeTxn(() async {
       tg.lastChangedAt = DateTime.now();
-      tg.syncState = 200;
+      tg.syncState = (tg.syncState == null || tg.syncState! < 100) ? localUpdate : serverUpdate;
       await db.taxGroupEntitys.put(tg);
     });
-
-    // await db.writeTxn((isar) => {
-    //
-    // });
   }
 
   Future<void> deleteTaxRule(TaxRuleEntity taxRule) async {
