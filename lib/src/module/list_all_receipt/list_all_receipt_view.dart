@@ -96,9 +96,17 @@ class ReceiptHeaderCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    receipt.customerName ?? 'Sale Receipt',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  Row(
+                    children: [
+                      Text(
+                        receipt.customerName ?? 'Sale Receipt',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      HeaderStatusChip(
+                        status: receipt.status,
+                        syncState: receipt.syncState ?? 0,
+                      )
+                    ],
                   ),
                   Text(
                     NumberFormat.simpleCurrency(
@@ -114,13 +122,9 @@ class ReceiptHeaderCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Receipt #${receipt.transId}',
+                    receipt.transId,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  HeaderStatusChip(
-                    status: receipt.status,
-                    syncState: receipt.syncState ?? 0,
-                  )
                 ],
               ),
               Row(
@@ -187,15 +191,11 @@ class HeaderStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: CloudSyncIcon(syncState: syncState),
-        ),
         Container(
           decoration: BoxDecoration(
               border: Border.all(color: getStatusColor()),
               borderRadius: BorderRadius.circular(5)),
-          margin: const EdgeInsets.symmetric(vertical: 3),
+          margin: const EdgeInsets.only(left: 5, bottom: 3, top: 3),
           padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
           child: Row(
             children: [
@@ -213,6 +213,10 @@ class HeaderStatusChip extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: CloudSyncIcon(syncState: syncState),
         ),
       ],
     );

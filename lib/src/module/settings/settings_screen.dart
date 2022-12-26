@@ -155,13 +155,13 @@ class SettingsScreen extends StatelessWidget {
                   subtitle: LocaleKeys.settingsHelpDescription.tr(),
                   icon: Icons.mail_rounded,
                   children: [
-                    // SettingsItem(
-                    //   text: "Load Sample Data",
-                    //   onTap: () {
-                    //     BlocProvider.of<BackgroundSyncBloc>(context)
-                    //         .add(LoadSampleData());
-                    //   },
-                    // ),
+                    SettingsItem(
+                      text: "Load Sample Data",
+                      onTap: () {
+                        BlocProvider.of<BackgroundSyncBloc>(context)
+                            .add(LoadSampleData());
+                      },
+                    ),
                     // SettingsItem(
                     //   text: "Load Full Data",
                     //   onTap: () {

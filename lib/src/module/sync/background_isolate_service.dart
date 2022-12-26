@@ -35,12 +35,12 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
       'https://mr4f4gk1n3.execute-api.ap-south-1.amazonaws.com/dev';
 
   List<String> toSyncEntity = [
-    // transactionSync,
-    // customerSync,
-    // productSync,
+    transactionSync,
+    customerSync,
+    productSync,
     taxGroupSync,
-    // reportConfigSync,
-    // sequenceSync
+    reportConfigSync,
+    sequenceSync
   ];
 
   late BackgroundTransactionSync bckTrnSync;
@@ -107,11 +107,11 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
 
   Future<void> syncAllData() async {
     // Fetch all the SyncEntity from the database
-    // try {
-    //   bckProdSync.getProductImageToSync(imageDir);
-    // } catch (e) {
-    //   log.severe(e);
-    // }
+    try {
+      bckProdSync.getProductImageToSync(imageDir);
+    } catch (e) {
+      log.severe(e);
+    }
 
     try {
       var rawSyncData = await db.syncEntitys.where().findAll();

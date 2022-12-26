@@ -1,5 +1,6 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,7 @@ Future<void> main() async {
   Bloc.observer = InvoicingBlocObserver();
 
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   initRootLogger();
   await EasyLocalization.ensureInitialized();
   await DatabaseProvider.ensureInitialized();
@@ -68,21 +70,5 @@ Future<void> main() async {
 }
 
 Future<void> _initAmplifyFlutter() async {
-  // try {
-  //   // AmplifyDataStore datastorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance,
-  //   //     syncInterval: 10,
-  //   //     errorHandler: (er) => {
-  //   //   log.severe(er)
-  //   // });
-  //   // await Amplify.addPlugin(datastorePlugin);
-  //   // await Amplify.addPlugin(AmplifyAPI());
-  //   await Amplify.configure(amplifyconfig);
-  //   log.info('Aws Configured');
-  // } on AmplifyAlreadyConfiguredException {
-  //   log.severe(
-  //       "Amplify was already configured. Looks like app restarted on android.");
-  // } catch (e) {
-  //   log.severe('Error configuring amplify');
-  //   log.severe(e);
-  // }
+
 }

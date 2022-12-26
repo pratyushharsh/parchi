@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "224399350726",
+    "project_id": "parchi-9e52b",
+    "storage_bucket": "parchi-9e52b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224399350726:android:19c523466667835c3d30c7",
+        "android_client_info": {
+          "package_name": "com.fomopips.parchi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224399350726-aaos7rgvo8vcqrkmugs66e3liiee3es4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fomopips.parchi",
+            "certificate_hash": "6978325e03bca20a7184df2913b4183fedb2a314"
+          }
+        },
+        {
+          "client_id": "224399350726-3j16lgt6ocfvh44o8vv4ipl82jc3rr64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6AJiSxLCoPjkzobRTfQHSsLsrRHW4j0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "224399350726-3j16lgt6ocfvh44o8vv4ipl82jc3rr64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
