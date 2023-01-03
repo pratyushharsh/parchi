@@ -212,6 +212,7 @@ class CreateNewReceiptBloc
       status: TransactionStatus.created,
       associateId: currentEmployee!.employeeId,
       associateName: '${currentEmployee.firstName} ${currentEmployee.lastName}',
+      locked: true
     );
 
     try {
@@ -272,6 +273,9 @@ class CreateNewReceiptBloc
         log.severe(e);
       }
     }
+
+    // Release lock
+    transaction.locked = false;
 
     try {
       return await transactionRepository.createNewSale(transaction);

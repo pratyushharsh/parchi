@@ -16,7 +16,8 @@ class BackgroundTaxGroupSync extends BackgroundEntitySync {
     return List.empty();
   }
 
-  Map<String, dynamic> merge(Map<String, dynamic> local, Map<String, dynamic> server) {
+  Map<String, dynamic> merge(
+      Map<String, dynamic> local, Map<String, dynamic> server) {
     // If there is no update simply return the data.
     if (local['lastChangedAt'] == server['lastChangedAt']) {
       return server;
@@ -34,11 +35,15 @@ class BackgroundTaxGroupSync extends BackgroundEntitySync {
 
   @override
   Future<void> importData(List data, int lastSyncAt) async {
-    for (var taxGroup in data) {
-      var tmp = Map<String, dynamic>.from(taxGroup);
-      await db.writeTxn(() async {
+    await db.writeTxn(() async {
+      for (var taxGroup in data) {
+        var tmp = Map<String, dynamic>.from(taxGroup);
+
         // Get the data for the particular tax group from the database.
-        var localTaxGroup = await db.taxGroupEntitys.where().groupIdEqualTo(tmp['groupId']).exportJson();
+        var localTaxGroup = await db.taxGroupEntitys
+            .where()
+            .groupIdEqualTo(tmp['groupId'])
+            .exportJson();
         // if the tax group is not present in the database, then add it.
         if (localTaxGroup.isEmpty) {
           tmp['syncState'] = serverSync;
@@ -54,12 +59,13 @@ class BackgroundTaxGroupSync extends BackgroundEntitySync {
           tmp['taxRules'] = modRules;
           await db.taxGroupEntitys.importJson([tmp]);
         } else {
-          await db.taxGroupEntitys.importJson([merge(localTaxGroup[0], taxGroup)]);
+          await db.taxGroupEntitys
+              .importJson([merge(localTaxGroup[0], taxGroup)]);
         }
-        await updateSyncEntityTimestamp(lastSyncAt);
-      });
-      // Based on the sync state to determine whether to update or create.
-    }
+        // Based on the sync state to determine whether to update or create.
+      }
+      await updateSyncEntityTimestamp(lastSyncAt);
+    });
   }
 
   @override

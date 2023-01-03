@@ -125,6 +125,8 @@ class ReceiptHeaderCard extends StatelessWidget {
                     receipt.transId,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
+                  if (receipt.locked)
+                  const Icon(Icons.lock_outline, size: 12, color: Colors.grey,)
                 ],
               ),
               Row(

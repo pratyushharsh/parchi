@@ -51,7 +51,7 @@ class SequenceRepository with DatabaseProvider {
           }
         }
         if (!exist) {
-          var tmp = SequenceEntity(name: type, nextSeq: 1, pattern: '{counter}', createAt: DateTime.now());
+          var tmp = SequenceEntity(name: type, nextSeq: 1, pattern: '{uuid}', createAt: DateTime.now());
           await db.sequenceEntitys.putByName(tmp);
           sequences.add(tmp);
         }

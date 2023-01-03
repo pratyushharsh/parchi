@@ -4,7 +4,6 @@ import 'background_sync.dart';
 import '../../entity/pos/entity.dart';
 
 class BackgroundTransactionSync extends BackgroundEntitySync {
-
   @override
   String get type => transactionSync;
 
@@ -12,15 +11,16 @@ class BackgroundTransactionSync extends BackgroundEntitySync {
   Future<List<Map<String, dynamic>>> exportData() async {
     return await db.transactionHeaderEntitys
         .where()
-        .syncStateIsNull()
-        .or()
+        .lockedEqualTo(false)
+        .filter()
         .syncStateLessThan(500)
+        .or()
+        .syncStateIsNull()
         .exportJson();
   }
 
   @override
-  Future<void> importData(
-      List<dynamic> data, int lastSyncAt) async {
+  Future<void> importData(List<dynamic> data, int lastSyncAt) async {
     List<Map<String, dynamic>> transactions = [];
     for (var transaction in data) {
       var tmp = Map<String, dynamic>.from(transaction);

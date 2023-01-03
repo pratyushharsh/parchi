@@ -9,7 +9,8 @@ part 'trn_header_entity.g.dart';
 class TransactionHeaderEntity {
   Id? id;
 
-  @Index(unique: true, replace: true, type: IndexType.value, caseSensitive: true)
+  @Index(
+      unique: true, replace: true, type: IndexType.value, caseSensitive: true)
   final String transId;
   final int storeId;
   final String storeLocale;
@@ -58,6 +59,9 @@ class TransactionHeaderEntity {
   final String? associateName;
   final String? notes;
 
+  @Index(type: IndexType.value)
+  bool locked;
+
   List<TransactionLineItemEntity> lineItems;
   List<TransactionPaymentLineItemEntity> paymentLineItems;
 
@@ -80,6 +84,7 @@ class TransactionHeaderEntity {
       required this.roundTotal,
       required this.discountTotal,
       required this.status,
+      this.locked = false,
       this.lineItems = const [],
       this.paymentLineItems = const [],
       this.customerId,

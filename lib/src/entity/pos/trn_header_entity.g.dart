@@ -90,76 +90,81 @@ const TransactionHeaderEntitySchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'TransactionLineItemEntity',
     ),
-    r'notes': PropertySchema(
+    r'locked': PropertySchema(
       id: 14,
+      name: r'locked',
+      type: IsarType.bool,
+    ),
+    r'notes': PropertySchema(
+      id: 15,
       name: r'notes',
       type: IsarType.string,
     ),
     r'paymentLineItems': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'paymentLineItems',
       type: IsarType.objectList,
       target: r'TransactionPaymentLineItemEntity',
     ),
     r'roundTotal': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'roundTotal',
       type: IsarType.double,
     ),
     r'shippingAddress': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'shippingAddress',
       type: IsarType.object,
       target: r'Address',
     ),
     r'status': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'status',
       type: IsarType.string,
       enumMap: _TransactionHeaderEntitystatusEnumValueMap,
     ),
     r'storeCurrency': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'storeCurrency',
       type: IsarType.string,
     ),
     r'storeId': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'storeId',
       type: IsarType.long,
     ),
     r'storeLocale': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'storeLocale',
       type: IsarType.string,
     ),
     r'subtotal': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'subtotal',
       type: IsarType.double,
     ),
     r'syncState': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'syncState',
       type: IsarType.long,
     ),
     r'taxTotal': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'taxTotal',
       type: IsarType.double,
     ),
     r'total': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'total',
       type: IsarType.double,
     ),
     r'transId': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'transId',
       type: IsarType.string,
     ),
     r'transactionType': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'transactionType',
       type: IsarType.string,
       enumMap: _TransactionHeaderEntitytransactionTypeEnumValueMap,
@@ -283,6 +288,19 @@ const TransactionHeaderEntitySchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'syncState',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'locked': IndexSchema(
+      id: 497338535767934804,
+      name: r'locked',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'locked',
           type: IndexType.value,
           caseSensitive: false,
         )
@@ -416,30 +434,31 @@ void _transactionHeaderEntitySerialize(
     TransactionLineItemEntitySchema.serialize,
     object.lineItems,
   );
-  writer.writeString(offsets[14], object.notes);
+  writer.writeBool(offsets[14], object.locked);
+  writer.writeString(offsets[15], object.notes);
   writer.writeObjectList<TransactionPaymentLineItemEntity>(
-    offsets[15],
+    offsets[16],
     allOffsets,
     TransactionPaymentLineItemEntitySchema.serialize,
     object.paymentLineItems,
   );
-  writer.writeDouble(offsets[16], object.roundTotal);
+  writer.writeDouble(offsets[17], object.roundTotal);
   writer.writeObject<Address>(
-    offsets[17],
+    offsets[18],
     allOffsets,
     AddressSchema.serialize,
     object.shippingAddress,
   );
-  writer.writeString(offsets[18], object.status.name);
-  writer.writeString(offsets[19], object.storeCurrency);
-  writer.writeLong(offsets[20], object.storeId);
-  writer.writeString(offsets[21], object.storeLocale);
-  writer.writeDouble(offsets[22], object.subtotal);
-  writer.writeLong(offsets[23], object.syncState);
-  writer.writeDouble(offsets[24], object.taxTotal);
-  writer.writeDouble(offsets[25], object.total);
-  writer.writeString(offsets[26], object.transId);
-  writer.writeString(offsets[27], object.transactionType.name);
+  writer.writeString(offsets[19], object.status.name);
+  writer.writeString(offsets[20], object.storeCurrency);
+  writer.writeLong(offsets[21], object.storeId);
+  writer.writeString(offsets[22], object.storeLocale);
+  writer.writeDouble(offsets[23], object.subtotal);
+  writer.writeLong(offsets[24], object.syncState);
+  writer.writeDouble(offsets[25], object.taxTotal);
+  writer.writeDouble(offsets[26], object.total);
+  writer.writeString(offsets[27], object.transId);
+  writer.writeString(offsets[28], object.transactionType.name);
 }
 
 TransactionHeaderEntity _transactionHeaderEntityDeserialize(
@@ -473,33 +492,34 @@ TransactionHeaderEntity _transactionHeaderEntityDeserialize(
           TransactionLineItemEntity(),
         ) ??
         const [],
-    notes: reader.readStringOrNull(offsets[14]),
+    locked: reader.readBoolOrNull(offsets[14]) ?? false,
+    notes: reader.readStringOrNull(offsets[15]),
     paymentLineItems: reader.readObjectList<TransactionPaymentLineItemEntity>(
-          offsets[15],
+          offsets[16],
           TransactionPaymentLineItemEntitySchema.deserialize,
           allOffsets,
           TransactionPaymentLineItemEntity(),
         ) ??
         const [],
-    roundTotal: reader.readDouble(offsets[16]),
+    roundTotal: reader.readDouble(offsets[17]),
     shippingAddress: reader.readObjectOrNull<Address>(
-      offsets[17],
+      offsets[18],
       AddressSchema.deserialize,
       allOffsets,
     ),
     status: _TransactionHeaderEntitystatusValueEnumMap[
-            reader.readStringOrNull(offsets[18])] ??
+            reader.readStringOrNull(offsets[19])] ??
         TransactionStatus.created,
-    storeCurrency: reader.readString(offsets[19]),
-    storeId: reader.readLong(offsets[20]),
-    storeLocale: reader.readString(offsets[21]),
-    subtotal: reader.readDouble(offsets[22]),
-    syncState: reader.readLongOrNull(offsets[23]),
-    taxTotal: reader.readDouble(offsets[24]),
-    total: reader.readDouble(offsets[25]),
-    transId: reader.readString(offsets[26]),
+    storeCurrency: reader.readString(offsets[20]),
+    storeId: reader.readLong(offsets[21]),
+    storeLocale: reader.readString(offsets[22]),
+    subtotal: reader.readDouble(offsets[23]),
+    syncState: reader.readLongOrNull(offsets[24]),
+    taxTotal: reader.readDouble(offsets[25]),
+    total: reader.readDouble(offsets[26]),
+    transId: reader.readString(offsets[27]),
     transactionType: _TransactionHeaderEntitytransactionTypeValueEnumMap[
-            reader.readStringOrNull(offsets[27])] ??
+            reader.readStringOrNull(offsets[28])] ??
         TransactionType.sale,
   );
   object.id = id;
@@ -552,8 +572,10 @@ P _transactionHeaderEntityDeserializeProp<P>(
           ) ??
           const []) as P;
     case 14:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 15:
+      return (reader.readStringOrNull(offset)) as P;
+    case 16:
       return (reader.readObjectList<TransactionPaymentLineItemEntity>(
             offset,
             TransactionPaymentLineItemEntitySchema.deserialize,
@@ -561,35 +583,35 @@ P _transactionHeaderEntityDeserializeProp<P>(
             TransactionPaymentLineItemEntity(),
           ) ??
           const []) as P;
-    case 16:
-      return (reader.readDouble(offset)) as P;
     case 17:
+      return (reader.readDouble(offset)) as P;
+    case 18:
       return (reader.readObjectOrNull<Address>(
         offset,
         AddressSchema.deserialize,
         allOffsets,
       )) as P;
-    case 18:
+    case 19:
       return (_TransactionHeaderEntitystatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TransactionStatus.created) as P;
-    case 19:
-      return (reader.readString(offset)) as P;
     case 20:
-      return (reader.readLong(offset)) as P;
-    case 21:
       return (reader.readString(offset)) as P;
+    case 21:
+      return (reader.readLong(offset)) as P;
     case 22:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 23:
-      return (reader.readLongOrNull(offset)) as P;
-    case 24:
       return (reader.readDouble(offset)) as P;
+    case 24:
+      return (reader.readLongOrNull(offset)) as P;
     case 25:
       return (reader.readDouble(offset)) as P;
     case 26:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 27:
+      return (reader.readString(offset)) as P;
+    case 28:
       return (_TransactionHeaderEntitytransactionTypeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TransactionType.sale) as P;
@@ -773,6 +795,15 @@ extension TransactionHeaderEntityQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'syncState'),
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterWhere>
+      anyLocked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'locked'),
       );
     });
   }
@@ -1843,6 +1874,51 @@ extension TransactionHeaderEntityQueryWhere on QueryBuilder<
         upper: [upperSyncState],
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> lockedEqualTo(bool locked) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'locked',
+        value: [locked],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> lockedNotEqualTo(bool locked) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'locked',
+              lower: [],
+              upper: [locked],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'locked',
+              lower: [locked],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'locked',
+              lower: [locked],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'locked',
+              lower: [],
+              upper: [locked],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
@@ -3217,6 +3293,16 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> lockedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'locked',
+        value: value,
+      ));
     });
   }
 
@@ -4775,6 +4861,20 @@ extension TransactionHeaderEntityQuerySortBy
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      sortByLocked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'locked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      sortByLockedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'locked', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
       sortByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -5128,6 +5228,20 @@ extension TransactionHeaderEntityQuerySortThenBy on QueryBuilder<
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      thenByLocked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'locked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
+      thenByLockedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'locked', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterSortBy>
       thenByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -5385,6 +5499,13 @@ extension TransactionHeaderEntityQueryWhereDistinct on QueryBuilder<
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QDistinct>
+      distinctByLocked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'locked');
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QDistinct>
       distinctByNotes({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notes', caseSensitive: caseSensitive);
@@ -5574,6 +5695,13 @@ extension TransactionHeaderEntityQueryProperty on QueryBuilder<
       QQueryOperations> lineItemsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lineItems');
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, bool, QQueryOperations>
+      lockedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'locked');
     });
   }
 
