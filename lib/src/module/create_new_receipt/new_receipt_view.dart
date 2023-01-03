@@ -710,6 +710,11 @@ class NewInvoiceButtonBar extends StatelessWidget {
               Expanded(
                 child: RejectButton(
                   onPressed: () {
+                    if (!state.inProgress) {
+                      Navigator.of(context).pop();
+                      return;
+                    }
+
                     // @TODO Void All the tender
                     if (state.transactionHeader == null) {
                       Navigator.of(context).pop();

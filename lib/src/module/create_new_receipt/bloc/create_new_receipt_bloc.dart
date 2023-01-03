@@ -21,7 +21,8 @@ part 'create_new_receipt_event.dart';
 part 'create_new_receipt_state.dart';
 
 class CreateNewReceiptBloc
-    extends Bloc<CreateNewReceiptEvent, CreateNewReceiptState> with SequenceConfig {
+    extends Bloc<CreateNewReceiptEvent, CreateNewReceiptState>
+    with SequenceConfig {
   final log = Logger('CreateNewReceiptBloc');
   final AuthenticationBloc authenticationBloc;
   final SequenceRepository sequenceRepository;
@@ -74,14 +75,15 @@ class CreateNewReceiptBloc
   void _onInitiateTransaction(OnInitiateNewTransaction event,
       Emitter<CreateNewReceiptState> emit) async {
     if (event.transSeq != null) {
-      final transaction = await transactionRepository
-          .getTransaction(event.transSeq!);
+      final transaction =
+          await transactionRepository.getTransaction(event.transSeq!);
 
       if (transaction != null) {
         Map<String, ProductEntity> pm = Map.from(state.productMap);
 
         for (final lineItem in transaction.lineItems) {
-          final product = await productRepository.getProductById(lineItem.itemId!);
+          final product =
+              await productRepository.getProductById(lineItem.itemId!);
           if (product != null) {
             pm[product.productId!] = product;
           }
@@ -90,9 +92,9 @@ class CreateNewReceiptBloc
         // Fetch Customer if present
         ContactEntity? customer;
         if (transaction.customerId != null) {
-          customer = await customerRepository.getCustomerById(transaction.customerId!);
+          customer =
+              await customerRepository.getCustomerById(transaction.customerId!);
         }
-
 
         emit(state.copyWith(
           transSeq: transaction.transId,
@@ -176,14 +178,16 @@ class CreateNewReceiptBloc
       pm.putIfAbsent(event.product.productId!, () => event.product);
       List<TransactionLineItemEntity> newList = [...state.lineItem, newLine];
       emit(state.copyWith(
-          lineItem: newList, step: SaleStep.item, productMap: pm));
+          lineItem: newList,
+          step: SaleStep.item,
+          productMap: pm,
+          inProgress: true));
       add(_VerifyOrderAndEmitState());
     } catch (e, st) {
       log.severe(e, e, st);
       errorNotificationBloc.add(ErrorEvent(e.toString()));
     }
   }
-
 
   // Create a transaction header if this is a new transaction.
   Future<TransactionHeaderEntity> _createNewTransactionHeader() async {
@@ -197,23 +201,23 @@ class CreateNewReceiptBloc
 
     var currentEmployee = authenticationBloc.state.employee;
     TransactionHeaderEntity header = TransactionHeaderEntity(
-      transId: nextSeq,
-      businessDate: DateTime.now(),
-      beginDatetime: DateTime.now(),
-      storeCurrency: store.currencyId ?? 'INR',
-      storeLocale: store.locale ?? 'en_IN',
-      storeId: store.rtlLocId,
-      transactionType: TransactionType.sale,
-      total: 0.0,
-      taxTotal: 0.0,
-      subtotal: 0.0,
-      roundTotal: 0.00,
-      discountTotal: 0.00,
-      status: TransactionStatus.created,
-      associateId: currentEmployee!.employeeId,
-      associateName: '${currentEmployee.firstName} ${currentEmployee.lastName}',
-      locked: true
-    );
+        transId: nextSeq,
+        businessDate: DateTime.now(),
+        beginDatetime: DateTime.now(),
+        storeCurrency: store.currencyId ?? 'INR',
+        storeLocale: store.locale ?? 'en_IN',
+        storeId: store.rtlLocId,
+        transactionType: TransactionType.sale,
+        total: 0.0,
+        taxTotal: 0.0,
+        subtotal: 0.0,
+        roundTotal: 0.00,
+        discountTotal: 0.00,
+        status: TransactionStatus.created,
+        associateId: currentEmployee!.employeeId,
+        associateName:
+            '${currentEmployee.firstName} ${currentEmployee.lastName}',
+        locked: true);
 
     try {
       return await transactionRepository.createNewSale(header);
@@ -247,19 +251,19 @@ class CreateNewReceiptBloc
     // Set Customer and its address
     if (state.customer != null) {
       transaction.customerId = state.customer?.contactId;
-      transaction.customerName = '${state.customer?.firstName} ${state.customer?.lastName}';
+      transaction.customerName =
+          '${state.customer?.firstName} ${state.customer?.lastName}';
     }
 
     transaction.shippingAddress = state.customerAddress?.shippingAddress;
     transaction.billingAddress = state.customerAddress?.billingAddress;
-
 
     List<TransactionLineItemEntity> lineItems = state.lineItem;
     transaction.lineItems = lineItems;
     transaction.paymentLineItems = state.tenderLine;
 
     double discountAmount =
-    discountHelper.calculateTransactionDiscountTotal(transaction);
+        discountHelper.calculateTransactionDiscountTotal(transaction);
     double taxAmount = taxHelper.calculateTransactionTaxAmount(transaction);
 
     transaction.discountTotal = discountAmount;
@@ -285,7 +289,6 @@ class CreateNewReceiptBloc
     }
   }
 
-
   void _onCreateNewTransaction(
       OnCreateNewTransaction event, Emitter<CreateNewReceiptState> emit) async {
     try {
@@ -293,7 +296,9 @@ class CreateNewReceiptBloc
       emit(state.copyWith(
           transactionHeader: txn,
           status: CreateNewReceiptStatus.saleComplete,
-          step: SaleStep.printAndEmail));
+          step: SaleStep.printAndEmail,
+        inProgress: false
+      ));
     } catch (e, st) {
       log.severe(e, e, st);
       emit(state.copyWith(status: CreateNewReceiptStatus.error));
@@ -307,7 +312,9 @@ class CreateNewReceiptBloc
       emit(state.copyWith(
           transactionHeader: txn,
           status: CreateNewReceiptStatus.saleComplete,
-          step: SaleStep.confirmed));
+          step: SaleStep.confirmed,
+        inProgress: false,
+      ));
     } catch (e) {
       log.severe(e);
       emit(state.copyWith(status: CreateNewReceiptStatus.error));
@@ -316,21 +323,19 @@ class CreateNewReceiptBloc
 
   void _onCancelTransaction(
       OnCancelTransaction event, Emitter<CreateNewReceiptState> emit) async {
-
     // Check if any tender not voided is present.
     if (state.tenderLine.any((element) => !element.isVoid)) {
-      errorNotificationBloc.add(ErrorEvent("Please Void all Tender to cancel the transaction."));
+      errorNotificationBloc
+          .add(ErrorEvent("Please Void all Tender to cancel the transaction."));
       return;
     }
 
-
     try {
-
       var txn = await _manageOrder(TransactionStatus.cancelled);
       emit(state.copyWith(
           transactionHeader: txn,
           status: CreateNewReceiptStatus.saleComplete,
-          step: SaleStep.confirmed));
+          step: SaleStep.confirmed, inProgress: false,));
     } catch (e) {
       log.severe(e);
       emit(state.copyWith(status: CreateNewReceiptStatus.error));
@@ -344,7 +349,7 @@ class CreateNewReceiptBloc
       emit(state.copyWith(
           transactionHeader: txn,
           status: CreateNewReceiptStatus.saleComplete,
-          step: SaleStep.confirmed));
+          step: SaleStep.confirmed, inProgress: false,));
     } catch (e) {
       log.severe(e);
       emit(state.copyWith(status: CreateNewReceiptStatus.error));
@@ -354,16 +359,19 @@ class CreateNewReceiptBloc
   void _onCustomerSelectEvent(
       OnCustomerSelect event, Emitter<CreateNewReceiptState> emit) async {
     emit(state.copyWith(
-      customer: event.contact,
-      customerAddress: CustomerAddress(
-          billingAddress: event.contact.billingAddress,
-          shippingAddress: event.contact.shippingAddress),
-    ));
+        customer: event.contact,
+        customerAddress: CustomerAddress(
+            billingAddress: event.contact.billingAddress,
+            shippingAddress: event.contact.shippingAddress),
+        inProgress: true));
   }
 
   void _onCustomerRemoveEvent(
       OnCustomerRemove event, Emitter<CreateNewReceiptState> emit) async {
-    emit(state.copyWith(customer: null, customerAction: CustomerAction.remove));
+    emit(state.copyWith(
+        customer: null,
+        customerAction: CustomerAction.remove,
+        inProgress: true));
   }
 
   void _onQuantityUpdate(
@@ -398,7 +406,9 @@ class CreateNewReceiptBloc
       }
     }
     emit(state.copyWith(
-        lineItem: newList, status: CreateNewReceiptStatus.inProgress));
+        lineItem: newList,
+        status: CreateNewReceiptStatus.inProgress,
+        inProgress: true));
   }
 
   void _onPriceUpdate(
@@ -432,7 +442,9 @@ class CreateNewReceiptBloc
       }
     }
     emit(state.copyWith(
-        lineItem: newList, status: CreateNewReceiptStatus.inProgress));
+        lineItem: newList,
+        status: CreateNewReceiptStatus.inProgress,
+        inProgress: true));
   }
 
   void _onLineItemDiscountAmount(OnApplyLineItemDiscountAmount event,
@@ -476,7 +488,9 @@ class CreateNewReceiptBloc
       }
     }
     emit(state.copyWith(
-        lineItem: newList, status: CreateNewReceiptStatus.inProgress));
+        lineItem: newList,
+        status: CreateNewReceiptStatus.inProgress,
+        inProgress: true));
   }
 
   void _onLineItemDiscountPercent(OnApplyLineItemDiscountPercent event,
@@ -520,7 +534,9 @@ class CreateNewReceiptBloc
       }
     }
     emit(state.copyWith(
-        lineItem: newList, status: CreateNewReceiptStatus.inProgress));
+        lineItem: newList,
+        status: CreateNewReceiptStatus.inProgress,
+        inProgress: true));
   }
 
   void _onChangeLineItemTaxAmount(OnChangeLineItemTaxAmount event,
@@ -538,7 +554,7 @@ class CreateNewReceiptBloc
         newList.add(line);
       }
     }
-    emit(state.copyWith(lineItem: newList));
+    emit(state.copyWith(lineItem: newList, inProgress: true));
   }
 
   void _onChangeLineItemTaxPercent(OnChangeLineItemTaxPercent event,
@@ -556,7 +572,7 @@ class CreateNewReceiptBloc
         newList.add(line);
       }
     }
-    emit(state.copyWith(lineItem: newList));
+    emit(state.copyWith(lineItem: newList, inProgress: true));
   }
 
   void _onAddNewTenderLineItem(
@@ -581,7 +597,7 @@ class CreateNewReceiptBloc
       newLine
     ];
 
-    emit(state.copyWith(tenderLine: newList));
+    emit(state.copyWith(tenderLine: newList, inProgress: true));
     add(_VerifyOrderAndEmitState());
   }
 
@@ -591,7 +607,7 @@ class CreateNewReceiptBloc
     if (state.amountDue <= 0 && event.step == SaleStep.complete) {
       add(OnCreateNewTransaction());
     } else {
-      emit(state.copyWith(step: event.step));
+      emit(state.copyWith(step: event.step, inProgress: true));
     }
   }
 
@@ -604,7 +620,7 @@ class CreateNewReceiptBloc
     if (state.amountDue > 0 && state.step == SaleStep.complete) {
       emit(state.copyWith(step: SaleStep.payment));
     } else if (state.amountDue <= 0 && state.step != SaleStep.complete) {
-      emit(state.copyWith(step: SaleStep.complete));
+      emit(state.copyWith(step: SaleStep.complete, inProgress: true));
     }
   }
 
@@ -692,8 +708,11 @@ class CreateNewReceiptBloc
       }
     }
 
-    emit(
-        state.copyWith(lineItem: newList, step: SaleStep.item, productMap: pm));
+    emit(state.copyWith(
+        lineItem: newList,
+        step: SaleStep.item,
+        productMap: pm,
+        inProgress: true));
     // add(_VerifyOrderAndEmitState());
   }
 
@@ -701,17 +720,22 @@ class CreateNewReceiptBloc
       Emitter<CreateNewReceiptState> emit) async {
     var custAddress = state.customerAddress ?? const CustomerAddress();
     emit(state.copyWith(
-        customerAddress: custAddress.copyWith(billingAddress: event.address)));
+        customerAddress: custAddress.copyWith(
+          billingAddress: event.address,
+        ),
+        inProgress: true));
   }
 
   void _onChangeCustomerShippingAddress(OnChangeCustomerShippingAddress event,
       Emitter<CreateNewReceiptState> emit) async {
     var custAddress = state.customerAddress ?? const CustomerAddress();
     emit(state.copyWith(
-        customerAddress: custAddress.copyWith(shippingAddress: event.address)));
+        customerAddress: custAddress.copyWith(shippingAddress: event.address),
+        inProgress: true));
   }
 
-  void _onLineItemVoid(OnLineItemVoid event, Emitter<CreateNewReceiptState> emit) async {
+  void _onLineItemVoid(
+      OnLineItemVoid event, Emitter<CreateNewReceiptState> emit) async {
     emit(state.copyWith(status: CreateNewReceiptStatus.loading));
     List<TransactionLineItemEntity> newList = [];
     for (var line in state.lineItem) {
@@ -720,10 +744,14 @@ class CreateNewReceiptBloc
       }
       newList.add(line);
     }
-    emit(state.copyWith(lineItem: newList, status: CreateNewReceiptStatus.success));
+    emit(state.copyWith(
+        lineItem: newList,
+        status: CreateNewReceiptStatus.success,
+        inProgress: true));
   }
 
-  void _onTenderLineVoid(OnTenderLineVoid event, Emitter<CreateNewReceiptState> emit) async {
+  void _onTenderLineVoid(
+      OnTenderLineVoid event, Emitter<CreateNewReceiptState> emit) async {
     emit(state.copyWith(status: CreateNewReceiptStatus.loading));
     List<TransactionPaymentLineItemEntity> newList = [];
     for (var line in state.tenderLine) {
@@ -732,6 +760,9 @@ class CreateNewReceiptBloc
       }
       newList.add(line);
     }
-    emit(state.copyWith(tenderLine: newList, status: CreateNewReceiptStatus.success));
+    emit(state.copyWith(
+        tenderLine: newList,
+        status: CreateNewReceiptStatus.success,
+        inProgress: true));
   }
 }

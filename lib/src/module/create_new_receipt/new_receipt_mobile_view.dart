@@ -64,6 +64,10 @@ class NewReceiptMobileView extends StatelessWidget {
                           "Receipt #${state.transSeq}",
                       icon: Icons.arrow_back,
                       onTap: () {
+                        if (!state.inProgress) {
+                          Navigator.of(context).pop();
+                          return;
+                        }
                         if (state.transactionHeader == null) {
                           Navigator.of(context).pop();
                           return;
