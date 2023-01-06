@@ -20,16 +20,19 @@ class BackgroundTaxGroupSync extends BackgroundEntitySync {
       Map<String, dynamic> local, Map<String, dynamic> server) {
     // If there is no update simply return the data.
     if (local['lastChangedAt'] == server['lastChangedAt']) {
+      server['syncState'] = serverSync;
       return server;
     }
 
     // If the local data is newer than the server data, return the local data.
     if (local['lastChangedAt'] != null && server['lastChangedAt'] != null) {
       if (local['lastChangedAt'].compareTo(server['lastChangedAt']) > 0) {
+        local['syncState'] = serverSync;
         return local;
       }
     }
 
+    server['syncState'] = serverSync;
     return server;
   }
 

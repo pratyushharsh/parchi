@@ -20,7 +20,7 @@ class SequenceRepository with DatabaseProvider {
         seq.lastSeqCreatedAt = DateTime.now();
         await db.sequenceEntitys.put(seq);
       } else {
-        await db.sequenceEntitys.put(SequenceEntity(name: type, nextSeq: 1, pattern: '{counter}', createAt: DateTime.now())..lastSeqCreatedAt = DateTime.now());
+        await db.sequenceEntitys.put(SequenceEntity(name: type, nextSeq: 1, pattern: '{uuid}', createAt: DateTime.now())..lastSeqCreatedAt = DateTime.now());
       }
     });
     // Use the pattern to generate the sequence

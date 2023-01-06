@@ -312,6 +312,8 @@ class _TenderDisplayDesktopState extends State<TenderDisplayDesktop> {
   void onSelectNewTender(String val) {
     setState(() {
       selectedTender = val;
+      tenderController.text =
+          getCurrencyFormatter(context).format(widget.suggestedAmount);
     });
     FocusScope.of(context).requestFocus(tenderFocusNode);
   }
@@ -340,7 +342,7 @@ class _TenderDisplayDesktopState extends State<TenderDisplayDesktop> {
             top: 10,
             left: 10,
             child: Text(
-              "Tender Amount ${widget.suggestedAmount != null ? "| ${getCurrencyFormatter(context).format(widget.suggestedAmount)}" : ""}",
+              "Tender Amount ${widget.suggestedAmount != null ? "\n ${getCurrencyFormatter(context).format(widget.suggestedAmount)}" : ""}",
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,

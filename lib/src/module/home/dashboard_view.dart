@@ -29,15 +29,19 @@ class DashboardView extends StatelessWidget {
                 const Text("Dashboard", style: TextStyle(color: Colors.white)),
                 BlocBuilder<BackgroundSyncBloc, BackgroundSyncState>(
                   builder: (context, state) {
-                    return const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: FittedBox(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 4,
-                        ),
-                      ),
+                    return Text(
+                      state.status == BackgroundSyncStatus.inProgress ? "Syncing..." : "Synced",
+                      style: const TextStyle(color: Colors.white),
                     );
+                    // return const Padding(
+                    //   padding: EdgeInsets.all(8.0),
+                    //   child: FittedBox(
+                    //     child: CircularProgressIndicator(
+                    //       color: Colors.white,
+                    //       strokeWidth: 4,
+                    //     ),
+                    //   ),
+                    // );
                   },
                 ),
               ],
