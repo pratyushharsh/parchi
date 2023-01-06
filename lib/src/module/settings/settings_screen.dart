@@ -85,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
                           Navigator.of(context)
                               .pushNamed(RouteConfig.employeeScreen);
                         }),
-                    SettingsItem(text: "Feature Settings", onTap: () {}),
+                    // SettingsItem(text: "Feature Settings", onTap: () {}),
                     SettingsItem(
                         text: "Change Locale",
                         onTap: () {
@@ -137,12 +137,12 @@ class SettingsScreen extends StatelessWidget {
                   subtitle: LocaleKeys.settingsSettingsDescription.tr(),
                   icon: Icons.settings,
                   children: [
-                    SettingsItem(
-                        text: "Sync Data",
-                        onTap: () async {
-                          BlocProvider.of<BackgroundSyncBloc>(context)
-                              .add(SyncAllConfigDataEvent(forceSync: true));
-                        }),
+                    // SettingsItem(
+                    //     text: "Sync Data",
+                    //     onTap: () async {
+                    //       BlocProvider.of<BackgroundSyncBloc>(context)
+                    //           .add(SyncAllConfigDataEvent(forceSync: true));
+                    //     }),
                   ],
                 ),
               ),
