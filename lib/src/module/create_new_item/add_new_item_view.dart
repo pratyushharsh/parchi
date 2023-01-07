@@ -1,9 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:validators/sanitizers.dart';
 
-import '../../config/defaults.dart';
 import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
 import '../../entity/config/code_value_entity.dart';
@@ -118,7 +117,7 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                     child: AppBarLeading(
                       heading: state.existingProduct != null
                           ? state.existingProduct!.productId
-                          : "New Product",
+                          : "_newProduct",
                       icon: Icons.arrow_back,
                       onTap: () {
                         Navigator.of(context).pop();
@@ -143,9 +142,9 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                             borderRadius: BorderRadius.circular(12.0)),
                       ),
                       child: const Text(
-                        "Bulk Import",
+                        "_bulkImport",
                         style: TextStyle(color: AppColor.primary),
-                      ),
+                      ).tr(),
                     ),
                   ),
                   Positioned(
@@ -157,7 +156,7 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                         children: [
                           Expanded(
                             child:
-                                RejectButton(label: "Cancel", onPressed: () {}),
+                                RejectButton(label: "_cancel", onPressed: () {}),
                           ),
                           const SizedBox(
                             width: 12,
@@ -165,8 +164,8 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                           Expanded(
                               child: AcceptButton(
                             label: state.existingProduct != null
-                                ? "Update"
-                                : "Save",
+                                ? "_update"
+                                : "_save",
                             onPressed: () {
                               BlocProvider.of<AddNewItemBloc>(context)
                                   .add(SaveProductEvent());
@@ -266,7 +265,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                   imageUrl: state.imageUrl,
                 ),
                 CustomTextField(
-                  label: "Product Name",
+                  label: "_productName",
                   validator: NewProductFieldValidator.validateProductName,
                   controller: _productNameController,
                   onValueChange: (value) {
@@ -277,7 +276,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                   maxLines: 3,
                 ),
                 CustomTextField(
-                  label: "Product Description",
+                  label: "_productDescription",
                   controller: _productDescriptionController,
                   onValueChange: (value) {
                     BlocProvider.of<AddNewItemBloc>(context)
@@ -291,7 +290,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                   children: [
                     Expanded(
                       child: CustomTextField(
-                        label: "Sale Price",
+                        label: "_salePrice",
                         textInputType: TextInputType.number,
                         validator: NewProductFieldValidator.validatePrice,
                         controller: _salePriceController,
@@ -308,7 +307,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                     ),
                     Expanded(
                       child: CodeValueDropDown(
-                        label: "UOM",
+                        label: "_uom",
                         onChanged: _onSelectedUomChanged,
                         category: "UOM",
                         value: state.uom,
@@ -325,7 +324,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                   children: [
                     Expanded(
                       child: CustomTextField(
-                        label: "List Price",
+                        label: "_listPrice",
                         textInputType: TextInputType.number,
                         validator: NewProductFieldValidator.validatePrice,
                         controller: _listPriceController,
@@ -342,7 +341,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                     ),
                     Expanded(
                       child: CustomTextField(
-                        label: "Brand",
+                        label: "_brand",
                         controller: _brandController,
                         onValueChange: (value) {
                           BlocProvider.of<AddNewItemBloc>(context)
@@ -362,12 +361,12 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                       // ),
                       ),
                   child: const Text(
-                    "Tax Detail",
+                    "_taxDetail",
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
                         color: AppColor.primary),
-                  ),
+                  ).tr(),
                 ),
                 const SizedBox(
                   height: 15,
@@ -385,9 +384,9 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                       width: 5,
                     ),
                     const Text(
-                      "Price Include Tax",
+                      "_priceIncludeTax",
                       style: TextStyle(color: Color(0xFF6B7281)),
-                    )
+                    ).tr()
                   ],
                 ),
                 const SizedBox(
@@ -398,7 +397,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                   children: [
                     Expanded(
                       child: CustomTextField(
-                        label: "HSN",
+                        label: "_hsn",
                         controller: _hsnController,
                       ),
                     ),
@@ -408,7 +407,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                     Expanded(
                       child: CustomDropDown<TaxGroupEntity>(
                         value: state.taxGroupId,
-                        label: 'Tax Group',
+                        label: '_taxGroup',
                         itemAsString: (TaxGroupEntity? value) =>
                             value?.name ?? "",
                         asyncItems: (filter) async {
@@ -426,7 +425,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                   height: 20,
                 ),
                 CustomTextField(
-                  label: "Barcode / SKU",
+                  label: "_barcodeSku",
                   controller: _skuController,
                   validator: NewProductFieldValidator.validateSkuData,
                 ),

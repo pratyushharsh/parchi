@@ -46,21 +46,21 @@ class CreateNewTaxGroupForm extends StatelessWidget {
                 child: Column(
                   children: [
                     CustomTextField(
-                      label: 'Tax Group Id',
+                      label: '_taxGroupId',
                       initialValue: state.groupId,
                       onValueChange: (value) =>
                           BlocProvider.of<NewTaxGroupBloc>(context)
                               .add(OnGroupIdChange(value)),
                     ),
                     CustomTextField(
-                      label: 'Tax Group Name',
+                      label: '_taxGroupName',
                       initialValue: state.name,
                       onValueChange: (value) =>
                           BlocProvider.of<NewTaxGroupBloc>(context)
                               .add(OnGroupNameChange(value)),
                     ),
                     CustomTextField(
-                      label: 'Tax Group Description',
+                      label: '_taxGroupDescription',
                       initialValue: state.description,
                       onValueChange: (value) =>
                           BlocProvider.of<NewTaxGroupBloc>(context)
@@ -73,7 +73,7 @@ class CreateNewTaxGroupForm extends StatelessWidget {
             Row(children: [
               Expanded(
                 child: RejectButton(
-                  label: "Cancel",
+                  label: "_cancel",
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -82,7 +82,7 @@ class CreateNewTaxGroupForm extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: AcceptButton(
-                  label: "Create New Group",
+                  label: "_createNewGroup",
                   onPressed: state.isValid
                       ? () {
                           // Generate Tax Group

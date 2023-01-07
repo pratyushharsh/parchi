@@ -48,7 +48,7 @@ class EmployeeDetailView extends StatelessWidget {
                     builder: (context, state) {
                       return AppBarLeading(
                         heading:
-                            state.newEmployee ? "New Employee" : "Employee",
+                            state.newEmployee ? "_newEmployee" : "_employee",
                         icon: Icons.arrow_back,
                         onTap: () {
                           Navigator.of(context).pop();
@@ -126,16 +126,16 @@ class EmployeeDetailView extends StatelessWidget {
                                 .read<CreateEditEmployeeBloc>()
                                 .add(OnCreateNewEmployee());
                           },
-                          child: const Text(
-                            "Create",
-                            style: TextStyle(color: AppColor.primary),
-                          ),
                           style: ElevatedButton.styleFrom(
                             elevation: 0, backgroundColor: AppColor.color8,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 14, horizontal: 10),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0)),
+                          ),
+                          child: const Text(
+                            "_create",
+                            style: TextStyle(color: AppColor.primary),
                           ),
                         ),
                       );
@@ -152,16 +152,16 @@ class EmployeeDetailView extends StatelessWidget {
                                 .read<CreateEditEmployeeBloc>()
                                 .add(OnSaveEmployee());
                           },
-                          child: const Text(
-                            "Save",
-                            style: TextStyle(color: AppColor.primary),
-                          ),
                           style: ElevatedButton.styleFrom(
                             elevation: 0, backgroundColor: AppColor.color8,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 14, horizontal: 10),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0)),
+                          ),
+                          child: const Text(
+                            "_save",
+                            style: TextStyle(color: AppColor.primary),
                           ),
                         ),
                       );
@@ -207,7 +207,7 @@ class EmployeeForm extends StatelessWidget {
             ),
             CustomTextField(
               initialValue: state.firstName,
-              label: 'First Name',
+              label: '_firstName',
               validator: NewPartyFieldValidator.validatePartyName,
               onValueChange: (value) {
                 BlocProvider.of<CreateEditEmployeeBloc>(context)
@@ -216,7 +216,7 @@ class EmployeeForm extends StatelessWidget {
             ),
             CustomTextField(
               initialValue: state.middleName,
-              label: 'Middle Name',
+              label: '_middleName',
               onValueChange: (value) {
                 BlocProvider.of<CreateEditEmployeeBloc>(context)
                     .add(OnEmployeeMiddleNameChanged(value));
@@ -225,7 +225,7 @@ class EmployeeForm extends StatelessWidget {
             CustomTextField(
               initialValue: state.lastName,
               validator: NewPartyFieldValidator.validatePartyName,
-              label: 'Last Name',
+              label: '_lastName',
               onValueChange: (value) {
                 BlocProvider.of<CreateEditEmployeeBloc>(context)
                     .add(OnEmployeeLastNameChanged(value));
@@ -233,7 +233,7 @@ class EmployeeForm extends StatelessWidget {
             ),
             CustomTextField(
               initialValue: state.phone,
-              label: 'Phone',
+              label: '_phone',
               validator: NewEmployeeFieldValidator.validatePhone,
               textInputType: TextInputType.phone,
               enabled: state.newEmployee,
@@ -245,7 +245,7 @@ class EmployeeForm extends StatelessWidget {
             CustomTextField(
               initialValue: state.email,
               validator: NewPartyFieldValidator.validatePartyEmail,
-              label: 'Email',
+              label: '_email',
               onValueChange: (value) {
                 BlocProvider.of<CreateEditEmployeeBloc>(context)
                     .add(OnEmployeeEmailChanged(value));
@@ -253,7 +253,7 @@ class EmployeeForm extends StatelessWidget {
             ),
             CustomTextField(
               initialValue: state.locale,
-              label: 'Language',
+              label: '_language',
               onValueChange: (value) {
                 BlocProvider.of<CreateEditEmployeeBloc>(context)
                     .add(OnEmployeeLocaleChanged(value));

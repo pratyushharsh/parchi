@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,8 +34,8 @@ class ItemViewWidgets extends StatelessWidget {
           height: 30,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           child: Row(
-            children: const [
-              Text("Products", style: TextStyle(color: Colors.white)),
+            children: [
+              const Text("_productTitle", style: TextStyle(color: Colors.white)).tr(),
             ],
           ),
         ),
@@ -46,7 +47,7 @@ class ItemViewWidgets extends StatelessWidget {
               BlocProvider.of<ListAllItemBloc>(context)
                   .add(SearchProductByNameFilter(value));
             },
-            hintText: "Search by Product Id, Name",
+            hintText: "_searchProductHint".tr(),
             filterWidget: const ItemFilterBar(),
           ),
         ),

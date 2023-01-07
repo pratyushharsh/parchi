@@ -169,7 +169,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
           listPrice: state.listPrice ?? state.existingProduct!.listPrice,
           salePrice: state.salePrice ?? state.existingProduct!.salePrice,
           uom: state.uom?.code ?? state.existingProduct!.uom,
-          enable: state.enable ?? state.existingProduct!.enable,
+          enable: state.enable,
           brand: state.brand ?? state.existingProduct!.brand,
           skuCode: state.skuCode ?? state.existingProduct!.skuCode,
           // barcode: state.barcode ?? state.existingProduct!.barcode,

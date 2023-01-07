@@ -61,6 +61,7 @@ Future<void> main() async {
         Locale('hi', 'IN'),
       ],
       fallbackLocale: const Locale('en', 'US'),
+      // useFallbackTranslations: true,
       child: MyApp(
         userPool: userPool,
         restClient: restClient,

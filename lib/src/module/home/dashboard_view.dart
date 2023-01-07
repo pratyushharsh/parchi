@@ -53,7 +53,7 @@ class DashboardView extends StatelessWidget {
               builder: (context, state) {
                 return SearchBar(
                     label: "dashboard",
-                    hintText: "Search by Receipt Id, Phone Number",
+                    hintText: "_searchReceiptHint",
                     onChanged: (val) {
                       BlocProvider.of<ListAllReceiptBloc>(context)
                           .add(SearchTransactionByText(val));

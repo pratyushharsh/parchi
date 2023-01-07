@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +40,7 @@ class LoadItemInBulk extends StatelessWidget {
                   top: 20,
                   left: 16,
                   child: AppBarLeading(
-                    heading: "Bulk Import",
+                    heading: "_bulkImport",
                     icon: Icons.arrow_back,
                     onTap: () {
                       Navigator.of(context).pop();
@@ -117,23 +118,23 @@ class UploadFileButton extends StatelessWidget {
         height: 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
+          children: [
+            const Icon(
               Icons.upload,
               size: 40,
               color: AppColor.primary,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
-              "Upload Your Files",
+            const Text(
+              "_uploadFile",
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: AppColor.primary,
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
-            )
+            ).tr()
           ],
         ),
       ),
@@ -193,36 +194,36 @@ class DownloadSampleFileButton extends StatelessWidget {
       onPressed: () {
         generateSampleCsv();
       },
-      child: SizedBox(
-        width: 150,
-        height: 150,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.file_copy_outlined,
-              size: 40,
-              color: AppColor.color8,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Download Sample File",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: AppColor.color8,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-      ),
       style: ElevatedButton.styleFrom(
         elevation: 0, backgroundColor: AppColor.primary,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+      child: SizedBox(
+        width: 150,
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.file_copy_outlined,
+              size: 40,
+              color: AppColor.color8,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              "_downloadSampleFile",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: AppColor.color8,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ).tr()
+          ],
         ),
       ),
     );

@@ -69,7 +69,7 @@ class SearchSaleProductBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomTextField(
-      label: "Search For Products",
+      label: "_searchForProducts",
       onValueChange: (val) {
         if (val.isNotEmpty) {
           BlocProvider.of<ItemSearchBloc>(context).add(SearchItemByFilter(val));

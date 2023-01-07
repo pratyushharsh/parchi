@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../config/theme_settings.dart';
 
@@ -41,7 +42,7 @@ class AppBarLeading extends StatelessWidget {
           Text(
             heading!,
             style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 26),
-          )
+          ).tr(),
       ],
     );
   }

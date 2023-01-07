@@ -6,7 +6,6 @@ import '../../config/route_config.dart';
 import '../authentication/bloc/authentication_bloc.dart';
 import '../sync/bloc/background_sync_bloc.dart';
 import '../../config/theme_settings.dart';
-import '../../../locale_keys.dart';
 import '../../repositories/business_repository.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/my_loader.dart';
@@ -16,8 +15,20 @@ import 'bloc/settings_bloc.dart';
 const String dummyImage =
     'https://images.unsplash.com/photo-1541569863345-f97c6484a917?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3570&q=80';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+
+  void refresh() {
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +64,16 @@ class SettingsScreen extends StatelessWidget {
                         "${state.employee?.firstName ?? ""} ${state.employee?.middleName ?? ""} ${state.employee?.lastName ?? ""}",
                     role: "Store User",
                     data: Detail(
-                      title: LocaleKeys.settingsAccount.tr(),
-                      subtitle: LocaleKeys.settingsAccountDescription.tr(),
+                      title: "_settingsAccount",
+                      subtitle: "_settingsAccountDescription",
                       icon: Icons.sync_alt_outlined,
                       children: [
                         SettingsItem(
-                            text: "Email",
+                            text: "_email",
                             subtext: state.employee?.email,
                             onTap: () {}),
                         SettingsItem(
-                            text: "Phone",
+                            text: "_phone",
                             subtext: state.employee?.phone,
                             onTap: () {}),
                       ],
@@ -75,51 +86,51 @@ class SettingsScreen extends StatelessWidget {
               ),
               SectionWidget(
                 data: Detail(
-                  title: LocaleKeys.settingsStore.tr(),
-                  subtitle: LocaleKeys.settingsStoreDescription.tr(),
+                  title: "_storeSettings",
+                  subtitle: "_storeSettingsDescription",
                   icon: Icons.home_repair_service,
                   children: [
                     SettingsItem(
-                        text: "Employee Maintenance",
+                        text: "_employeeMaintenance",
                         onTap: () {
                           Navigator.of(context)
                               .pushNamed(RouteConfig.employeeScreen);
                         }),
                     // SettingsItem(text: "Feature Settings", onTap: () {}),
                     SettingsItem(
-                        text: "Change Locale",
+                        text: "_changeLocale",
                         onTap: () {
                           Navigator.of(context)
                               .pushNamed(RouteConfig.localeScreen)
                               .then((value) {
                             if (value != null && value is Locale) {
-                              EasyLocalization.of(context)?.setLocale(value);
+                              EasyLocalization.of(context)?.setLocale(value).then((value) => refresh());
                             }
                           });
                         }),
                     SettingsItem(
-                      text: "Tax Configuration",
+                      text: "_taxConfiguration",
                       onTap: () {
                         Navigator.of(context)
                             .pushNamed(RouteConfig.taxConfigurationScreen);
                       },
                     ),
                     SettingsItem(
-                      text: "Sequence Configuration",
+                      text: "_sequenceConfiguration",
                       onTap: () {
                         Navigator.of(context)
                             .pushNamed(RouteConfig.sequenceConfigScreen);
                       },
                     ),
                     SettingsItem(
-                      text: "Invoice Configuration",
+                      text: "_invoiceConfiguration",
                       onTap: () {
                         Navigator.of(context)
                             .pushNamed(RouteConfig.invoiceSettingViewScreen);
                       },
                     ),
                     SettingsItem(
-                      text: "Receipt Configuration",
+                      text: "_receiptConfiguration",
                       onTap: () {
                         Navigator.of(context)
                             .pushNamed(RouteConfig.receiptSettingViewScreen);
@@ -133,8 +144,8 @@ class SettingsScreen extends StatelessWidget {
               ),
               SectionWidget(
                 data: Detail(
-                  title: LocaleKeys.settingsSettings.tr(),
-                  subtitle: LocaleKeys.settingsSettingsDescription.tr(),
+                  title: "_settings",
+                  subtitle: "_settingsDescription",
                   icon: Icons.settings,
                   children: [
                     // SettingsItem(
@@ -151,8 +162,8 @@ class SettingsScreen extends StatelessWidget {
               ),
               SectionWidget(
                 data: Detail(
-                  title: LocaleKeys.settingsHelp.tr(),
-                  subtitle: LocaleKeys.settingsHelpDescription.tr(),
+                  title: "_helpAndFeedback",
+                  subtitle: "_helpAndFeedbackDescription",
                   icon: Icons.mail_rounded,
                   children: [
                     // SettingsItem(
@@ -176,10 +187,10 @@ class SettingsScreen extends StatelessWidget {
                     //         .add(ExportDataEvent());
                     //   },
                     // ),
-                    SettingsItem(text: "FAQ and Videos", onTap: () {}),
-                    SettingsItem(text: "Contact us", onTap: () {}),
+                    SettingsItem(text: "_faqVideos", onTap: () {}),
+                    SettingsItem(text: "_contactUs", onTap: () {}),
                     SettingsItem(
-                        text: "About",
+                        text: "_about",
                         onTap: () {
                           Navigator.of(context)
                               .pushNamed(RouteConfig.aboutScreen);
@@ -197,7 +208,7 @@ class SettingsScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: RejectButton(
-                    label: "Log Out",
+                    label: "_logout",
                     onPressed: () {
                       BlocProvider.of<AuthenticationBloc>(context)
                           .add(LogOutUserEvent());
@@ -277,7 +288,7 @@ class SectionWidget extends StatelessWidget {
             Text(
               item.text,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
+            ).tr(),
             const Icon(Icons.chevron_right)
           ],
         ),
@@ -315,7 +326,7 @@ class SectionWidget extends StatelessWidget {
                   data.title,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 18),
-                ),
+                ).tr(),
                 Text(
                   data.subtitle,
                   style: const TextStyle(
@@ -323,7 +334,7 @@ class SectionWidget extends StatelessWidget {
                       fontStyle: FontStyle.italic,
                       color: AppColor.subtitleColorPrimary,
                       fontSize: 14),
-                ),
+                ).tr(),
               ],
             )
           ],
@@ -407,15 +418,15 @@ class _SwitchBusinessAccountWidgetState
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Row(
-          children: const [
-            Icon(Icons.add),
-            SizedBox(
+          children: [
+            const Icon(Icons.add),
+            const SizedBox(
               width: 10,
             ),
-            Text(
-              "Add New Business",
+            const Text(
+              "_addNewBusiness",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
+            ).tr(),
           ],
         ),
       ),
@@ -462,10 +473,10 @@ class _SwitchBusinessAccountWidgetState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Switch Business Account',
+                          '_switchBusinessAccount',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
+                        ).tr(),
                         AnimatedRotation(
                           turns: turns,
                           duration: const Duration(milliseconds: 800),
@@ -562,7 +573,7 @@ class AccountWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                     color: AppColor.subtitleColorPrimary),
-              ),
+              ).tr(),
               const SizedBox(
                 height: 6,
               ),
@@ -610,7 +621,7 @@ class AccountWidget extends StatelessWidget {
                   data.title,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 18),
-                ),
+                ).tr(),
                 Text(
                   data.subtitle,
                   style: const TextStyle(
@@ -618,7 +629,7 @@ class AccountWidget extends StatelessWidget {
                       fontStyle: FontStyle.italic,
                       color: AppColor.subtitleColorPrimary,
                       fontSize: 14),
-                ),
+                ).tr(),
               ],
             )
           ],

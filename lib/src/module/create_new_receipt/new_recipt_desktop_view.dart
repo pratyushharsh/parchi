@@ -162,7 +162,7 @@ class _SearchUserDisplayDesktopState extends State<SearchUserDisplayDesktop> {
               left: 0,
               right: 0,
               child: CustomTextField(
-                label: "Search For Products",
+                label: "_searchForProducts",
                 controller: _searchController,
                 onValueChange: (val) {
                   BlocProvider.of<ItemSearchBloc>(context)

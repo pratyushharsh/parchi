@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../locale_keys.dart';
 import '../../config/theme_settings.dart';
 import '../../entity/pos/tax_group_entity.dart';
 import '../../entity/pos/tax_rule_entity.dart';
@@ -48,7 +47,7 @@ class CreateEditTaxView extends StatelessWidget {
                     top: 20,
                     left: 16,
                     child: AppBarLeading(
-                      heading: LocaleKeys.taxConfiguration.tr(),
+                      heading: "_taxConfiguration",
                       icon: Icons.arrow_back,
                       onTap: () {
                         Navigator.of(context).pop();
@@ -235,7 +234,7 @@ class NewTaxRuleTile extends StatelessWidget {
             showTransitiveAppPopUp(
                     context: context,
                     child: CreateNewTaxRuleView(taxGroup: taxGroup),
-                    title: 'Create Tax Rule')
+                    title: '_createTaxRule')
                 .then((value) => {
                       if (value != null && value)
                         {
@@ -247,10 +246,10 @@ class NewTaxRuleTile extends StatelessWidget {
           child: Container(
             padding: padding,
             child: Row(
-              children: const [
-                Icon(Icons.add),
-                SizedBox(width: 16),
-                Text("Create New Tax Rule"),
+              children: [
+                const Icon(Icons.add),
+                const SizedBox(width: 16),
+                const Text("_createNewTaxRule").tr(),
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../config/theme_settings.dart';
@@ -28,16 +29,16 @@ class AcceptButton extends StatelessWidget {
     return ElevatedButton(
       // onPressed: null,
       onPressed: onPressed,
-      child: Text(
-        label,
-        style: const TextStyle(color: AppColor.textColorSecondary),
-      ),
       style: ElevatedButton.styleFrom(
         elevation: 0, backgroundColor: AppColor.primary,
         padding: padding,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.circular(5.0)),
       ),
+      child: Text(
+        label,
+        style: const TextStyle(color: AppColor.textColorSecondary),
+      ).tr(),
     );
   }
 }
@@ -61,16 +62,16 @@ class RejectButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(
-        label,
-        style: const TextStyle(color: AppColor.primary),
-      ),
       style: ElevatedButton.styleFrom(
         elevation: 0, backgroundColor: AppColor.color8,
         padding: padding,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       ),
+      child: Text(
+        label,
+        style: const TextStyle(color: AppColor.primary),
+      ).tr(),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -61,7 +62,7 @@ class NewReceiptMobileView extends StatelessWidget {
                     left: 16,
                     child: AppBarLeading(
                       heading:
-                          "Receipt #${state.transSeq}",
+                          "_receiptNoLabel".tr(namedArgs: {"receiptNo": state.transSeq}),
                       icon: Icons.arrow_back,
                       onTap: () {
                         if (!state.inProgress) {
@@ -169,6 +170,7 @@ class NewReceiptMobileView extends StatelessWidget {
                           itemBuilder: (context) => [
                             if (state.customer != null)
                               PopupMenuItem(
+                                value: "PARTIAL_PAYMENT",
                                 child: Row(
                                   children: const [
                                     FaIcon(
@@ -181,9 +183,9 @@ class NewReceiptMobileView extends StatelessWidget {
                                     Text("Partial Pay"),
                                   ],
                                 ),
-                                value: "PARTIAL_PAYMENT",
                               ),
                             PopupMenuItem(
+                              value: "SUSPEND",
                               child: Row(
                                 children: const [
                                   SizedBox(
@@ -201,9 +203,9 @@ class NewReceiptMobileView extends StatelessWidget {
                                   Text("Suspend Order"),
                                 ],
                               ),
-                              value: "SUSPEND",
                             ),
                             PopupMenuItem(
+                              value: "RETURN",
                               child: Row(
                                 children: const [
                                   Icon(
@@ -216,9 +218,9 @@ class NewReceiptMobileView extends StatelessWidget {
                                   Text("Return Order"),
                                 ],
                               ),
-                              value: "RETURN",
                             ),
                             PopupMenuItem(
+                              value: "CANCEL",
                               child: Row(
                                 children: const [
                                   Icon(
@@ -231,7 +233,6 @@ class NewReceiptMobileView extends StatelessWidget {
                                   Text("Cancel Order"),
                                 ],
                               ),
-                              value: "CANCEL",
                             ),
                           ],
                           icon: const Icon(

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../locale_keys.dart';
 import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
 import '../../widgets/clipper/wave_clipper.dart';
@@ -175,7 +174,7 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                                 : AppColor.iconColor,
                           ),
                           Text(
-                            LocaleKeys.home,
+                            "_home",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: widget.selectedIndex == 0
@@ -205,7 +204,7 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                                 ? AppColor.primary
                                 : AppColor.iconColor,
                           ),
-                          Text(LocaleKeys.customer,
+                          Text("_customer",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: widget.selectedIndex == 1
@@ -234,7 +233,7 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                                 ? AppColor.primary
                                 : AppColor.iconColor,
                           ),
-                          Text(LocaleKeys.sale,
+                          Text("_sale",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: widget.selectedIndex == 2
@@ -265,7 +264,7 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                             size: 18,
                           ),
                           const SizedBox(height: 3,),
-                          Text(LocaleKeys.product,
+                          Text("_product",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: widget.selectedIndex == 3
@@ -295,7 +294,7 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                                 : AppColor.iconColor,
                             size: 18,
                           ),
-                          Text(LocaleKeys.more,
+                          Text("_more",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: widget.selectedIndex == 4

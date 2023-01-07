@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../locale_keys.dart';
 import '../../widgets/appbar_leading.dart';
 
 class LocaleView extends StatefulWidget {
@@ -89,7 +88,7 @@ class _LocaleViewState extends State<LocaleView> {
                   top: 20,
                   left: 16,
                   child: AppBarLeading(
-                    heading: LocaleKeys.locale.tr(),
+                    heading: "_locale",
                     icon: Icons.arrow_back,
                     onTap: () {
                       Navigator.of(context).pop(_currentLocale);

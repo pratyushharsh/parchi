@@ -1,4 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -96,13 +97,13 @@ class CustomDropDown<T> extends StatelessWidget {
           label,
           style: const TextStyle(
               fontWeight: FontWeight.w400, color: Color(0xFF6B7281)),
-        ),
+        ).tr(),
         if (helperText != null && helperText!.isNotEmpty)
           Text(helperText!,
               style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   color: Colors.black38,
-                  fontSize: 12)),
+                  fontSize: 12)).tr(),
         const SizedBox(
           height: 1,
         ),

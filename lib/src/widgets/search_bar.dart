@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../config/theme_settings.dart';
@@ -44,7 +45,7 @@ class _SearchBarState extends State<SearchBar> {
                           BorderSide(color: AppColor.primary, width: 2)),
                   focusColor: AppColor.primary,
                   hoverColor: AppColor.primary,
-                  hintText: widget.hintText,
+                  hintText: widget.hintText?.tr(),
                 ),
                 onChanged: widget.onChanged,
               ),

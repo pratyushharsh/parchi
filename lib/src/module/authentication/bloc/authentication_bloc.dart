@@ -57,7 +57,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           return;
         }
 
-        var validSession = session?.isValid() ?? false;
+        var validSession = session.isValid();
         if (!validSession) {
           emit(AuthenticationState.unauthenticated());
           return;

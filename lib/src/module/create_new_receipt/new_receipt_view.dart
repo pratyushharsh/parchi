@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
-import '../../config/transaction_config.dart';
 import '../../entity/pos/address.dart';
 import '../../entity/pos/entity.dart';
 import '../../widgets/custom_button.dart';
@@ -352,12 +352,12 @@ class SearchAndAddItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
-          children: const [
-            Icon(Icons.add),
-            SizedBox(
+          children: [
+            const Icon(Icons.add),
+            const SizedBox(
               width: 10,
             ),
-            Text("Search For Products")
+            const Text("_searchForProducts").tr()
           ],
         ),
       ),
@@ -397,14 +397,14 @@ class LineItemHeader extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 800) {
         return Row(
-          children: const [
+          children: [
             Expanded(
               flex: 2,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "UnitCost",
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  "_unitCost".tr(),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -413,8 +413,8 @@ class LineItemHeader extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "Qty",
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  "_qty".tr(),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -423,8 +423,8 @@ class LineItemHeader extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "Amount",
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  "_amount".tr(),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -738,7 +738,7 @@ class NewInvoiceButtonBar extends StatelessWidget {
                             }
                         });
                   },
-                  label: 'Cancel',
+                  label: '_cancel',
                 ),
               ),
               const SizedBox(
@@ -762,7 +762,7 @@ class NewInvoiceButtonBar extends StatelessWidget {
                             }
                           }
                         : null,
-                    label: "Proceed To Pay",
+                    label: "_proceedToPay",
                   ),
                 ),
               if (state.step == SaleStep.complete)
@@ -772,7 +772,7 @@ class NewInvoiceButtonBar extends StatelessWidget {
                       BlocProvider.of<CreateNewReceiptBloc>(context)
                           .add(OnChangeSaleStep(SaleStep.complete));
                     },
-                    label: "Complete Sale",
+                    label: "_completeSale",
                   ),
                 ),
             ],
@@ -825,32 +825,32 @@ class NewReceiptSummaryWidget extends StatelessWidget {
         return Column(
           children: [
             RetailSummaryDetailRow(
-              title: "Total Qty",
+              title: "_totalQty",
               value: state.items.toString(),
               textStyle: const TextStyle(
                   fontWeight: FontWeight.w600, color: Colors.black54),
             ),
             RetailSummaryDetailRow(
-              title: "Sub Total",
+              title: "_subtotal",
               value: getCurrencyFormatter(context).format(state.subTotal),
               textStyle: const TextStyle(
                   fontWeight: FontWeight.w600, color: Colors.black54),
             ),
             RetailSummaryDetailRow(
-              title: "Discount",
+              title: "_discount",
               value: getCurrencyFormatter(context).format(state.discount),
               textStyle: const TextStyle(
                   fontWeight: FontWeight.w600, color: Colors.black54),
             ),
             RetailSummaryDetailRow(
-              title: "Tax",
+              title: "_tax",
               value: getCurrencyFormatter(context).format(state.tax),
               textStyle: const TextStyle(
                   fontWeight: FontWeight.w600, color: Colors.black54),
             ),
             const Divider(),
             RetailSummaryDetailRow(
-              title: "Amount Due",
+              title: "_amountDue",
               value: getCurrencyFormatter(context).format(state.amountDue),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -884,7 +884,7 @@ class RetailSummaryDetailRow extends StatelessWidget {
       mainAxisAlignment: mainAxisAlignment,
       children: [
         SelectableText(
-          title,
+          title.tr(),
           style: textStyle,
         ),
         SelectableText(
@@ -1034,7 +1034,7 @@ class _CustomerWidgetState extends State<CustomerWidget> {
                                     Text(
                                       state.isCustomerPresent
                                           ? state.customer!.firstName
-                                          : "Add Customer",
+                                          : "_addCustomer".tr(),
                                       style: const TextStyle(
                                           fontSize: 18,
                                           color: AppColor.primary),

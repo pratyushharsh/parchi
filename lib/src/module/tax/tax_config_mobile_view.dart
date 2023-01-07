@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,7 +51,7 @@ class NewTaxGroupButtonMobile extends StatelessWidget {
           showTransitiveAppPopUp(
             context: context,
             child: const CreateNewTaxGroupView(),
-            title: 'Create Tax Group'
+            title: '_createNewTaxGroup',
           ).then((value) => {
                 if (value != null && value)
                   {
@@ -69,7 +70,10 @@ class NewTaxGroupButtonMobile extends StatelessWidget {
         ),
         child: Center(
           child: Column(
-            children: const [Icon(Icons.add), Text("Add New Tax Group")],
+            children: [
+              const Icon(Icons.add),
+              const Text("_addNewTaxGroup").tr(),
+            ],
           ),
         ),
       ),
@@ -98,10 +102,10 @@ class TaxGroupCardMobile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Tax Group: ' + taxGroup.groupId,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
+              const Text(
+                "_taxGroupLabel",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ).tr(namedArgs: {'groupId': taxGroup.groupId}),
               CloudSyncIcon(
                 syncState: taxGroup.syncState ?? 0,
               ),
@@ -168,7 +172,7 @@ class TaxRuleCard extends StatelessWidget {
           children: [
             Text(taxRule.ruleName!),
             const Spacer(),
-            Text(taxRule.percent.toString() + "%"),
+            Text("${taxRule.percent}%"),
           ],
         ),
       ),

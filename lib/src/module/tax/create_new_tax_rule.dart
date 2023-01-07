@@ -51,14 +51,14 @@ class CreateNewTaxRuleForm extends StatelessWidget {
                 child: Column(
                   children: [
                     CustomTextField(
-                      label: 'Rule Id',
+                      label: '_taxRuleId',
                       initialValue: state.ruleId,
                       onValueChange: (value) =>
                           BlocProvider.of<NewTaxRuleBloc>(context)
                               .add(OnRuleIdChangeEvent(value)),
                     ),
                     CustomTextField(
-                      label: 'Rule Name',
+                      label: '_taxRuleName',
                       initialValue: state.ruleName,
                       onValueChange: (value) =>
                           BlocProvider.of<NewTaxRuleBloc>(context)
@@ -68,7 +68,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
                       children: [
                         Expanded(
                           child: CustomTextField(
-                            label: 'Percent',
+                            label: '_percent',
                             initialValue: state.percent?.toString(),
                             inputFormatters: [
                               CustomInputTextFormatter.positiveNumber
@@ -84,7 +84,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
                         const SizedBox(width: 10),
                         Expanded(
                           child: CustomTextField(
-                            label: 'Amount',
+                            label: '_amount',
                             initialValue: state.amount?.toString(),
                             inputFormatters: [
                               CustomInputTextFormatter.positiveNumber
@@ -97,7 +97,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
                       children: [
                         Expanded(
                           child: CustomTextField(
-                            label: 'Minimum Taxable Amount',
+                            label: '_minTaxableAmount',
                             initialValue:
                                 state.minimumTaxableAmount?.toString(),
                             inputFormatters: [
@@ -114,7 +114,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
                         const SizedBox(width: 10),
                         Expanded(
                           child: CustomTextField(
-                            label: 'Maximum Taxable Amount',
+                            label: '_maxTaxableAmount',
                             initialValue:
                                 state.maximumTaxableAmount?.toString(),
                             inputFormatters: [
@@ -154,7 +154,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
                             minHeight: 16,
                             value:
                                 state.effectiveDateTimeStamp?.toString() ?? '',
-                            label: 'Effective Date',
+                            label: '_effectiveDate',
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -181,7 +181,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
                             minHeight: 16,
                             value:
                                 state.expirationDateTimeStamp?.toString() ?? '',
-                            label: 'Expiration Date',
+                            label: '_expirationDate',
                           ),
                         ),
                       ],
@@ -193,7 +193,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
             Row(children: [
               Expanded(
                 child: RejectButton(
-                  label: "Cancel",
+                  label: "_cancel",
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -202,7 +202,7 @@ class CreateNewTaxRuleForm extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: AcceptButton(
-                  label: "Create New Rule",
+                  label: "_createTaxRule",
                   onPressed: state.isValid
                       ? () {
                           // Generate Tax Group

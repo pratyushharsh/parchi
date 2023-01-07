@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -73,7 +74,7 @@ class CustomTextField extends StatelessWidget {
                   color: Color(0xFF6B7281),
                 ),
                 textAlign: labelAlign,
-              ),
+              ).tr(),
             ),
           ],
         ),
@@ -82,7 +83,7 @@ class CustomTextField extends StatelessWidget {
               style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   color: Colors.black38,
-                  fontSize: 12)),
+                  fontSize: 12)).tr(),
         const SizedBox(
           height: 1,
         ),
