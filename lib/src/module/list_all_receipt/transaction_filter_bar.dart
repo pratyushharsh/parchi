@@ -198,61 +198,70 @@ class TransactionDateTimeRangePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ListAllReceiptBloc, ListAllReceiptState>(
       builder: (context, state) {
-        return InputChip(
-          label: state.filter.dateRange != null
-              ? Text(
-                  "${AppFormatter.dateFormatter.format(state.filter.dateRange!.start)} - ${AppFormatter.dateFormatter.format(state.filter.dateRange!.end)}", style: const TextStyle(color: AppColor.primary,),)
-              : const Text("Select Date Range", style: TextStyle(color: AppColor.primary,),),
-          avatar: const Icon(
-            Icons.calendar_today,
-            size: 14,
-            color: AppColor.primary,
-          ),
-          backgroundColor: Colors.transparent,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(4),
-            ),
-            side: BorderSide(
-              color: AppColor.primary,
-            ),
-          ),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          onSelected: (bool selected) async {
-            if (selected) {
-              showDateRangePicker(
-                saveText: "OK",
-                helpText: "Select Transaction Date Range",
-                context: context,
-                initialDateRange: state.filter.dateRange ?? DateTimeRange(
-                  start: DateTime.now().subtract(const Duration(days: 30)),
-                  end: DateTime.now(),
-                ),
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now(),
-                useRootNavigator: false,
-                builder: (Platform.isMacOS || Platform.isWindows)
-                    ? (context, child) {
-                        return Dialog(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.8,
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: child,
-                          ),
-                        );
-                      }
-                    : null,
-              ).then((value) {
-                if (value != null) {
-                  context.read<ListAllReceiptBloc>().add(
-                        UpdateFilterDateRange(
-                          value,
-                        ),
-                      );
-                }
-              });
-            }
+
+        return InkWell(
+          onTap: () {
+            showDateRangePicker(
+              saveText: "OK",
+              helpText: "Select Transaction Date Range",
+              context: context,
+              initialDateRange: state.filter.dateRange ?? DateTimeRange(
+                start: DateTime.now().subtract(const Duration(days: 30)),
+                end: DateTime.now(),
+              ),
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+              useRootNavigator: false,
+              builder: (Platform.isMacOS || Platform.isWindows)
+                  ? (context, child) {
+                return Dialog(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: child,
+                  ),
+                );
+              }
+                  : null,
+            ).then((value) {
+              if (value != null) {
+                context.read<ListAllReceiptBloc>().add(
+                  UpdateFilterDateRange(
+                    value,
+                  ),
+                );
+              }
+            });
           },
+          child: Container(
+            height: 10,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: AppColor.primary,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.calendar_today, size: 14,),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  state.filter.dateRange != null
+                      ? "${AppFormatter.dateFormatter.format(state.filter.dateRange!.start)} - ${AppFormatter.dateFormatter.format(state.filter.dateRange!.end)}"
+                      : "Select Date Range",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
