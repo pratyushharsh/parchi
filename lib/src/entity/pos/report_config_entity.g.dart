@@ -129,7 +129,7 @@ const ReportConfigEntitySchema = CollectionSchema(
   getId: _reportConfigEntityGetId,
   getLinks: _reportConfigEntityGetLinks,
   attach: _reportConfigEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _reportConfigEntityEstimateSize(

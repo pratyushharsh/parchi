@@ -73,7 +73,7 @@ const CollectionEntitySchema = CollectionSchema(
   getId: _collectionEntityGetId,
   getLinks: _collectionEntityGetLinks,
   attach: _collectionEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _collectionEntityEstimateSize(

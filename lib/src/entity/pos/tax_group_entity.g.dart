@@ -123,7 +123,7 @@ const TaxGroupEntitySchema = CollectionSchema(
   getId: _taxGroupEntityGetId,
   getLinks: _taxGroupEntityGetLinks,
   attach: _taxGroupEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _taxGroupEntityEstimateSize(

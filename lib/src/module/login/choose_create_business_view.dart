@@ -13,8 +13,9 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/my_loader.dart';
 import '../authentication/bloc/authentication_bloc.dart';
 import '../business/business_view.dart';
+import 'login_design.dart';
 
-class ChooseCreateBusinessView extends StatelessWidget {
+class ChooseCreateBusinessView extends StatelessWidget with LoginThemeConfig {
   const ChooseCreateBusinessView({Key? key}) : super(key: key);
 
   static Route route() {
@@ -33,8 +34,9 @@ class ChooseCreateBusinessView extends StatelessWidget {
     }
 
     return Container(
-      color: AppColor.background,
+      color: backgroundColor,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           backgroundColor: AppColor.background,
           body: Stack(
@@ -79,7 +81,7 @@ class ChooseCreateBusinessForm extends StatefulWidget {
       _ChooseCreateBusinessFormState();
 }
 
-class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> {
+class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> with LoginThemeConfig {
   String? _selectedBusiness;
   UserBusiness? _selectedBusinessData;
 
@@ -122,6 +124,7 @@ class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: elevation,
       margin: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
@@ -225,7 +228,10 @@ class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> {
                         ),
                       )
                   ]),
-                )
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
               ]);
         },
       ),

@@ -103,7 +103,7 @@ const EmployeeEntitySchema = CollectionSchema(
   getId: _employeeEntityGetId,
   getLinks: _employeeEntityGetLinks,
   attach: _employeeEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _employeeEntityEstimateSize(

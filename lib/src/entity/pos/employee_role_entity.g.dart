@@ -74,7 +74,7 @@ const EmployeeRoleEntitySchema = CollectionSchema(
   getId: _employeeRoleEntityGetId,
   getLinks: _employeeRoleEntityGetLinks,
   attach: _employeeRoleEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _employeeRoleEntityEstimateSize(

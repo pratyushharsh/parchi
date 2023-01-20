@@ -11,8 +11,9 @@ import '../../widgets/appbar_leading.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/my_loader.dart';
 import 'bloc/login_bloc.dart';
+import 'login_design.dart';
 
-class VerifyUserDeviceView extends StatelessWidget {
+class VerifyUserDeviceView extends StatelessWidget with LoginThemeConfig {
   const VerifyUserDeviceView({Key? key}) : super(key: key);
 
   static Route route() {
@@ -32,8 +33,9 @@ class VerifyUserDeviceView extends StatelessWidget {
     }
 
     return Container(
-      color: AppColor.background,
+      color: backgroundColor,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           backgroundColor: AppColor.background,
           body: Stack(
@@ -77,7 +79,7 @@ class VerifyUserDeviceForm extends StatefulWidget {
   State<VerifyUserDeviceForm> createState() => _VerifyUserDeviceFormState();
 }
 
-class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> {
+class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> with LoginThemeConfig {
   Set<String> _selectedDeviceIds = {};
 
   @override
@@ -153,6 +155,7 @@ class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: elevation,
       margin: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
@@ -261,7 +264,8 @@ class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> {
                       )
                   ],
                 ),
-              )
+              ),
+              const SizedBox(height: 10,)
             ],
           );
         },

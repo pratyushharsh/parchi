@@ -54,7 +54,7 @@ const SettingEntitySchema = CollectionSchema(
   getId: _settingEntityGetId,
   getLinks: _settingEntityGetLinks,
   attach: _settingEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _settingEntityEstimateSize(

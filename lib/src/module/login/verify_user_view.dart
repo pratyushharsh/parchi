@@ -15,8 +15,9 @@ import '../../widgets/appbar_leading.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/my_loader.dart';
 import 'bloc/login_bloc.dart';
+import 'login_design.dart';
 
-class VerifyUserView extends StatelessWidget {
+class VerifyUserView extends StatelessWidget with LoginThemeConfig {
   const VerifyUserView({Key? key}) : super(key: key);
 
   static Route route() {
@@ -34,7 +35,7 @@ class VerifyUserView extends StatelessWidget {
     }
 
     return Container(
-      color: AppColor.background,
+      color: backgroundColor,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColor.background,
@@ -81,7 +82,7 @@ class VerifyOtpForm extends StatefulWidget {
   State<VerifyOtpForm> createState() => _VerifyOtpFormState();
 }
 
-class _VerifyOtpFormState extends State<VerifyOtpForm> {
+class _VerifyOtpFormState extends State<VerifyOtpForm> with LoginThemeConfig {
   OtpFieldController otpController = OtpFieldController();
 
   @override
@@ -98,7 +99,7 @@ class _VerifyOtpFormState extends State<VerifyOtpForm> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 10,
+      elevation: elevation,
       margin: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),

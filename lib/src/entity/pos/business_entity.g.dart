@@ -106,7 +106,7 @@ const RetailLocationEntitySchema = CollectionSchema(
   getId: _retailLocationEntityGetId,
   getLinks: _retailLocationEntityGetLinks,
   attach: _retailLocationEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _retailLocationEntityEstimateSize(

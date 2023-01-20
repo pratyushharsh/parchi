@@ -17,5 +17,4 @@ class AppColor {
   static const Color subtitleColorPrimary = Color(0xFF929DA9);
   static const Color formInputBorder = Color(0xFFB1B4E6);
   static const Color formInputText = Color(0xFF6B7281);
-
 }

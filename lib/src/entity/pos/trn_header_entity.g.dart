@@ -319,7 +319,7 @@ const TransactionHeaderEntitySchema = CollectionSchema(
   getId: _transactionHeaderEntityGetId,
   getLinks: _transactionHeaderEntityGetLinks,
   attach: _transactionHeaderEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _transactionHeaderEntityEstimateSize(

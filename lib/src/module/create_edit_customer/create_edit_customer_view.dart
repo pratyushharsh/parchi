@@ -94,6 +94,7 @@ class _CreateNewCustomerFormState extends State<CreateNewCustomerForm> {
     return Container(
       color: Colors.white,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           backgroundColor: Colors.white,
           body: Form(
@@ -145,54 +146,6 @@ class _CreateNewCustomerFormState extends State<CreateNewCustomerForm> {
                     );
                   },
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: RejectButton(
-                              label: "Cancel",
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              }),
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        BlocBuilder<CustomerFormBloc, CustomerFormState>(
-                          builder: (context, state) {
-                            return Expanded(
-                              child: AcceptButton(
-                                label: "Save",
-                                onPressed: () {
-                                  ContactEntity ce = ContactEntity(
-                                    firstName: state.firstName!,
-                                    lastName: state.lastName!,
-                                    createTime: DateTime.now(),
-                                    billingAddress: state.billingAddress,
-                                    shippingAddress: state.shippingAddress,
-                                    email: state.email,
-                                    gstin: state.gstin,
-                                    panCard: state.panCard,
-                                    phoneNumber: state.phoneNumber,
-                                    contactId: state.contactId ?? 'Dummy',
-                                    storeId: '-1',
-                                  );
-                                  BlocProvider.of<CreateEditCustomerBloc>(
-                                          context)
-                                      .add(OnCreateCustomer(customer: ce));
-                                },
-                              ),
-                            );
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                )
               ],
             ),
           ),
@@ -411,7 +364,54 @@ class CreateCustomerForm extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(
-                  height: 250,
+                  height: 40,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RejectButton(
+                            label: "Cancel",
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      BlocBuilder<CustomerFormBloc, CustomerFormState>(
+                        builder: (context, state) {
+                          return Expanded(
+                            child: AcceptButton(
+                              label: "Save",
+                              onPressed: () {
+                                ContactEntity ce = ContactEntity(
+                                  firstName: state.firstName!,
+                                  lastName: state.lastName!,
+                                  createTime: DateTime.now(),
+                                  billingAddress: state.billingAddress,
+                                  shippingAddress: state.shippingAddress,
+                                  email: state.email,
+                                  gstin: state.gstin,
+                                  panCard: state.panCard,
+                                  phoneNumber: state.phoneNumber,
+                                  contactId: state.contactId ?? 'Dummy',
+                                  storeId: '-1',
+                                );
+                                BlocProvider.of<CreateEditCustomerBloc>(
+                                    context)
+                                    .add(OnCreateCustomer(customer: ce));
+                              },
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 150,
                 ),
               ],
             ),

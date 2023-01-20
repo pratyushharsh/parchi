@@ -82,7 +82,7 @@ class _LandingScreenState extends State<LandingScreen> {
             },
           ),
           Positioned(
-            bottom: 0,
+            bottom: 15,
             left: 0,
             right: 0,
             height: 40,
@@ -171,7 +171,7 @@ class Page1 extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.all(20.0),
                 child: Text(
-                  "Effortless transactions on the go.",
+                  "Effortless sales on the go.",
                   style: TextStyle(
                     fontSize: 40,
                     fontStyle: FontStyle.italic,
@@ -201,7 +201,7 @@ class Page2 extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              Expanded(child: Image.asset("assets/image/UI_Mobile_Shop.webp")),
+              Expanded(child: Image.asset("assets/image/p3.png")),
               Container(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20, vertical: 16),
@@ -274,7 +274,7 @@ class Page3 extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              Expanded(child: Image.asset("assets/image/UI_Mobile_Shop.webp")),
+              Expanded(child: Image.asset("assets/image/p2.png")),
               Container(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20, vertical: 16),

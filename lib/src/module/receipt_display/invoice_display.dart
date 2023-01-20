@@ -29,6 +29,7 @@ class AppInvoiceDisplay extends StatelessWidget {
       child: Container(
         color: AppColor.background,
         child: SafeArea(
+          bottom: false,
           child: Scaffold(
             backgroundColor: AppColor.background,
             body: Stack(
@@ -41,24 +42,12 @@ class AppInvoiceDisplay extends StatelessWidget {
                   child: BlocBuilder<ReceiptDisplayBloc, ReceiptDisplayState>(
                     builder: (context, state) {
                       if (state.status == ReceiptDisplayStatus.success) {
-                        return MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                          theme: ThemeData.dark().copyWith(
-                            primaryColor: AppColor.primary,
-                            brightness: Brightness.light,
-                            backgroundColor: AppColor.background,
-                            dividerColor: Colors.white54,
-                            colorScheme: const ColorScheme.light(
-                                primary: AppColor.primary),
-                          ),
-                          home: FutureBuilder<InvoiceConfig>(
-                            future: RepositoryProvider.of<InvoiceRepository>(
-                                    context)
+                        return FutureBuilder<InvoiceConfig>(
+                            future: RepositoryProvider.of<InvoiceRepository>(context)
                                 .getInvoiceSettingByName('INVOICE'),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return PdfPreview(
-
                                   loadingWidget:
                                       const MyLoader(color: AppColor.primary),
                                   canDebug: false,
@@ -86,8 +75,7 @@ class AppInvoiceDisplay extends StatelessWidget {
                                 );
                               }
                             },
-                          ),
-                        );
+                          );
                       }
                       return Container();
                     },

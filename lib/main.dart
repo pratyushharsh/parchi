@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +26,9 @@ Future<void> main() async {
   Bloc.observer = InvoicingBlocObserver();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp();
+  }
   initRootLogger();
   await EasyLocalization.ensureInitialized();
   await DatabaseProvider.ensureInitialized();

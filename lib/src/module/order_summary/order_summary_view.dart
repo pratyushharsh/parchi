@@ -24,8 +24,10 @@ class OrderSummaryView extends StatelessWidget {
       lazy: false,
       create: (context) => OrderSummaryBloc(orderId: orderId),
       child: Container(
-        color: AppColor.color3,
+        color: AppColor.headerBackground,
+        // Gradient For the Color
         child: SafeArea(
+          bottom: false,
           child: Scaffold(
             body: Stack(
               children: [

@@ -103,7 +103,7 @@ const CountryEntitySchema = CollectionSchema(
   getId: _countryEntityGetId,
   getLinks: _countryEntityGetLinks,
   attach: _countryEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _countryEntityEstimateSize(

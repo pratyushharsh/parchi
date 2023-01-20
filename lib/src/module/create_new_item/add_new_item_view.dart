@@ -104,7 +104,7 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
         return Container(
           color: Colors.white,
           child: SafeArea(
-            maintainBottomViewPadding: false,
+            bottom: false,
             child: Scaffold(
               backgroundColor: Colors.white,
               body: Stack(
@@ -148,7 +148,7 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                     ),
                   ),
                   Positioned(
-                    bottom: 0,
+                    bottom: 10,
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       width: MediaQuery.of(context).size.width,

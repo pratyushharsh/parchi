@@ -123,7 +123,7 @@ const SequenceEntitySchema = CollectionSchema(
   getId: _sequenceEntityGetId,
   getLinks: _sequenceEntityGetLinks,
   attach: _sequenceEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _sequenceEntityEstimateSize(

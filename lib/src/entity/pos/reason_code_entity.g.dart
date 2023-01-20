@@ -78,7 +78,7 @@ const ReasonCodeEntitySchema = CollectionSchema(
   getId: _reasonCodeEntityGetId,
   getLinks: _reasonCodeEntityGetLinks,
   attach: _reasonCodeEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _reasonCodeEntityEstimateSize(

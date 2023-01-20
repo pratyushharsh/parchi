@@ -86,7 +86,7 @@ const CodeValueEntitySchema = CollectionSchema(
   getId: _codeValueEntityGetId,
   getLinks: _codeValueEntityGetLinks,
   attach: _codeValueEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _codeValueEntityEstimateSize(

@@ -193,7 +193,7 @@ const ContactEntitySchema = CollectionSchema(
   getId: _contactEntityGetId,
   getLinks: _contactEntityGetLinks,
   attach: _contactEntityAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _contactEntityEstimateSize(

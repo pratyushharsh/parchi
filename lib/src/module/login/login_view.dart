@@ -12,6 +12,7 @@ import '../../widgets/app_logo.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/my_loader.dart';
 import 'bloc/login_bloc.dart';
+import 'login_design.dart';
 import 'phone_email_widget.dart';
 
 class LoginView extends StatelessWidget {
@@ -92,7 +93,7 @@ class LoginView extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatelessWidget with LoginThemeConfig {
   const LoginForm({Key? key}) : super(key: key);
 
   @override
@@ -102,7 +103,7 @@ class LoginForm extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
       ),
-      elevation: 10,
+      elevation: elevation,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

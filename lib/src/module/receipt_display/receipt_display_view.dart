@@ -1,8 +1,12 @@
-import 'dart:ui';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -10,12 +14,13 @@ import 'package:pdf/pdf.dart';
 
 import '../../config/currency.dart';
 import '../../config/theme_settings.dart';
-import '../../config/transaction_config.dart';
 import '../../entity/pos/entity.dart';
 import '../../widgets/appbar_leading.dart';
 import 'bloc/receipt_display_bloc.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+
+import 'bluetooth_printing.dart';
 
 const String top = "TOP";
 const String bottom = "BOTTOM";
@@ -47,26 +52,26 @@ class ReceiptDisplayView extends StatelessWidget {
     );
   }
 
-  void _printReceipt() {
-    Printing.layoutPdf(
-      format: PdfPageFormat.roll80,
-      onLayout: (PdfPageFormat format) async {
-        final doc = pw.Document();
+  Future<Uint8List> captureWidget() async {
+    RenderRepaintBoundary boundary =
+    _printKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+    ByteData? byteData =
+    await image.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytes = byteData!.buffer.asUint8List();
+    return pngBytes;
+  }
 
-        final image = await WidgetWraper.fromKey(
-          key: _printKey,
-          pixelRatio: 3.0,
-        );
+  void _printReceipt(BuildContext context) async {
 
-        doc.addPage(pw.Page(
-            pageFormat: format,
-            build: (pw.Context context) {
-              return pw.Center(
-                child: pw.Image(image),
-              );
-            }));
 
-        return doc.save();
+    Uint8List pngBytes = await captureWidget();
+
+    print(base64Encode(pngBytes));
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return BluetoothPrinters(data:  pngBytes,);
       },
     );
   }
@@ -126,7 +131,7 @@ class ReceiptDisplayView extends StatelessWidget {
                         right: 10,
                         child: MyBottomAppBar(
                           onShare: _shareReceipt,
-                          onPrint: _printReceipt,
+                          onPrint: () => _printReceipt(context),
                         ),
                       )
                     ],

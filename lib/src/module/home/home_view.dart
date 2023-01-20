@@ -134,7 +134,7 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
         Column(
           children: [
             const SizedBox(
-              height: 250,
+              height: 150,
             ),
             Container(
               height: 30,

@@ -85,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.1.0"
+  bluetooth_print:
+    dependency: "direct main"
+    description:
+      name: bluetooth_print
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.0"
   blurrycontainer:
     dependency: "direct main"
     description:
@@ -594,21 +601,21 @@ packages:
       name: isar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.5"
   isar_flutter_libs:
     dependency: "direct main"
     description:
       name: isar_flutter_libs
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.5"
   isar_generator:
     dependency: "direct dev"
     description:
       name: isar_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.5"
   js:
     dependency: transitive
     description:
