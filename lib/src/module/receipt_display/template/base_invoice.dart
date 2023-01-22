@@ -6,6 +6,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
+import '../../../config/formatter.dart';
 import '../../../entity/pos/entity.dart';
 import 'invoice.dart';
 import 'invoice_config.dart';
@@ -27,7 +28,7 @@ class BaseInvoice extends IInvoice {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Made on Parchi."),
+            Text("Made with ♥ on Parchi."),
             Text("Page ${context.pageNumber} of ${context.pagesCount}"),
           ],
         )
@@ -90,6 +91,8 @@ class BaseInvoice extends IInvoice {
                 : SizedBox(),
             buildStoreDetail(context)
           ]),
+          Divider(height: 6, thickness: 0.8),
+          buildInvoiceSummary(context),
           Divider(height: 6, thickness: 0.8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,6 +378,57 @@ class BaseInvoice extends IInvoice {
     return DeclarationAndSignatureWidget(
         declaration: config.declaration ?? "",
         showDeclaration: config.showDeclaration);
+  }
+
+  @override
+  Widget buildInvoiceSummary(Context context) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Invoice No #\t',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                Text(
+                  order.transId,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Invoice Date #\t',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                Text(
+                  AppFormatter.dateFormatter.format(order.businessDate),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ]
+        )
+      ]
+    );
   }
 }
 

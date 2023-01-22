@@ -253,7 +253,7 @@ class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> with LoginT
                                           .toList()
                                           .length -
                                       _selectedDeviceIds.length <
-                                  3
+                                  6
                               ? () {
                                   BlocProvider.of<LoginBloc>(context).add(
                                       RemoveDevice(

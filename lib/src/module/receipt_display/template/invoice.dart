@@ -171,6 +171,7 @@ typedef ColumnSummaryBuilder = String Function(
 abstract class IInvoice with InvoiceUtil, ImageMixinConfig {
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat);
   ImageProvider? getStoreLogo(Context context);
+  Widget buildInvoiceSummary(Context context);
   Widget buildStoreDetail(Context context);
   Widget buildShippingAddress(Context context);
   Widget buildBillingAddress(Context context);

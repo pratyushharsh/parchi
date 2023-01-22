@@ -79,6 +79,8 @@
     "_amountDue": "Amount Due",
     "_saleReceipt": "Sale Receipt",
     "_searchReceiptHint": "Search by Receipt Id, Customer Name, Phone",
+    "_unitCost": "Unit Cost",
+    "_qty": "Qty",
 
     "_taxGroupLabel": "Tax Group: {groupId}",
     "_receiptNoLabel": "Receipt # {receiptNo}",

@@ -20,10 +20,18 @@ mixin SequenceConfig {
       } else if (key == "uuid") {
         const uuid = Uuid();
         return uuid.v1();
+      } else if (key == "tbase36") {
+        return timestampToBase36(DateTime.now().millisecondsSinceEpoch);
       }
       return key;
     });
-
     return res;
+  }
+
+  String timestampToBase36(int data) {
+    if (data < 0) {
+      throw ArgumentError.value(data, 'data', 'must be positive');
+    }
+    return data.toRadixString(36).toUpperCase();
   }
 }

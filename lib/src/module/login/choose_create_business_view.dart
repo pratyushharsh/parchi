@@ -81,7 +81,8 @@ class ChooseCreateBusinessForm extends StatefulWidget {
       _ChooseCreateBusinessFormState();
 }
 
-class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> with LoginThemeConfig {
+class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm>
+    with LoginThemeConfig {
   String? _selectedBusiness;
   UserBusiness? _selectedBusinessData;
 
@@ -166,7 +167,8 @@ class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> wit
                       Text(
                         "Choose Business you want to continue with.",
                         style: TextStyle(
-                            color: AppColor.color5, fontWeight: FontWeight.w600),
+                            color: AppColor.color5,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -197,7 +199,8 @@ class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> wit
                             if (index == state.userBusinesses.length) {
                               return const NewBusinessButton();
                             }
-                            return _buildBusinessList(state.userBusinesses[index]);
+                            return _buildBusinessList(
+                                state.userBusinesses[index]);
                           },
                         ),
                       ),
@@ -205,7 +208,8 @@ class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm> wit
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
+                  padding: const EdgeInsets.only(
+                      left: 16.0, right: 16.0, bottom: 16.0, top: 8.0),
                   child: Row(children: [
                     if (state.status ==
                         AuthenticationStatus.chooseBusinessLoading)
@@ -249,18 +253,20 @@ class NewBusinessButton extends StatelessWidget {
         Navigator.of(context).push(BusinessView.route());
       },
       child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColor.background.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-              child: Column(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColor.background.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Center(
+          child: Column(
             children: const [
               Icon(Icons.add_business),
               Text("Add New Business")
             ],
-          ))),
+          ),
+        ),
+      ),
     );
   }
 }
