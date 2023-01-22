@@ -73,13 +73,11 @@ class SearchReturnOrderForm extends StatelessWidget {
       children: [
         CustomTextField(
           label: "Order No",
-          textInputType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          textCapitalization: TextCapitalization.characters,
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-zA-Z]+'))],
           onFieldSubmitted: (value) {
-            if (int.tryParse(value) != null) {
-              BlocProvider.of<ReturnOrderBloc>(context)
-                  .add(SearchOrderToReturn(orderId: value));
-            }
+            BlocProvider.of<ReturnOrderBloc>(context)
+                .add(SearchOrderToReturn(orderId: value));
           },
         ),
         BlocBuilder<ReturnOrderBloc, ReturnOrderState>(
@@ -314,8 +312,11 @@ class _ReturnOrderLineItemState extends State<ReturnOrderLineItem> {
                         itemAsString: (ReasonCodeEntity? value) =>
                         value?.description ?? "",
                         asyncItems: (filter) async {
-                          return await RepositoryProvider.of<ReasonCodeRepository>(context)
-                                      .getReasonCodeByTypeCode("RETURN");
+                          var data = await RepositoryProvider.of<ReasonCodeRepository>(context)
+                              .getReasonCodeByTypeCode("RETURN");
+                          print("*********************");
+                          print(data);
+                          return data;
                         },
                         onChanged: (value) {
                           if (value != null) {

@@ -1,12 +1,12 @@
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-import '../database/db_provider.dart';
 import '../entity/pos/entity.dart';
+import 'store_config_manager.dart';
 
 mixin SequenceConfig {
-  String generateSequence(SequenceEntity sequence) {
 
+  String generateSequence(SequenceEntity sequence) {
     String pattern = sequence.pattern;
 
     String res = pattern.replaceAllMapped(RegExp(r'{(.+?)}'), (Match m) {
@@ -22,6 +22,10 @@ mixin SequenceConfig {
         return uuid.v1();
       } else if (key == "tbase36") {
         return timestampToBase36(DateTime.now().millisecondsSinceEpoch);
+      } else if (key == "store") {
+        return timestampToBase36(StoreConfigCacheManager.storeId);
+      } else if (key == "wkst") {
+        return timestampToBase36(StoreConfigCacheManager.workstationId);
       }
       return key;
     });

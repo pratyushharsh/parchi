@@ -14,7 +14,7 @@ class ReasonCodeRepository with DatabaseProvider {
 
   Future<List<ReasonCodeEntity>> getReasonCodeByTypeCode(String reasonTypeCode) {
     try {
-      var data = db.reasonCodeEntitys.where().findAll();
+      var data = defaultInstance.reasonCodeEntitys.where().findAll();
       return data;
     }catch (e) {
       log.severe(e);

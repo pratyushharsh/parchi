@@ -39,10 +39,10 @@ class AppBarLeading extends StatelessWidget {
             width: 15,
           ),
         if (heading != null)
-          Text(
-            heading!,
+          SelectableText(
+            heading!.tr(),
             style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 26),
-          ).tr(),
+          ),
       ],
     );
   }

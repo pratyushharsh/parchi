@@ -31,7 +31,7 @@ mixin DatabaseProvider {
     if (!_isIsolated) {
       path = (await getApplicationDocumentsDirectory()).path;
       log.info("Creating new database connection at $path");
-      inspector = false;
+      inspector = true;
     }
 
     return await Isar.open([

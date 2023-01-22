@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../config/store_config_manager.dart';
 import '../../../entity/pos/business_entity.dart';
 import '../../../repositories/business_repository.dart';
 import '../../../database/db_provider.dart';
@@ -77,6 +78,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
               await businessRepository.getBusinessById(int.parse(curStore));
           var userDetail = await employeeRepository.getEmployeeByStoreAndUserId(
               curStore, user.getUsername()!);
+          StoreConfigCacheManager.init(
+              storeId: int.parse(curStore),
+              workstationId: 1,
+              userId: user.getUsername()!,
+              userName: '${userDetail?.firstName ?? ""} ${userDetail?.lastName}',
+              userEmail: '${userDetail?.email}',);
           emit(AuthenticationState.authenticated(user, business, userDetail!));
           sync.add(StartSyncEvent(int.parse(curStore)));
         }

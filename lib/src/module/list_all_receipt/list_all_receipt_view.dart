@@ -51,8 +51,7 @@ class ListAllReceiptView extends StatelessWidget {
         }
         return RefreshIndicator(
           onRefresh: () async {
-            BlocProvider.of<ListAllReceiptBloc>(context)
-                .add(LoadAllReceipt());
+            BlocProvider.of<ListAllReceiptBloc>(context).add(LoadAllReceipt());
           },
           child: state.receipts.isEmpty
               ? const WidgetNoReceipt()
@@ -122,12 +121,16 @@ class ReceiptHeaderCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  SelectableText(
                     receipt.transId,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   if (receipt.locked)
-                  const Icon(Icons.lock_outline, size: 12, color: Colors.grey,)
+                    const Icon(
+                      Icons.lock_outline,
+                      size: 12,
+                      color: Colors.grey,
+                    )
                 ],
               ),
               Row(
@@ -139,10 +142,11 @@ class ReceiptHeaderCard extends StatelessWidget {
                     const Text(' | '),
                   if (receipt.shippingAddress != null)
                     Expanded(
-                        child: Text(
-                      '${receipt.shippingAddress}',
-                      overflow: TextOverflow.ellipsis,
-                    ))
+                      child: Text(
+                        '${receipt.shippingAddress}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
                 ],
               ),
               Row(

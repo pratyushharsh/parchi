@@ -626,6 +626,12 @@ class CreateNewReceiptBloc
 
   void _onReturnLineItem(
       OnReturnLineItemEvent event, Emitter<CreateNewReceiptState> emit) async {
+    // @TODO Check if the header is created otherwise create new transaction header
+    if (state.transactionHeader == null) {
+      var header = await _createNewTransactionHeader();
+      emit(state.copyWith(transactionHeader: header, transSeq: header.transId));
+    }
+
     // Create a new Return Line Item
     int seq = state.lineItem.length;
 
