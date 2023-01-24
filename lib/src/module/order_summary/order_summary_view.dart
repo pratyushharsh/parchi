@@ -254,14 +254,17 @@ class OrderLine extends StatelessWidget {
                 .map((e) => InkWell(
                       onTap: () {},
                       child: !e.isVoid
-                          ? Column(
-                              children: [
-                                NewLineItem(
-                                  saleLine: e,
-                                  productModel: productMap[e.itemId],
-                                ),
-                                const Divider()
-                              ],
+                          ? Container(
+                              color: AppColor.headerBackground.withOpacity(0.5),
+                              child: Column(
+                                children: [
+                                  NewLineItem(
+                                    saleLine: e,
+                                    productModel: productMap[e.itemId],
+                                  ),
+                                  const Divider()
+                                ],
+                              ),
                             )
                           : Container(),
                     ))
@@ -269,24 +272,32 @@ class OrderLine extends StatelessWidget {
           ],
         );
       } else {
-        return Column(
-            children: order.lineItems
-                .map((e) => !e.isVoid
-                    ? InkWell(
-                        onTap: () {},
-                        child: Column(
-                          children: [
-                            const Divider(height: 0),
-                            OrderItemDetailDisplay(
-                                entity: e,
-                                product: productMap[e.itemId],
-                                orderLocale: order.storeLocale),
-                            const Divider(height: 0),
-                          ],
-                        ),
-                      )
-                    : Container())
-                .toList());
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: order.lineItems.length,
+          itemBuilder: ((context, index) {
+            final e = order.lineItems[index];
+            if (e.isVoid) {
+              return Container();
+            }
+            return InkWell(
+              onTap: () {},
+              child: Container(
+                color: index % 2 != 0 ? AppColor.headerBackground.withOpacity(0.3) : null,
+                child: Column(
+                  children: [
+                    const Divider(height: 0),
+                    OrderItemDetailDisplay(
+                        entity: e,
+                        product: productMap[e.itemId],
+                        orderLocale: order.storeLocale),
+                    const Divider(height: 0),
+                  ],
+                ),
+              ),
+            );
+          }),
+        );
       }
     });
   }
@@ -338,7 +349,9 @@ class OrderItemDetailDisplay extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(entity.itemDescription!,),
+                      Text(
+                        entity.itemDescription!,
+                      ),
                       Text(entity.itemId!),
                     ],
                   ),

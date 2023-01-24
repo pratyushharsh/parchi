@@ -249,6 +249,7 @@ class BuildLineItem extends StatelessWidget {
                               width: 8,
                             ),
                           ),
+                          color: idx % 2 == 0 ? AppColor.headerBackground.withOpacity(0.5) : null
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,

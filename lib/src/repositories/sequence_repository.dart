@@ -20,7 +20,16 @@ class SequenceRepository with DatabaseProvider {
         seq.lastSeqCreatedAt = DateTime.now();
         await db.sequenceEntitys.put(seq);
       } else {
-        await db.sequenceEntitys.put(SequenceEntity(name: type, nextSeq: 1, pattern: '{uuid}', createAt: DateTime.now())..lastSeqCreatedAt = DateTime.now());
+
+        String pattern = '{uuid}';
+
+        if (type == SequenceType.transaction) {
+          pattern = '{store}-{wkst}-{tbase36}';
+        }
+
+        await db.sequenceEntitys.put(SequenceEntity(
+            name: type, nextSeq: 1, pattern: pattern, createAt: DateTime.now())
+          ..lastSeqCreatedAt = DateTime.now());
       }
     });
     // Use the pattern to generate the sequence
@@ -51,7 +60,18 @@ class SequenceRepository with DatabaseProvider {
           }
         }
         if (!exist) {
-          var tmp = SequenceEntity(name: type, nextSeq: 1, pattern: '{uuid}', createAt: DateTime.now());
+
+          String pattern = '{uuid}';
+
+          if (type == SequenceType.transaction) {
+            pattern = '{store}-{wkst}-{tbase36}';
+          }
+
+          var tmp = SequenceEntity(
+              name: type,
+              nextSeq: 1,
+              pattern: pattern,
+              createAt: DateTime.now());
           await db.sequenceEntitys.putByName(tmp);
           sequences.add(tmp);
         }

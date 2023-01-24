@@ -152,10 +152,10 @@ class _SearchUserDisplayDesktopState extends State<SearchUserDisplayDesktop> {
               child: CustomerWidget(),
             ),
             const Positioned(
-              child: SearchItemProductsListDesktop(),
               bottom: 90,
               left: 0,
               right: 0,
+              child: SearchItemProductsListDesktop(),
             ),
             Positioned(
               bottom: -4,

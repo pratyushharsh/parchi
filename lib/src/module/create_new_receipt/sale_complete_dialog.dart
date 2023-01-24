@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../config/theme_settings.dart';
 import '../../widgets/custom_button.dart';
+import '../../widgets/extension/retail_extension.dart';
 
 typedef OnButtonCallback = void Function();
 
@@ -29,9 +30,9 @@ class SaleCompleteDialog extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          const Text(
-            "Change Due : \$0.00",
-            style: TextStyle(fontWeight: FontWeight.w100, fontSize: 20, color: AppColor.formInputText),
+          Text(
+            "Change Due : ${getCurrencyFormatter(context).format(0.00)}",
+            style: const TextStyle(fontWeight: FontWeight.w100, fontSize: 20, color: AppColor.formInputText),
           ),
           Expanded(child: Container()),
           Padding(
