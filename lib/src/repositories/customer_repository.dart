@@ -39,6 +39,7 @@ class CustomerRepository with DatabaseProvider {
     return db.transactionHeaderEntitys
         .where()
         .customerIdEqualTo(customerId)
+        .sortByBusinessDateDesc()
         .findAll();
   }
 

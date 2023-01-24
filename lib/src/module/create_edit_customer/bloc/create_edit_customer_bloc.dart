@@ -80,11 +80,8 @@ class CreateEditCustomerBloc
       emit(state.copyWith(
           status: CreateEditCustomerStatus.loadedExistingCustomer));
       ContactEntity? ce = await customerRepository.getCustomerById(customerId!);
-      List<TransactionHeaderEntity> purchaseHistory = await db
-          .transactionHeaderEntitys
-          .where()
-          .customerIdEqualTo(customerId)
-          .findAll();
+      List<TransactionHeaderEntity> purchaseHistory =
+          await customerRepository.getPurchaseListByCustomerId(customerId!);
       emit(state.copyWith(
           status: CreateEditCustomerStatus.loadedExistingCustomer,
           customer: ce,
