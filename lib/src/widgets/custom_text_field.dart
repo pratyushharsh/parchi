@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? icon;
   final Widget? suffixIcon;
   final String? initialValue;
+  final String? hint;
   final ValueChanged<String>? onValueChange;
   final String? errorText;
   final TextInputType? textInputType;
@@ -38,6 +39,7 @@ class CustomTextField extends StatelessWidget {
       this.maxLines = 1,
       this.minLines = 1,
       this.initialValue,
+      this.hint,
       this.onValueChange,
       this.textInputType,
       this.errorText,
@@ -123,6 +125,7 @@ class CustomTextField extends StatelessWidget {
               border: const OutlineInputBorder(),
               isDense: true,
               errorText: errorText,
+              hintText: hint,
             ),
           ),
         ),

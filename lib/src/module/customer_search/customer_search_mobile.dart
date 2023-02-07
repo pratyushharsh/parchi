@@ -37,6 +37,7 @@ class CustomerSearchMobile extends StatelessWidget {
               child: Column(children: [
                 CustomTextField(
                   label: "Customer Detail",
+                  hint: "Customer name, Phone number, Email",
                   onValueChange: (value) {
                     BlocProvider.of<CustomerSearchBloc>(context)
                         .add(OnCustomerNameChange(name: value));

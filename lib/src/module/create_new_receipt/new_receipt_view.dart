@@ -87,7 +87,7 @@ class NewReceiptView extends StatelessWidget {
                 child: SizedBox(
                   width: min(MediaQuery.of(context).size.width * 0.8, 600),
                   height: 450,
-                  child: const SaleCompleteDialog(),
+                  child: SaleCompleteDialog(customer: state.customer,),
                 ),
               ),
             ).then((value) => {
@@ -371,13 +371,14 @@ class SearchAndAddItem extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
+        color: AppColor.headerBackground.withOpacity(0.5),
         child: Row(
           children: [
             const Icon(Icons.add),
             const SizedBox(
               width: 10,
             ),
-            const Text("_searchForProducts").tr()
+            const Text("_searchForProducts", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),).tr()
           ],
         ),
       ),
@@ -418,6 +419,16 @@ class LineItemHeader extends StatelessWidget {
       if (constraints.maxWidth < 800) {
         return Row(
           children: [
+            Expanded(
+              flex: 1,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "_item".tr(),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
             Expanded(
               flex: 2,
               child: Align(
@@ -505,6 +516,7 @@ class TenderLineDisplay extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
       child: Row(
         children: [
+          const SizedBox(width: 50, child: Icon(Icons.currency_exchange),),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
@@ -579,7 +591,7 @@ class NewLineItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(saleLine.itemDescription!),
+                    // Text(saleLine.itemId!),
                     Text(saleLine.itemDescription!),
                     Text(
                       saleLine.itemId!,

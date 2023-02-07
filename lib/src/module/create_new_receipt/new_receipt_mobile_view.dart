@@ -269,8 +269,9 @@ class AcceptTenderDisplayMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: AppColor.primary,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
             body: TenderDisplayDesktop(
           onTender: onTender,

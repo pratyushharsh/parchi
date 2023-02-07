@@ -12,8 +12,8 @@ import '../../../repositories/contact_repository.dart';
 part 'customer_search_event.dart';
 part 'customer_search_state.dart';
 
-class CustomerSearchBloc
-    extends Bloc<CustomerSearchEvent, CustomerSearchState> with DatabaseProvider{
+class CustomerSearchBloc extends Bloc<CustomerSearchEvent, CustomerSearchState>
+    with DatabaseProvider {
   final log = Logger('CustomerSearchBloc');
   final ContactRepository contactDb;
 
@@ -44,8 +44,14 @@ class CustomerSearchBloc
             .where((con) {
               if (event.name != null) {
                 if (con.firstName
-                    .toLowerCase()
-                    .contains(event.name!.toLowerCase())) {
+                        .toLowerCase()
+                        .contains(event.name!.toLowerCase()) ||
+                    con.lastName
+                        .toLowerCase()
+                        .contains(event.name!.toLowerCase()) ||
+                    (con.phoneNumber ?? '').contains(event.name!) ||
+                    (con.email ?? '').contains(event.name!) ||
+                    con.contactId.contains(event.name!)) {
                   return true;
                 }
                 return false;

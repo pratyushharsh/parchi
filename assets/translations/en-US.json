@@ -81,6 +81,7 @@
     "_searchReceiptHint": "Search by Receipt Id, Customer Name, Phone",
     "_unitCost": "Unit Cost",
     "_qty": "Qty",
+    "_item": "Item",
 
     "_taxGroupLabel": "Tax Group: {groupId}",
     "_receiptNoLabel": "Txn # {receiptNo}",

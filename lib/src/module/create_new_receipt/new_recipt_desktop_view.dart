@@ -15,6 +15,7 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/desktop_pop_up.dart';
 import '../../widgets/extension/retail_extension.dart';
 import '../../widgets/keypad_overlay/keypad_overlay.dart';
+import '../../widgets/store_user_widget.dart';
 import '../../widgets/timer.dart';
 import '../authentication/bloc/authentication_bloc.dart';
 import '../calculator/calculator.dart';
@@ -421,7 +422,7 @@ class _TenderDisplayDesktopState extends State<TenderDisplayDesktop> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

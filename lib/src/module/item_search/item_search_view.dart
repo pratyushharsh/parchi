@@ -47,14 +47,18 @@ class SearchItemView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SearchSaleProductBar(),
-              BlocBuilder<ItemSearchBloc, ItemSearchState>(
-                  builder: (context, state) {
-                return Column(
-                  children: state.products
-                      .map((e) => buildItemCard(context, e))
-                      .toList(),
-                );
-              })
+              Expanded(
+                child: BlocBuilder<ItemSearchBloc, ItemSearchState>(
+                    builder: (context, state) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: state.products
+                          .map((e) => buildItemCard(context, e))
+                          .toList(),
+                    ),
+                  );
+                }),
+              )
             ],
           ),
         ),

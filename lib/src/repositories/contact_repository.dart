@@ -16,9 +16,9 @@ class ContactRepository {
         _contacts = data
             .map((e) {
 
-              Phone? ph;
+              String? ph;
               try {
-                ph = e.phones.first;
+                ph = e.phones.first.number.replaceAll(" ", '').replaceAll("-", "");
               } catch (e) {
                 // No Phone Found
               }
@@ -34,7 +34,7 @@ class ContactRepository {
                 contactId: 'P${e.id}',
                 firstName: e.name.first,
                 lastName: e.name.last,
-                phoneNumber: ph?.number,
+                phoneNumber: ph,
                 email: em?.address, storeId: '', createTime: DateTime.now()
               );
         },)

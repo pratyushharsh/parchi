@@ -4,13 +4,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../config/theme_settings.dart';
+import '../../entity/pos/contact_entity.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/extension/retail_extension.dart';
 
 typedef OnButtonCallback = void Function();
 
 class SaleCompleteDialog extends StatelessWidget {
-  const SaleCompleteDialog({Key? key}) : super(key: key);
+  final ContactEntity? customer;
+  const SaleCompleteDialog({Key? key, this.customer}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class SaleCompleteDialog extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
             child: TextFormField(
+              initialValue: customer?.email,
               decoration: InputDecoration(
                 labelStyle: const TextStyle(fontWeight: FontWeight.w100, color: AppColor.formInputText),
                 hintText: "Email Invoice",
