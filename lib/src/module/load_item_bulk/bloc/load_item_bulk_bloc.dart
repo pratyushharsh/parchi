@@ -50,19 +50,21 @@ class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> with D
             category: e[1].toString().split(",").map((e) => e).toList(),
             displayName: e[2].toString(),
             description: e[3].toString(),
-            listPrice: e[4].toString().isNotEmpty
-                ? double.parse(e[4].toString())
+            color: e[4].toString(),
+            size: e[5].toString(),
+            listPrice: e[6].toString().isNotEmpty
+                ? double.parse(e[6].toString())
                 : 9999999.00,
-            salePrice: e[5].toString().isNotEmpty
-                ? double.parse(e[5].toString())
+            salePrice: e[7].toString().isNotEmpty
+                ? double.parse(e[7].toString())
                 : 9999999.00,
-            uom: e[6].toString(),
-            brand: e[7],
-            skuCode: e[8].toString(),
-            hsn: e[9],
-            taxGroupId: e[10],
-            imageUrl: e[11].toString().isNotEmpty
-                ? e[11]
+            uom: e[8].toString(),
+            brand: e[9],
+            skuCode: e[10].toString(),
+            hsn: e[11],
+            taxGroupId: e[12],
+            imageUrl: e[13].toString().isNotEmpty
+                ? e[13]
                     .toString()
                     .split(",")
                     .where((element) => element.isNotEmpty)

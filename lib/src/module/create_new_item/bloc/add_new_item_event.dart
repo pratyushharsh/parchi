@@ -104,4 +104,16 @@ class PriceIncludeTaxChangedEvent extends AddNewItemEvent {
   PriceIncludeTaxChangedEvent(this.priceIncludeTax);
 }
 
+class SizeChangedEvent extends AddNewItemEvent {
+  final String size;
+
+  SizeChangedEvent(this.size);
+}
+
+class ColorChangedEvent extends AddNewItemEvent {
+  final String color;
+
+  ColorChangedEvent(this.color);
+}
+
 class SaveProductEvent extends AddNewItemEvent {}

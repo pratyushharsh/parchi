@@ -13,6 +13,8 @@ class AddNewItemState {
   final String? skuCode;
   final String? barcode;
   final String? hsn;
+  final String? color;
+  final String? size;
   final TaxGroupEntity? taxGroupId;
   final List<String> category;
   final List<String> imageUrl;
@@ -32,6 +34,8 @@ class AddNewItemState {
     this.skuCode,
     this.barcode,
     this.hsn,
+    this.color,
+    this.size,
     this.taxGroupId,
     this.category = const [],
     this.imageUrl = const [],
@@ -51,6 +55,8 @@ class AddNewItemState {
     String? skuCode,
     String? barcode,
     String? hsn,
+    String? color,
+    String? size,
     TaxGroupEntity? taxGroupId,
     List<String>? category,
     List<String>? imageUrl,
@@ -69,6 +75,8 @@ class AddNewItemState {
       skuCode: skuCode ?? this.skuCode,
       barcode: barcode ?? this.barcode,
       hsn: hsn ?? this.hsn,
+      color: color ?? this.color,
+      size: size ?? this.size,
       taxGroupId: taxGroupId ?? this.taxGroupId,
       category: category ?? this.category,
       imageUrl: imageUrl ?? this.imageUrl,

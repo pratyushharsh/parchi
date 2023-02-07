@@ -38,14 +38,15 @@ class AddNewItemScreen extends StatelessWidget {
           )..add(LoadExistingProduct(productId)),
         )
       ],
-      child: const AddNewItemForm(),
+      child: AddNewItemForm(editable: productId == null,),
     );
   }
 }
 
 class AddNewItemForm extends StatefulWidget {
   final NewItemScreenState status;
-  const AddNewItemForm({Key? key, this.status = NewItemScreenState.createItem})
+  final bool editable;
+  const AddNewItemForm({Key? key, this.status = NewItemScreenState.createItem, this.editable = true})
       : super(key: key);
 
   @override
@@ -111,13 +112,13 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
               body: Stack(
                 fit: StackFit.expand,
                 children: [
-                  const NewItemDetailForm(),
+                  NewItemDetailForm(editable: widget.editable,),
                   Positioned(
                     top: 40,
                     left: 16,
                     child: AppBarLeading(
                       heading: state.existingProduct != null
-                          ? state.existingProduct!.productId
+                          ? (state.existingProduct!.skuCode ?? state.existingProduct!.productId)
                           : "_newProduct",
                       icon: Icons.arrow_back,
                       onTap: () {
@@ -128,7 +129,7 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                   // if (!_inEditMode)
                   BlocBuilder<AddNewItemBloc, AddNewItemState>(
                     builder: (context, state) {
-                      if(state.status == AddNewItemStatus.existingProduct) return Container();
+                      if(state.status == AddNewItemStatus.existingProduct || !widget.editable) return Container();
                       return Positioned(
                         top: 20,
                         right: 16,
@@ -153,6 +154,7 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                       );
                     },
                   ),
+                  if (widget.editable)
                   Positioned(
                     bottom: 10,
                     child: Container(
@@ -192,7 +194,8 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
 }
 
 class NewItemDetailForm extends StatefulWidget {
-  const NewItemDetailForm({Key? key}) : super(key: key);
+  final bool editable;
+  const NewItemDetailForm({Key? key, required this.editable}) : super(key: key);
 
   @override
   State<NewItemDetailForm> createState() => _NewItemDetailFormState();
@@ -206,6 +209,8 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
   late TextEditingController _brandController;
   late TextEditingController _hsnController;
   late TextEditingController _skuController;
+  late TextEditingController _colorController;
+  late TextEditingController _sizeController;
 
   @override
   void initState() {
@@ -217,6 +222,8 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
     _brandController = TextEditingController();
     _hsnController = TextEditingController();
     _skuController = TextEditingController();
+    _colorController = TextEditingController();
+    _sizeController = TextEditingController();
   }
 
   @override
@@ -228,6 +235,8 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
     _brandController.dispose();
     _hsnController.dispose();
     _skuController.dispose();
+    _colorController.dispose();
+    _sizeController.dispose();
     super.dispose();
   }
 
@@ -256,6 +265,8 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
           _brandController.text = state.brand ?? "";
           _hsnController.text = state.hsn ?? "";
           _skuController.text = state.skuCode ?? "";
+          _colorController.text = state.color ?? "";
+          _sizeController.text = state.size ?? "";
         }
 
         return SingleChildScrollView(
@@ -272,6 +283,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                     ),
                     ProductItemsImage(
                       imageUrl: state.imageUrl,
+                      editable: widget.editable,
                     ),
                     CustomTextField(
                       label: "_productName",
@@ -283,16 +295,75 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                       },
                       minLines: 1,
                       maxLines: 3,
+                      enabled: widget.editable,
                     ),
                     CustomTextField(
-                      label: "_productDescription",
-                      controller: _productDescriptionController,
-                      onValueChange: (value) {
-                        BlocProvider.of<AddNewItemBloc>(context)
-                            .add(DescriptionChangedEvent(value));
-                      },
-                      minLines: 7,
-                      maxLines: 20,
+                      label: "_barcodeSku",
+                      controller: _skuController,
+                      validator: NewProductFieldValidator.validateSkuData,
+                      enabled: widget.editable,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: CustomTextField(
+                            label: "_color",
+                            controller: _colorController,
+                            onValueChange: (value) {
+                              BlocProvider.of<AddNewItemBloc>(context)
+                                  .add(ColorChangedEvent(value));
+                            },
+                            enabled: widget.editable,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                          child: CustomTextField(
+                            label: "_size",
+                            controller: _sizeController,
+                            onValueChange: (value) {
+                              BlocProvider.of<AddNewItemBloc>(context)
+                                  .add(SizeChangedEvent(value));
+                            },
+                            enabled: widget.editable,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: CodeValueDropDown(
+                            label: "_uom",
+                            onChanged: _onSelectedUomChanged,
+                            category: "UOM",
+                            value: state.uom,
+                            validator: (value) {
+                              return NewProductFieldValidator.validateUOM(
+                                  value?.code);
+                            },
+                            enabled: widget.editable,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                          child: CustomTextField(
+                            label: "_brand",
+                            controller: _brandController,
+                            onValueChange: (value) {
+                              BlocProvider.of<AddNewItemBloc>(context)
+                                  .add(BrandChangedEvent(value));
+                            },
+                            enabled: widget.editable,
+                          ),
+                        ),
+                      ],
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,28 +380,12 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                                     SalePriceChangedEvent(double.parse(value)));
                               }
                             },
+                            enabled: widget.editable,
                           ),
                         ),
                         const SizedBox(
                           width: 8,
                         ),
-                        Expanded(
-                          child: CodeValueDropDown(
-                            label: "_uom",
-                            onChanged: _onSelectedUomChanged,
-                            category: "UOM",
-                            value: state.uom,
-                            validator: (value) {
-                              return NewProductFieldValidator.validateUOM(
-                                  value?.code);
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
                         Expanded(
                           child: CustomTextField(
                             label: "_listPrice",
@@ -343,22 +398,21 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                                     ListPriceChangedEvent(double.parse(value)));
                               }
                             },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Expanded(
-                          child: CustomTextField(
-                            label: "_brand",
-                            controller: _brandController,
-                            onValueChange: (value) {
-                              BlocProvider.of<AddNewItemBloc>(context)
-                                  .add(BrandChangedEvent(value));
-                            },
+                            enabled: widget.editable,
                           ),
                         ),
                       ],
+                    ),
+                    CustomTextField(
+                      label: "_productDescription",
+                      controller: _productDescriptionController,
+                      onValueChange: (value) {
+                        BlocProvider.of<AddNewItemBloc>(context)
+                            .add(DescriptionChangedEvent(value));
+                      },
+                      minLines: 7,
+                      maxLines: 20,
+                      enabled: widget.editable,
                     ),
                     const SizedBox(
                       height: 20,
@@ -408,6 +462,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                           child: CustomTextField(
                             label: "_hsn",
                             controller: _hsnController,
+                            enabled: widget.editable,
                           ),
                         ),
                         const SizedBox(
@@ -426,17 +481,10 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                             },
                             onChanged: _onSelectedTaxGroupChanged,
                             validator: NewProductFieldValidator.validateTaxGroup,
+                            enabled: widget.editable,
                           ),
                         ),
                       ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      label: "_barcodeSku",
-                      controller: _skuController,
-                      validator: NewProductFieldValidator.validateSkuData,
                     ),
                     const SizedBox(
                       height: 300,
@@ -454,7 +502,8 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
 
 class ProductItemsImage extends StatefulWidget {
   final List<String> imageUrl;
-  const ProductItemsImage({Key? key, required this.imageUrl}) : super(key: key);
+  final bool editable;
+  const ProductItemsImage({Key? key, required this.imageUrl, required this.editable}) : super(key: key);
   @override
   State<ProductItemsImage> createState() => _ProductItemsImageState();
 }
@@ -520,6 +569,7 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
                         ),
                       ))
                   .toList(),
+              if (widget.editable)
               const AddNewItemImage(height: 100, width: 100)
             ],
           ),
@@ -584,6 +634,7 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
                         ),
                       ))
                   .toList(),
+              if (widget.editable)
               const AddNewItemImage()
             ],
           ),

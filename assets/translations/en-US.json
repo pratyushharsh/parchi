@@ -82,6 +82,8 @@
     "_unitCost": "Unit Cost",
     "_qty": "Qty",
     "_item": "Item",
+    "_color": "Color",
+    "_size": "Size",
 
     "_taxGroupLabel": "Tax Group: {groupId}",
     "_receiptNoLabel": "Txn # {receiptNo}",

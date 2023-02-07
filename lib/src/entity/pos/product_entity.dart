@@ -26,6 +26,8 @@ class ProductEntity {
   String? skuCode;
   String? hsn;
   String? taxGroupId;
+  String? color;
+  String? size;
 
   @Index()
   List<String> category;
@@ -57,6 +59,8 @@ class ProductEntity {
     this.skuCode,
     this.hsn,
     this.taxGroupId,
+    this.color,
+    this.size,
     this.category = const [],
     this.imageUrl = const [],
     required this.createTime,
