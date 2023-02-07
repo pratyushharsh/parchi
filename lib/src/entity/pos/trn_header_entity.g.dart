@@ -106,65 +106,70 @@ const TransactionHeaderEntitySchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'TransactionPaymentLineItemEntity',
     ),
-    r'roundTotal': PropertySchema(
+    r'returnRef': PropertySchema(
       id: 17,
+      name: r'returnRef',
+      type: IsarType.stringList,
+    ),
+    r'roundTotal': PropertySchema(
+      id: 18,
       name: r'roundTotal',
       type: IsarType.double,
     ),
     r'shippingAddress': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'shippingAddress',
       type: IsarType.object,
       target: r'Address',
     ),
     r'status': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'status',
       type: IsarType.string,
       enumMap: _TransactionHeaderEntitystatusEnumValueMap,
     ),
     r'storeCurrency': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'storeCurrency',
       type: IsarType.string,
     ),
     r'storeId': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'storeId',
       type: IsarType.long,
     ),
     r'storeLocale': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'storeLocale',
       type: IsarType.string,
     ),
     r'subtotal': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'subtotal',
       type: IsarType.double,
     ),
     r'syncState': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'syncState',
       type: IsarType.long,
     ),
     r'taxTotal': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'taxTotal',
       type: IsarType.double,
     ),
     r'total': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'total',
       type: IsarType.double,
     ),
     r'transId': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'transId',
       type: IsarType.string,
     ),
     r'transactionType': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'transactionType',
       type: IsarType.string,
       enumMap: _TransactionHeaderEntitytransactionTypeEnumValueMap,
@@ -305,6 +310,19 @@ const TransactionHeaderEntitySchema = CollectionSchema(
           caseSensitive: false,
         )
       ],
+    ),
+    r'returnRef': IndexSchema(
+      id: -7551087479532740082,
+      name: r'returnRef',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'returnRef',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
     )
   },
   links: {},
@@ -389,6 +407,13 @@ int _transactionHeaderEntityEstimateSize(
           value, offsets, allOffsets);
     }
   }
+  bytesCount += 3 + object.returnRef.length * 3;
+  {
+    for (var i = 0; i < object.returnRef.length; i++) {
+      final value = object.returnRef[i];
+      bytesCount += value.length * 3;
+    }
+  }
   {
     final value = object.shippingAddress;
     if (value != null) {
@@ -442,23 +467,24 @@ void _transactionHeaderEntitySerialize(
     TransactionPaymentLineItemEntitySchema.serialize,
     object.paymentLineItems,
   );
-  writer.writeDouble(offsets[17], object.roundTotal);
+  writer.writeStringList(offsets[17], object.returnRef);
+  writer.writeDouble(offsets[18], object.roundTotal);
   writer.writeObject<Address>(
-    offsets[18],
+    offsets[19],
     allOffsets,
     AddressSchema.serialize,
     object.shippingAddress,
   );
-  writer.writeString(offsets[19], object.status.name);
-  writer.writeString(offsets[20], object.storeCurrency);
-  writer.writeLong(offsets[21], object.storeId);
-  writer.writeString(offsets[22], object.storeLocale);
-  writer.writeDouble(offsets[23], object.subtotal);
-  writer.writeLong(offsets[24], object.syncState);
-  writer.writeDouble(offsets[25], object.taxTotal);
-  writer.writeDouble(offsets[26], object.total);
-  writer.writeString(offsets[27], object.transId);
-  writer.writeString(offsets[28], object.transactionType.name);
+  writer.writeString(offsets[20], object.status.name);
+  writer.writeString(offsets[21], object.storeCurrency);
+  writer.writeLong(offsets[22], object.storeId);
+  writer.writeString(offsets[23], object.storeLocale);
+  writer.writeDouble(offsets[24], object.subtotal);
+  writer.writeLong(offsets[25], object.syncState);
+  writer.writeDouble(offsets[26], object.taxTotal);
+  writer.writeDouble(offsets[27], object.total);
+  writer.writeString(offsets[28], object.transId);
+  writer.writeString(offsets[29], object.transactionType.name);
 }
 
 TransactionHeaderEntity _transactionHeaderEntityDeserialize(
@@ -501,25 +527,26 @@ TransactionHeaderEntity _transactionHeaderEntityDeserialize(
           TransactionPaymentLineItemEntity(),
         ) ??
         const [],
-    roundTotal: reader.readDouble(offsets[17]),
+    returnRef: reader.readStringList(offsets[17]) ?? const [],
+    roundTotal: reader.readDouble(offsets[18]),
     shippingAddress: reader.readObjectOrNull<Address>(
-      offsets[18],
+      offsets[19],
       AddressSchema.deserialize,
       allOffsets,
     ),
     status: _TransactionHeaderEntitystatusValueEnumMap[
-            reader.readStringOrNull(offsets[19])] ??
+            reader.readStringOrNull(offsets[20])] ??
         TransactionStatus.created,
-    storeCurrency: reader.readString(offsets[20]),
-    storeId: reader.readLong(offsets[21]),
-    storeLocale: reader.readString(offsets[22]),
-    subtotal: reader.readDouble(offsets[23]),
-    syncState: reader.readLongOrNull(offsets[24]),
-    taxTotal: reader.readDouble(offsets[25]),
-    total: reader.readDouble(offsets[26]),
-    transId: reader.readString(offsets[27]),
+    storeCurrency: reader.readString(offsets[21]),
+    storeId: reader.readLong(offsets[22]),
+    storeLocale: reader.readString(offsets[23]),
+    subtotal: reader.readDouble(offsets[24]),
+    syncState: reader.readLongOrNull(offsets[25]),
+    taxTotal: reader.readDouble(offsets[26]),
+    total: reader.readDouble(offsets[27]),
+    transId: reader.readString(offsets[28]),
     transactionType: _TransactionHeaderEntitytransactionTypeValueEnumMap[
-            reader.readStringOrNull(offsets[28])] ??
+            reader.readStringOrNull(offsets[29])] ??
         TransactionType.sale,
   );
   object.id = id;
@@ -584,34 +611,36 @@ P _transactionHeaderEntityDeserializeProp<P>(
           ) ??
           const []) as P;
     case 17:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 18:
+      return (reader.readDouble(offset)) as P;
+    case 19:
       return (reader.readObjectOrNull<Address>(
         offset,
         AddressSchema.deserialize,
         allOffsets,
       )) as P;
-    case 19:
+    case 20:
       return (_TransactionHeaderEntitystatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TransactionStatus.created) as P;
-    case 20:
-      return (reader.readString(offset)) as P;
     case 21:
-      return (reader.readLong(offset)) as P;
-    case 22:
       return (reader.readString(offset)) as P;
+    case 22:
+      return (reader.readLong(offset)) as P;
     case 23:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 24:
-      return (reader.readLongOrNull(offset)) as P;
-    case 25:
       return (reader.readDouble(offset)) as P;
+    case 25:
+      return (reader.readLongOrNull(offset)) as P;
     case 26:
       return (reader.readDouble(offset)) as P;
     case 27:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 28:
+      return (reader.readString(offset)) as P;
+    case 29:
       return (_TransactionHeaderEntitytransactionTypeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TransactionType.sale) as P;
@@ -804,6 +833,15 @@ extension TransactionHeaderEntityQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'locked'),
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QAfterWhere>
+      anyReturnRefElement() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'returnRef'),
       );
     });
   }
@@ -1917,6 +1955,148 @@ extension TransactionHeaderEntityQueryWhere on QueryBuilder<
               lower: [],
               upper: [locked],
               includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> returnRefElementEqualTo(String returnRefElement) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'returnRef',
+        value: [returnRefElement],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> returnRefElementNotEqualTo(String returnRefElement) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnRef',
+              lower: [],
+              upper: [returnRefElement],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnRef',
+              lower: [returnRefElement],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnRef',
+              lower: [returnRefElement],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnRef',
+              lower: [],
+              upper: [returnRefElement],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> returnRefElementGreaterThan(
+    String returnRefElement, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnRef',
+        lower: [returnRefElement],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> returnRefElementLessThan(
+    String returnRefElement, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnRef',
+        lower: [],
+        upper: [returnRefElement],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> returnRefElementBetween(
+    String lowerReturnRefElement,
+    String upperReturnRefElement, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnRef',
+        lower: [lowerReturnRefElement],
+        includeLower: includeLower,
+        upper: [upperReturnRefElement],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterWhereClause>
+      returnRefElementStartsWith(String ReturnRefElementPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnRef',
+        lower: [ReturnRefElementPrefix],
+        upper: ['$ReturnRefElementPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> returnRefElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'returnRef',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterWhereClause> returnRefElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'returnRef',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'returnRef',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'returnRef',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'returnRef',
+              upper: [''],
             ));
       }
     });
@@ -3543,6 +3723,233 @@ extension TransactionHeaderEntityQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'paymentLineItems',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'returnRef',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'returnRef',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'returnRef',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'returnRef',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'returnRef',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'returnRef',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterFilterCondition>
+      returnRefElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'returnRef',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+          QAfterFilterCondition>
+      returnRefElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'returnRef',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'returnRef',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'returnRef',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'returnRef',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'returnRef',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'returnRef',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'returnRef',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'returnRef',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity,
+      QAfterFilterCondition> returnRefLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'returnRef',
         lower,
         includeLower,
         upper,
@@ -5513,6 +5920,13 @@ extension TransactionHeaderEntityQueryWhereDistinct on QueryBuilder<
   }
 
   QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QDistinct>
+      distinctByReturnRef() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'returnRef');
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, TransactionHeaderEntity, QDistinct>
       distinctByRoundTotal() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'roundTotal');
@@ -5716,6 +6130,13 @@ extension TransactionHeaderEntityQueryProperty on QueryBuilder<
       QQueryOperations> paymentLineItemsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'paymentLineItems');
+    });
+  }
+
+  QueryBuilder<TransactionHeaderEntity, List<String>, QQueryOperations>
+      returnRefProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'returnRef');
     });
   }
 

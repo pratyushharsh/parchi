@@ -269,6 +269,11 @@ class CreateNewReceiptBloc
     transaction.discountTotal = discountAmount;
     transaction.taxTotal = taxAmount;
 
+    List<String> returnLine = [];
+    // Find all line item that is returned
+    
+
+
     // Create If Contact Does not exist else override
     if (state.customer != null) {
       try {

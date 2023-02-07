@@ -359,10 +359,7 @@ class _TenderDisplayDesktopState extends State<TenderDisplayDesktop> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                        tenderIconMapping[selectedTender] ??
-                            tenderIconMapping["OTHER"]!,
-                        size: 80),
+                    tenderIconMapping["OTHER"]!,
                     const SizedBox(
                       height: 50,
                     ),
@@ -484,9 +481,9 @@ class TenderListDisplayCard extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(tenderIconMapping[tenderType] ??
-                    tenderIconMapping["OTHER"]!),
-                const SizedBox(height: 10),
+                tenderIconMapping[tenderType] ??
+                    tenderIconMapping["OTHER"]!,
+                const SizedBox(height: 5),
                 Text(tenderType)
               ],
             ),

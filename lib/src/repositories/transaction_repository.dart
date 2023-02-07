@@ -34,6 +34,7 @@ class TransactionRepository with DatabaseProvider {
   // @TODO
   Future<List<TransactionLineItemEntity>> getLineItemWithOriginalTransactionNo(
       String id) async {
+    // db.transactionHeaderEntitys.where().returnRefElementEqualTo
     // var order = await db.transactionHeaderEntitys.where().lineItemsProperty().originalTransSeqProperty().equalTo(id).findAll();
     return [];
   }

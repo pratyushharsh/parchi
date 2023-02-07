@@ -65,6 +65,9 @@ class TransactionHeaderEntity {
   List<TransactionLineItemEntity> lineItems;
   List<TransactionPaymentLineItemEntity> paymentLineItems;
 
+  @Index(type: IndexType.value)
+  List<String> returnRef;
+
   // final lineItems = IsarLinks<TransactionLineItemEntity>();
   // final paymentLineItems = IsarLinks<TransactionPaymentLineItemEntity>();
 
@@ -97,7 +100,8 @@ class TransactionHeaderEntity {
       this.lastSyncAt,
       this.syncState,
       this.associateId,
-      this.associateName});
+      this.associateName,
+      this.returnRef = const []});
 }
 
 enum TransactionStatus {

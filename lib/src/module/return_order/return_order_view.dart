@@ -74,7 +74,7 @@ class SearchReturnOrderForm extends StatelessWidget {
         CustomTextField(
           label: "Order No",
           textCapitalization: TextCapitalization.characters,
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-zA-Z]+'))],
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-zA-Z\-]+'))],
           onFieldSubmitted: (value) {
             BlocProvider.of<ReturnOrderBloc>(context)
                 .add(SearchOrderToReturn(orderId: value));
