@@ -47,22 +47,22 @@ class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> with D
 
           var entity = ProductEntity(
             productId: productId,
-            category: [e[1].toString(), ...e[2].toString().split(",").map((e) => e).toList()],
-            displayName: e[3].toString(),
-            description: e[4].toString(),
-            listPrice: e[5].toString().isNotEmpty
+            category: e[1].toString().split(",").map((e) => e).toList(),
+            displayName: e[2].toString(),
+            description: e[3].toString(),
+            listPrice: e[4].toString().isNotEmpty
+                ? double.parse(e[4].toString())
+                : 9999999.00,
+            salePrice: e[5].toString().isNotEmpty
                 ? double.parse(e[5].toString())
                 : 9999999.00,
-            salePrice: e[6].toString().isNotEmpty
-                ? double.parse(e[6].toString())
-                : 9999999.00,
-            uom: e[7].toString(),
-            brand: e[8],
-            skuCode: e[9].toString(),
-            hsn: e[11],
-            taxGroupId: e[11],
-            imageUrl: e[12].toString().isNotEmpty
-                ? e[12]
+            uom: e[6].toString(),
+            brand: e[7],
+            skuCode: e[8].toString(),
+            hsn: e[9],
+            taxGroupId: e[10],
+            imageUrl: e[11].toString().isNotEmpty
+                ? e[11]
                     .toString()
                     .split(",")
                     .where((element) => element.isNotEmpty)

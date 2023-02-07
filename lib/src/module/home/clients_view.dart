@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/theme_settings.dart';
 import '../../widgets/search_bar.dart';
+import '../../widgets/store_user_widget.dart';
 import '../all_customer/all_customer_view.dart';
 import '../all_customer/bloc/all_customer_bloc.dart';
 import '../all_customer/customer_filter_bar.dart';
@@ -14,9 +15,23 @@ const List<String> sortOptions = [
   'Sort By Last',
   'Sort By Date'
 ];
+//
+// class CustomerSearchView extends StatelessWidget {
+//   const CustomerSearchView({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Sca();
+//   }
+// }
+
 
 class ClientsView extends StatelessWidget {
   const ClientsView({Key? key}) : super(key: key);
+
+  // static Route route() {
+  //   return MaterialPageRoute<void>(builder: (_) => const ClientsView());
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +54,17 @@ class ClientsViewWidget extends StatelessWidget {
       children: [
         Column(
           children: [
-            Container(
-              color: AppColor.primary,
-              height: 30,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-              child: Row(
-                children: const [
-                  Text("Customer", style: TextStyle(color: Colors.white)),
-                ],
-              ),
-            ),
+            // Container(
+            //   color: AppColor.primary,
+            //   height: 30,
+            //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            //   child: Row(
+            //     children: const [
+            //       Text("Customer", style: TextStyle(color: Colors.white)),
+            //     ],
+            //   ),
+            // ),
+            const StoreUserWidget(),
             Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
               child: SearchBar(

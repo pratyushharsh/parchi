@@ -7,6 +7,7 @@ import '../../config/theme_settings.dart';
 import '../../widgets/appbar_leading.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/desktop_pop_up.dart';
+import '../../widgets/store_user_widget.dart';
 import '../return_order/return_order_view.dart';
 import 'bloc/create_new_receipt_bloc.dart';
 import 'new_receipt_view.dart';
@@ -26,11 +27,11 @@ class NewReceiptMobileView extends StatelessWidget {
           body: Stack(
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: const [
                     SizedBox(
-                      height: 80,
+                      height: 85,
                     ),
                     // CustomerDetailWidget(),
                     CustomerWidget(),
@@ -59,8 +60,8 @@ class NewReceiptMobileView extends StatelessWidget {
               BlocBuilder<CreateNewReceiptBloc, CreateNewReceiptState>(
                 builder: (context, state) {
                   return Positioned(
-                    top: 20,
-                    left: 16,
+                    top: 40,
+                    left: 10,
                     child: AppBarLeading(
                       heading:
                           "_receiptNoLabel".tr(namedArgs: {"receiptNo": state.transSeq}),
@@ -124,8 +125,8 @@ class NewReceiptMobileView extends StatelessWidget {
                 builder: (context, state) {
                   if (state.transactionHeader == null) return const SizedBox();
                   return Positioned(
-                      top: 20,
-                      right: 16,
+                      top: 40,
+                      right: 10,
                       child: Container(
                         decoration: BoxDecoration(
                           color: AppColor.primary,
@@ -244,6 +245,7 @@ class NewReceiptMobileView extends StatelessWidget {
                       ));
                 },
               ),
+              const StoreUserWidget(),
             ],
           ),
           bottomNavigationBar: const Padding(

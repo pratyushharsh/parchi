@@ -9,6 +9,7 @@ import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
 import '../../widgets/clipper/wave_clipper.dart';
 import '../load_customer_contact/bloc/load_customer_contact_bloc.dart';
+import 'bloc/dashboard_bloc.dart';
 import 'clients_view.dart';
 import 'dashboard_view.dart';
 import 'items_view.dart';
@@ -47,45 +48,53 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: selectedIndex != 4
-            ? const LinearGradient(colors: [
-                AppColor.primary,
-                AppColor.primary,
-                AppColor.background,
-                Colors.white,
-              ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
-            : const LinearGradient(colors: [
-                AppColor.background,
-                Colors.white,
-              ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-      ),
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: AppColor.background,
-          body: Stack(
-            fit: StackFit.expand,
-            clipBehavior: Clip.none,
-            children: [
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                // transitionBuilder:
-                //     (Widget child, Animation<double> animation) =>
-                //         ScaleTransition(
-                //   scale: animation,
-                //   child: child,
-                // ),
-                child: _tabs[selectedIndex],
+    return BlocProvider(
+      create: (context) => DashboardBloc(),
+      child: BlocListener<DashboardBloc, DashboardState>(
+        listener: (context, state) {
+          changeIndex(state.index);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: selectedIndex != 4
+                ? const LinearGradient(colors: [
+                    AppColor.primary,
+                    AppColor.primary,
+                    AppColor.background,
+                    Colors.white,
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
+                : const LinearGradient(colors: [
+                    AppColor.background,
+                    Colors.white,
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+          ),
+          child: SafeArea(
+            child: Scaffold(
+              backgroundColor: AppColor.background,
+              body: Stack(
+                fit: StackFit.expand,
+                clipBehavior: Clip.none,
+                children: [
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    // transitionBuilder:
+                    //     (Widget child, Animation<double> animation) =>
+                    //         ScaleTransition(
+                    //   scale: animation,
+                    //   child: child,
+                    // ),
+                    child: _tabs[selectedIndex],
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: MyBottomAppBar(
+                      letIndexChange: changeIndex,
+                      selectedIndex: selectedIndex,
+                    ),
+                  ),
+                ],
               ),
-              Positioned(
-                bottom: 0,
-                child: MyBottomAppBar(
-                  letIndexChange: changeIndex,
-                  selectedIndex: selectedIndex,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -122,7 +131,6 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-
     MainAxisAlignment mainAxisAlignment = MainAxisAlignment.spaceBetween;
     if (Platform.isMacOS || Platform.isWindows) {
       mainAxisAlignment = MainAxisAlignment.center;
@@ -150,7 +158,8 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
               height: 60,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 8),
+              padding:
+                  const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 8),
               child: Row(
                 mainAxisAlignment: mainAxisAlignment,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -158,9 +167,9 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                   InkWell(
                     onTap: () {
                       widget.letIndexChange(0);
-                      setState(() {
-                        _open = false;
-                      });
+                      // setState(() {
+                      //   _open = !_open;
+                      // });
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -168,20 +177,18 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.stacked_bar_chart_rounded,
+                            Icons.receipt_long_rounded,
                             color: widget.selectedIndex == 0
                                 ? AppColor.primary
                                 : AppColor.iconColor,
                           ),
-                          Text(
-                            "_home",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: widget.selectedIndex == 0
-                                  ? AppColor.primary
-                                  : AppColor.iconColor,
-                            ),
-                          ).tr(),
+                          Text("_sale",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.selectedIndex == 0
+                                    ? AppColor.primary
+                                    : AppColor.iconColor,
+                              )).tr(),
                         ],
                       ),
                     ),
@@ -218,9 +225,9 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                   InkWell(
                     onTap: () {
                       widget.letIndexChange(2);
-                      // setState(() {
-                      //   _open = !_open;
-                      // });
+                      setState(() {
+                        _open = false;
+                      });
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -228,18 +235,20 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.receipt_long_rounded,
+                            Icons.stacked_bar_chart_rounded,
                             color: widget.selectedIndex == 2
                                 ? AppColor.primary
                                 : AppColor.iconColor,
                           ),
-                          Text("_sale",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: widget.selectedIndex == 2
-                                    ? AppColor.primary
-                                    : AppColor.iconColor,
-                              )).tr(),
+                          Text(
+                            "_home",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: widget.selectedIndex == 2
+                                  ? AppColor.primary
+                                  : AppColor.iconColor,
+                            ),
+                          ).tr(),
                         ],
                       ),
                     ),
@@ -263,7 +272,9 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                                 : AppColor.iconColor,
                             size: 18,
                           ),
-                          const SizedBox(height: 3,),
+                          const SizedBox(
+                            height: 3,
+                          ),
                           Text("_product",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -412,7 +423,8 @@ class SaleOptionButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        elevation: 0, backgroundColor: AppColor.color8,
+        elevation: 0,
+        backgroundColor: AppColor.color8,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),

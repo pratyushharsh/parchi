@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/theme_settings.dart';
 import '../../widgets/search_bar.dart';
+import '../../widgets/store_user_widget.dart';
 import '../list_all_item/bloc/list_all_item_bloc.dart';
 import '../list_all_item/item_filter_bar.dart';
 import '../list_all_item/list_all_item_view.dart';
@@ -29,16 +30,17 @@ class ItemViewWidgets extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          color: AppColor.primary,
-          height: 30,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-          child: Row(
-            children: [
-              const Text("_productTitle", style: TextStyle(color: Colors.white)).tr(),
-            ],
-          ),
-        ),
+        // Container(
+        //   color: AppColor.primary,
+        //   height: 30,
+        //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+        //   child: Row(
+        //     children: [
+        //       const Text("_productTitle", style: TextStyle(color: Colors.white)).tr(),
+        //     ],
+        //   ),
+        // ),
+        const StoreUserWidget(),
         Padding(
           padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
           child: SearchBar(

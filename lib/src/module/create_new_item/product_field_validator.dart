@@ -53,11 +53,11 @@ class NewProductFieldValidator {
   }
 
   static String? validateSkuData(String? value) {
-    if (value != null && value.isNotEmpty) {
-      if (!isAlphanumeric(value)) {
-        return 'Not a valid number';
-      }
-    }
+    // if (value != null && value.isNotEmpty) {
+    //   if (!isAlphanumeric(value)) {
+    //     return 'Not a valid number';
+    //   }
+    // }
     return null;
   }
 }

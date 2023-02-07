@@ -58,6 +58,9 @@ class OrderSummaryView extends StatelessWidget {
                               ),
                               // Paym entLineDisplay(state.order),
                               OrderDetailSummary(order: state.order!),
+                              const SizedBox(
+                                height: 100,
+                              )
                             ],
                           ),
                         );
@@ -70,7 +73,7 @@ class OrderSummaryView extends StatelessWidget {
                   top: 20,
                   left: 16,
                   child: AppBarLeading(
-                    heading: "Order Detail  #$orderId",
+                    heading: "#$orderId",
                     icon: Icons.arrow_back,
                     onTap: () {
                       Navigator.of(context).pop();
@@ -86,9 +89,122 @@ class OrderSummaryView extends StatelessWidget {
   }
 }
 
-class CustomerAddress extends StatelessWidget {
+class CustomerAddressMobile extends StatelessWidget {
   final TransactionHeaderEntity order;
-  const CustomerAddress({Key? key, required this.order}) : super(key: key);
+  const CustomerAddressMobile({Key? key, required this.order})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColor.headerBackground,
+      child: Column(
+        children: [
+          if (order.customerId != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        order.customerName!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 24),
+                      ),
+                      const SizedBox(height: 16),
+                      // Text('${order.customerAddress}'),
+                      Text('${order.customerPhone}'),
+                    ]),
+              ),
+            ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(AppFormatter.longDateFormatter
+                        .format(order.businessDate)),
+                    Text('Invoice #' + order.transId.toString()),
+                    Text('Sales Associate : ${order.associateName}'),
+                    const Text('Notes :'),
+                  ]),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Wrap(
+                  spacing: 10,
+                  children: [
+                    OrderSummaryButton(
+                      text: 'Print Receipt',
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          RouteConfig.receiptDisplayScreen,
+                          arguments: order.transId,
+                        );
+                      },
+                    ),
+                    OrderSummaryButton(
+                      text: 'Print Invoice',
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          RouteConfig.invoiceDisplayScreen,
+                          arguments: order.transId,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Wrap(
+                  spacing: 10,
+                  children: [
+                    OrderSummaryButton(
+                      text: 'Email Invoice',
+                      onTap: () {},
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Wrap(
+                        children: [
+                          OrderSummaryButton(
+                            text: 'Return Items',
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomerAddressDesktop extends StatelessWidget {
+  final TransactionHeaderEntity order;
+  const CustomerAddressDesktop({Key? key, required this.order})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +225,7 @@ class CustomerAddress extends StatelessWidget {
                           .format(order.businessDate)),
                       Text('Invoice #' + order.transId.toString()),
                       Text('Sales Associate : ${order.associateName}'),
-                      const Text('Notes : Yet to add this'),
+                      const Text('Notes :'),
                     ]),
               ),
               if (order.customerId != null)
@@ -181,6 +297,22 @@ class CustomerAddress extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CustomerAddress extends StatelessWidget {
+  final TransactionHeaderEntity order;
+  const CustomerAddress({Key? key, required this.order}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 600) {
+        return CustomerAddressDesktop(order: order);
+      } else {
+        return CustomerAddressMobile(order: order);
+      }
+    });
   }
 }
 
@@ -283,7 +415,9 @@ class OrderLine extends StatelessWidget {
             return InkWell(
               onTap: () {},
               child: Container(
-                color: index % 2 != 0 ? AppColor.headerBackground.withOpacity(0.3) : null,
+                color: index % 2 != 0
+                    ? AppColor.headerBackground.withOpacity(0.3)
+                    : null,
                 child: Column(
                   children: [
                     const Divider(height: 0),

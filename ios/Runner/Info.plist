@@ -58,5 +58,7 @@
     <string>NO</string>
     <key>NSContactsUsageDescription</key>
     <string>Get the existing contacts.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Get the existing photos.</string>
 </dict>
 </plist>

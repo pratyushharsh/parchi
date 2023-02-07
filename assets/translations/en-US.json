@@ -57,7 +57,7 @@
     "_listPrice": "List Price",
     "_brand": "Brand",
     "_hsn": "HSN",
-    "_barcodeSku": "Barcode/SKU",
+    "_barcodeSku": "SKU",
     "_taxDetail": "Tax Detail",
     "_priceIncludeTax": "Price Include Tax",
     "_taxGroup": "Tax Group",
@@ -84,6 +84,7 @@
 
     "_taxGroupLabel": "Tax Group: {groupId}",
     "_receiptNoLabel": "Txn # {receiptNo}",
+    "_addNewBusiness": "Add New Business",
 
     "loginHeader": "Enter your mobile number",
     "loginHeaderDescription": "We will send you a confirmation code",

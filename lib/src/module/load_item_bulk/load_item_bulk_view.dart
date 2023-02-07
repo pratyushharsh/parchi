@@ -48,33 +48,33 @@ class LoadItemInBulk extends StatelessWidget {
                     },
                   ),
                 ),
-                const Positioned(top: 60, child: WorkSheet()),
-                // Positioned(
-                //   bottom: 0,
-                //   top: 0,
-                //   left: 0,
-                //   right: 0,
-                //   child: Center(
-                //     child: SingleChildScrollView(
-                //       child: Column(
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: const [
-                //           SizedBox(
-                //             height: 30,
-                //           ),
-                //           DownloadSampleFileButton(),
-                //           SizedBox(
-                //             height: 50,
-                //           ),
-                //           UploadFileButton(),
-                //           SizedBox(
-                //             height: 30,
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                // const Positioned(top: 60, child: WorkSheet()),
+                Positioned(
+                  bottom: 0,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          SizedBox(
+                            height: 30,
+                          ),
+                          DownloadSampleFileButton(),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          UploadFileButton(),
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
