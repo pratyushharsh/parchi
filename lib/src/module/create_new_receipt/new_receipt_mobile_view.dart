@@ -18,8 +18,9 @@ class NewReceiptMobileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColor.background,
+      color: AppColor.primary,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           backgroundColor: AppColor.background,
           body: Stack(
@@ -246,7 +247,7 @@ class NewReceiptMobileView extends StatelessWidget {
             ],
           ),
           bottomNavigationBar: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: EdgeInsets.only(left: 10.0, right: 10.00, bottom: 24),
             child: NewInvoiceButtonBar(),
           ),
         ),

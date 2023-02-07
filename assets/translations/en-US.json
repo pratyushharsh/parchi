@@ -83,7 +83,7 @@
     "_qty": "Qty",
 
     "_taxGroupLabel": "Tax Group: {groupId}",
-    "_receiptNoLabel": "Receipt # {receiptNo}",
+    "_receiptNoLabel": "Txn # {receiptNo}",
 
     "loginHeader": "Enter your mobile number",
     "loginHeaderDescription": "We will send you a confirmation code",

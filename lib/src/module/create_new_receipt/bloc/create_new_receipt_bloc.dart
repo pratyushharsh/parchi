@@ -113,6 +113,12 @@ class CreateNewReceiptBloc
         return;
       }
     }
+
+    if (event.isReturn) {
+      emit(state.copyWith(
+        isReturn: true,
+      ));
+    }
   }
 
   void _onAddNewLineItem(
@@ -635,6 +641,11 @@ class CreateNewReceiptBloc
     if (state.transactionHeader == null) {
       var header = await _createNewTransactionHeader();
       emit(state.copyWith(transactionHeader: header, transSeq: header.transId));
+    }
+
+    // Get the customer from original transaction if customer not present.
+    if (state.customer == null) {
+
     }
 
     // Create a new Return Line Item

@@ -62,8 +62,9 @@ class MobileDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColor.background,
+      color: AppColor.primary,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           backgroundColor: AppColor.background,
           body: Stack(

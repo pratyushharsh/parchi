@@ -29,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int selectedIndex = 0;
+  int selectedIndex = 2;
 
   final List<Widget> _tabs = const [
     DashboardView(),
@@ -217,10 +217,10 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
                   ),
                   InkWell(
                     onTap: () {
-                      // widget.letIndexChange(2);
-                      setState(() {
-                        _open = !_open;
-                      });
+                      widget.letIndexChange(2);
+                      // setState(() {
+                      //   _open = !_open;
+                      // });
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -411,6 +411,12 @@ class SaleOptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        elevation: 0, backgroundColor: AppColor.color8,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+      ),
       child: Column(
         children: [
           icon,
@@ -419,12 +425,6 @@ class SaleOptionButton extends StatelessWidget {
             style: const TextStyle(color: AppColor.primary),
           ),
         ],
-      ),
-      style: ElevatedButton.styleFrom(
-        elevation: 0, backgroundColor: AppColor.color8,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
       ),
     );
   }

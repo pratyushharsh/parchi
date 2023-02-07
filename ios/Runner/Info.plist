@@ -56,5 +56,7 @@
     </array>
     <key>FirebaseAppDelegateProxyEnabled</key>
     <string>NO</string>
+    <key>NSContactsUsageDescription</key>
+    <string>Get the existing contacts.</string>
 </dict>
 </plist>

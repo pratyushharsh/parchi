@@ -19,6 +19,7 @@ import '../customer_search/bloc/customer_search_bloc.dart';
 import '../customer_search/customer_search_widget.dart';
 import '../item_search/item_search_view.dart';
 import '../line_item_modification/line_item_modification_view.dart';
+import '../return_order/return_order_view.dart';
 import 'bloc/create_new_receipt_bloc.dart';
 import 'new_receipt_mobile_view.dart';
 import 'new_recipt_desktop_view.dart';
@@ -26,7 +27,8 @@ import 'sale_complete_dialog.dart';
 
 class NewReceiptView extends StatelessWidget {
   final String? transId;
-  const NewReceiptView({Key? key, this.transId}) : super(key: key);
+  final bool isReturn;
+  const NewReceiptView({Key? key, this.transId, this.isReturn = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class NewReceiptView extends StatelessWidget {
             priceHelper: RepositoryProvider.of(ctx),
             discountHelper: RepositoryProvider.of(ctx),
             errorNotificationBloc: BlocProvider.of(ctx),
-          )..add(OnInitiateNewTransaction(transSeq: transId)),
+          )..add(OnInitiateNewTransaction(transSeq: transId, isReturn: isReturn)),
         ),
         BlocProvider(
           create: (ctx) => CustomerSearchBloc(
@@ -55,6 +57,23 @@ class NewReceiptView extends StatelessWidget {
       ],
       child: BlocListener<CreateNewReceiptBloc, CreateNewReceiptState>(
         listener: (context, state) {
+          if (state.isReturn && state.transSeq.isEmpty) {
+            showTransitiveAppPopUp(
+              title: "Return Order",
+              child: const ReturnOrderView(
+                currentOrderLineItem: [],
+              ),
+              context: context,
+            ).then((value) => {
+              if (value != null)
+                {
+                  BlocProvider.of<CreateNewReceiptBloc>(
+                      context)
+                      .add(OnReturnLineItemEvent(value))
+                }
+            });
+          }
+
           if (state.step == SaleStep.printAndEmail) {
             // Navigator.of(context).push(
             //   MaterialPageRoute(

@@ -27,8 +27,9 @@ class OnUnitPriceUpdate extends CreateNewReceiptEvent {
 
 class OnInitiateNewTransaction extends CreateNewReceiptEvent {
   final String? transSeq;
+  final bool isReturn;
 
-  OnInitiateNewTransaction({this.transSeq});
+  OnInitiateNewTransaction({this.transSeq, this.isReturn = false});
 }
 
 class OnCreateNewTransaction extends CreateNewReceiptEvent {}
@@ -118,3 +119,5 @@ class OnTenderLineVoid extends CreateNewReceiptEvent {
 }
 
 class OnPartialPayment extends CreateNewReceiptEvent {}
+
+class InitiateReturn extends CreateNewReceiptEvent {}

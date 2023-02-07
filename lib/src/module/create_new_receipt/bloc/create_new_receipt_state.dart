@@ -41,6 +41,7 @@ class CustomerAddress {
 class CreateNewReceiptState extends Equatable {
   final String transSeq;
   final bool inProgress;
+  final bool isReturn;
   final TransactionHeaderEntity? transactionHeader;
   final List<TransactionLineItemEntity> lineItem;
   final List<TransactionPaymentLineItemEntity> tenderLine;
@@ -53,6 +54,7 @@ class CreateNewReceiptState extends Equatable {
   const CreateNewReceiptState({
     this.transSeq = '',
     this.inProgress = false,
+    this.isReturn = false,
     this.lineItem = const [],
     this.transactionHeader,
     this.tenderLine = const [],
@@ -109,6 +111,8 @@ class CreateNewReceiptState extends Equatable {
 
   @override
   List<Object?> get props => [
+        inProgress,
+        isReturn,
         transactionHeader,
         lineItem,
         transSeq,
@@ -123,6 +127,7 @@ class CreateNewReceiptState extends Equatable {
   CreateNewReceiptState copyWith({
     String? transSeq,
     bool? inProgress,
+    bool? isReturn,
     TransactionHeaderEntity? transactionHeader,
     List<TransactionLineItemEntity>? lineItem,
     List<TransactionPaymentLineItemEntity>? tenderLine,
@@ -136,6 +141,7 @@ class CreateNewReceiptState extends Equatable {
     return CreateNewReceiptState(
       transSeq: transSeq ?? this.transSeq,
       inProgress: inProgress ?? this.inProgress,
+      isReturn: isReturn ?? this.isReturn,
       transactionHeader: transactionHeader ?? this.transactionHeader,
       lineItem: lineItem ?? this.lineItem,
       tenderLine: tenderLine ?? this.tenderLine,

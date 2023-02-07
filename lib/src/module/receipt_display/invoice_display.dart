@@ -27,7 +27,7 @@ class AppInvoiceDisplay extends StatelessWidget {
           settingsRepo: RepositoryProvider.of(context))
         ..add(FetchReceiptDataEvent()),
       child: Container(
-        color: AppColor.background,
+        color: AppColor.primary,
         child: SafeArea(
           bottom: false,
           child: Scaffold(

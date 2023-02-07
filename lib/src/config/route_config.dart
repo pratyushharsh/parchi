@@ -39,6 +39,7 @@ class RouteConfig {
   static const String allCustomerScreen = "/all-customer";
   static const String loadItemsInBulkScreen = "/load-in-bulk";
   static const String createReceiptScreen = "/create-receipt";
+  static const String createReturnReceiptScreen = "/return-receipt";
   static const String receiptDisplayScreen = "/receipt-display";
   static const String invoiceDisplayScreen = "/invoice-display";
   static const String invoiceViewScreen = "/invoice-view";
@@ -79,6 +80,9 @@ class RouteConfig {
       case createReceiptScreen:
         var transId = settings.arguments as String?;
         return MaterialPageRoute(builder: (_) => NewReceiptView(transId: transId,));
+      case createReturnReceiptScreen:
+        var transId = settings.arguments as String?;
+        return MaterialPageRoute(builder: (_) => const NewReceiptView(isReturn: true,));
       case invoiceViewScreen:
         return MaterialPageRoute(builder: (_) => const InvoiceView());
       case businessViewScreen:
