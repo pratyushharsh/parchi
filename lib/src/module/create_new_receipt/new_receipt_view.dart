@@ -28,7 +28,8 @@ import 'sale_complete_dialog.dart';
 class NewReceiptView extends StatelessWidget {
   final String? transId;
   final bool isReturn;
-  const NewReceiptView({Key? key, this.transId, this.isReturn = false}) : super(key: key);
+  const NewReceiptView({Key? key, this.transId, this.isReturn = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,8 @@ class NewReceiptView extends StatelessWidget {
             priceHelper: RepositoryProvider.of(ctx),
             discountHelper: RepositoryProvider.of(ctx),
             errorNotificationBloc: BlocProvider.of(ctx),
-          )..add(OnInitiateNewTransaction(transSeq: transId, isReturn: isReturn)),
+          )..add(
+              OnInitiateNewTransaction(transSeq: transId, isReturn: isReturn)),
         ),
         BlocProvider(
           create: (ctx) => CustomerSearchBloc(
@@ -65,13 +67,12 @@ class NewReceiptView extends StatelessWidget {
               ),
               context: context,
             ).then((value) => {
-              if (value != null)
-                {
-                  BlocProvider.of<CreateNewReceiptBloc>(
-                      context)
-                      .add(OnReturnLineItemEvent(value))
-                }
-            });
+                  if (value != null)
+                    {
+                      BlocProvider.of<CreateNewReceiptBloc>(context)
+                          .add(OnReturnLineItemEvent(value))
+                    }
+                });
           }
 
           if (state.step == SaleStep.printAndEmail) {
@@ -87,7 +88,9 @@ class NewReceiptView extends StatelessWidget {
                 child: SizedBox(
                   width: min(MediaQuery.of(context).size.width * 0.8, 600),
                   height: 450,
-                  child: SaleCompleteDialog(customer: state.customer,),
+                  child: SaleCompleteDialog(
+                    customer: state.customer,
+                  ),
                 ),
               ),
             ).then((value) => {
@@ -165,14 +168,15 @@ class VoidWidget extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(count, (index) => index, growable: false)
-                    .map(
-                      (e) => const Divider(
-                        thickness: 1,
-                        color: Colors.grey,
-                      ),
-                    )
-                    .toList(),
+                children:
+                    List.generate(count, (index) => index, growable: false)
+                        .map(
+                          (e) => const Divider(
+                            thickness: 1,
+                            color: Colors.grey,
+                          ),
+                        )
+                        .toList(),
               ),
             ),
             const SizedBox(
@@ -193,14 +197,15 @@ class VoidWidget extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(count, (index) => index, growable: false)
-                    .map(
-                      (e) => const Divider(
-                    thickness: 1,
-                    color: Colors.grey,
-                  ),
-                )
-                    .toList(),
+                children:
+                    List.generate(count, (index) => index, growable: false)
+                        .map(
+                          (e) => const Divider(
+                            thickness: 1,
+                            color: Colors.grey,
+                          ),
+                        )
+                        .toList(),
               ),
             ),
           ],
@@ -228,7 +233,8 @@ class BuildLineItem extends StatelessWidget {
     );
   }
 
-  bool canLineItemModified(TransactionHeaderEntity header, TransactionLineItemEntity saleLine) {
+  bool canLineItemModified(
+      TransactionHeaderEntity header, TransactionLineItemEntity saleLine) {
     if (saleLine.returnFlag || saleLine.isVoid) {
       return false;
     }
@@ -248,7 +254,8 @@ class BuildLineItem extends StatelessWidget {
           itemBuilder: (itemBuilder, idx) {
             if (idx < state.lineItem.length) {
               return InkWell(
-                onTap: canLineItemModified(state.transactionHeader!, state.lineItem[idx])
+                onTap: canLineItemModified(
+                        state.transactionHeader!, state.lineItem[idx])
                     ? () {
                         onTap(context, state.lineItem[idx],
                             state.productMap[state.lineItem[idx].itemId]);
@@ -260,16 +267,17 @@ class BuildLineItem extends StatelessWidget {
                       opacity: state.lineItem[idx].isVoid ? 0.45 : 1,
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                              color: state.lineItem[idx].returnFlag
-                                  ? Colors.redAccent
-                                  : Colors.blueAccent,
-                              width: 8,
+                            border: Border(
+                              left: BorderSide(
+                                color: state.lineItem[idx].returnFlag
+                                    ? Colors.redAccent
+                                    : Colors.blueAccent,
+                                width: 8,
+                              ),
                             ),
-                          ),
-                          color: idx % 2 == 0 ? AppColor.headerBackground.withOpacity(0.5) : null
-                        ),
+                            color: idx % 2 == 0
+                                ? AppColor.headerBackground.withOpacity(0.5)
+                                : null),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -321,7 +329,10 @@ class BuildLineItem extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Opacity(
-                          opacity: state.tenderLine[idx - state.lineItem.length].isVoid ? 0.45 : 1,
+                          opacity: state.tenderLine[idx - state.lineItem.length]
+                                  .isVoid
+                              ? 0.45
+                              : 1,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: TenderLineDisplay(
@@ -378,7 +389,10 @@ class SearchAndAddItem extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            const Text("_searchForProducts", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),).tr()
+            const Text(
+              "_searchForProducts",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ).tr()
           ],
         ),
       ),
@@ -516,7 +530,10 @@ class TenderLineDisplay extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
       child: Row(
         children: [
-          const SizedBox(width: 50, child: Icon(Icons.currency_exchange),),
+          const SizedBox(
+            width: 50,
+            child: Icon(Icons.currency_exchange),
+          ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
@@ -564,25 +581,31 @@ class NewLineItem extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(border: Border.all(width: 1)),
-                child:
-                    (productModel != null && productModel!.imageUrl.isNotEmpty)
-                        ? CustomImage(
-                            url: productModel!.imageUrl[0],
-                          )
-                        : Image.network(
-                            "https://cdn.iconscout.com/icon/premium/png-128-thumb/no-image-2840056-2359564.png",
-                            fit: BoxFit.cover,
-                            height: 70,
-                            width: 70,
-                            errorBuilder: (context, obj, trace) {
-                              return const SizedBox(
-                                height: 70,
-                                width: 70,
-                              );
-                            },
-                          ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed(RouteConfig.editItemScreen,
+                      arguments: productModel!.productId!);
+                },
+                child: Container(
+                  decoration: BoxDecoration(border: Border.all(width: 1)),
+                  child:
+                      (productModel != null && productModel!.imageUrl.isNotEmpty)
+                          ? CustomImage(
+                              url: productModel!.imageUrl[0],
+                            )
+                          : Image.network(
+                              "https://cdn.iconscout.com/icon/premium/png-128-thumb/no-image-2840056-2359564.png",
+                              fit: BoxFit.cover,
+                              height: 70,
+                              width: 70,
+                              errorBuilder: (context, obj, trace) {
+                                return const SizedBox(
+                                  height: 70,
+                                  width: 70,
+                                );
+                              },
+                            ),
+                ),
               ),
               const SizedBox(
                 width: 8,
@@ -594,9 +617,10 @@ class NewLineItem extends StatelessWidget {
                     // Text(saleLine.itemId!),
                     Text(saleLine.itemDescription!),
                     Text(
-                      saleLine.itemId!,
+                      '${saleLine.itemId!} - ${(saleLine.itemColor != null && saleLine.itemColor!.isNotEmpty) ? '${saleLine.itemColor}' : ''} ${(saleLine.itemSize != null && saleLine.itemSize!.isNotEmpty) ? '- ${saleLine.itemSize}' : ''}',
                       style: NewLineItem.textStyle,
                     ),
+                    // Build Rounded container for color and size
                   ],
                 ),
               )
@@ -779,7 +803,8 @@ class NewInvoiceButtonBar extends StatelessWidget {
               if (state.step == SaleStep.item || state.step == SaleStep.payment)
                 Expanded(
                   child: AcceptButton(
-                    onPressed: state.transSeq.isNotEmpty && state.lineItem.isNotEmpty
+                    onPressed: state.transSeq.isNotEmpty &&
+                            state.lineItem.isNotEmpty
                         ? () {
                             BlocProvider.of<CreateNewReceiptBloc>(context)
                                 .add(OnChangeSaleStep(SaleStep.payment));
@@ -986,7 +1011,8 @@ class _CustomerWidgetState extends State<CustomerWidget> {
   }
 
   bool canCustomerModified(TransactionHeaderEntity? transaction) {
-    if (transaction != null && transaction.status == TransactionStatus.partialPayment) {
+    if (transaction != null &&
+        transaction.status == TransactionStatus.partialPayment) {
       return false;
     }
     return true;
@@ -1095,12 +1121,14 @@ class _CustomerWidgetState extends State<CustomerWidget> {
                             ],
                           ),
                         ),
-                        if (!state.isCustomerPresent && canCustomerModified(state.transactionHeader))
+                        if (!state.isCustomerPresent &&
+                            canCustomerModified(state.transactionHeader))
                           const FaIcon(
                             FontAwesomeIcons.personCirclePlus,
                             color: AppColor.primary,
                           ),
-                        if (state.isCustomerPresent && canCustomerModified(state.transactionHeader))
+                        if (state.isCustomerPresent &&
+                            canCustomerModified(state.transactionHeader))
                           InkWell(
                             onTap: () {
                               BlocProvider.of<CreateNewReceiptBloc>(context)

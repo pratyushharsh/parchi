@@ -14,6 +14,8 @@ class TransactionLineItemEntity {
   String? category;
   String? itemId;
   String? itemDescription;
+  String? itemColor;
+  String? itemSize;
   String? hsn;
   double? quantity; // Quantity of the item
   double?
@@ -80,6 +82,8 @@ class TransactionLineItemEntity {
     this.baseUnitPrice,
     this.itemId,
     this.itemDescription,
+    this.itemColor,
+    this.itemSize,
     this.quantity,
     this.hsn,
     this.unitPrice,
@@ -125,6 +129,8 @@ class TransactionLineItemEntity {
           category == other.category &&
           itemId == other.itemId &&
           itemDescription == other.itemDescription &&
+          itemColor == other.itemColor &&
+          itemSize == other.itemSize &&
           hsn == other.hsn &&
           quantity == other.quantity &&
           unitPrice == other.unitPrice &&
@@ -170,6 +176,8 @@ class TransactionLineItemEntity {
       category.hashCode ^
       itemId.hashCode ^
       itemDescription.hashCode ^
+      itemColor.hashCode ^
+      itemSize.hashCode ^
       hsn.hashCode ^
       quantity.hashCode ^
       unitPrice.hashCode ^

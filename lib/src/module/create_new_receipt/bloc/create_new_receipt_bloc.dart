@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import '../../../config/sequence_config.dart';
-import '../../../config/transaction_config.dart';
 import '../../../entity/pos/address.dart';
 import '../../../entity/pos/entity.dart';
 import '../../../pos/calculator/tax_calculator.dart';
@@ -157,6 +156,8 @@ class CreateNewReceiptBloc
           lineItemSeq: seq + 1,
           itemId: event.product.productId!,
           itemDescription: event.product.displayName,
+          itemSize: event.product.size,
+          itemColor: event.product.color,
           quantity: 1,
           uom: event.product.uom,
           hsn: event.product.hsn,

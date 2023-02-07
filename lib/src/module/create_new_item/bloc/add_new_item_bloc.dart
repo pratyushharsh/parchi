@@ -70,6 +70,8 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
         category: product.category,
         imageUrl: product.imageUrl,
         status: AddNewItemStatus.existingProduct,
+        color: product.color,
+        size: product.size,
       ));
     }
   }
