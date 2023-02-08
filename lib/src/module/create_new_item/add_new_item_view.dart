@@ -434,40 +434,40 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      children: [
-                        CustomCheckbox(
-                          value: state.priceIncludeTax,
-                          onChanged: (val) {
-                            BlocProvider.of<AddNewItemBloc>(context)
-                                .add(PriceIncludeTaxChangedEvent(val));
-                          },
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Text(
-                          "_priceIncludeTax",
-                          style: TextStyle(color: Color(0xFF6B7281)),
-                        ).tr()
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     CustomCheckbox(
+                    //       value: state.priceIncludeTax,
+                    //       onChanged: (val) {
+                    //         BlocProvider.of<AddNewItemBloc>(context)
+                    //             .add(PriceIncludeTaxChangedEvent(val));
+                    //       },
+                    //     ),
+                    //     const SizedBox(
+                    //       width: 5,
+                    //     ),
+                    //     const Text(
+                    //       "_priceIncludeTax",
+                    //       style: TextStyle(color: Color(0xFF6B7281)),
+                    //     ).tr()
+                    //   ],
+                    // ),
                     const SizedBox(
                       height: 8,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: CustomTextField(
-                            label: "_hsn",
-                            controller: _hsnController,
-                            enabled: widget.editable,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
+                        // Expanded(
+                        //   child: CustomTextField(
+                        //     label: "_hsn",
+                        //     controller: _hsnController,
+                        //     enabled: widget.editable,
+                        //   ),
+                        // ),
+                        // const SizedBox(
+                        //   width: 8,
+                        // ),
                         Expanded(
                           child: CustomDropDown<TaxGroupEntity>(
                             value: state.taxGroupId,

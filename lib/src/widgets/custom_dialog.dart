@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_button.dart';
@@ -8,8 +9,8 @@ Future<T?> yesOrCancelDialog<T>(BuildContext context, String title,
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(title),
-        content: Text(content ?? ''),
+        title: Text(title).tr(),
+        content: Text(content ?? '').tr(),
         actions: [
           SizedBox(
             width: 100,
@@ -17,7 +18,7 @@ Future<T?> yesOrCancelDialog<T>(BuildContext context, String title,
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              label: 'Cancel',
+              label: '_cancel'.tr(),
             ),
           ),
           SizedBox(
@@ -26,7 +27,7 @@ Future<T?> yesOrCancelDialog<T>(BuildContext context, String title,
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              label: 'OK',
+              label: '_ok'.tr(),
             ),
           ),
         ],

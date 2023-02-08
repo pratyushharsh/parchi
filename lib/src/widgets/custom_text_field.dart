@@ -125,7 +125,7 @@ class CustomTextField extends StatelessWidget {
               border: const OutlineInputBorder(),
               isDense: true,
               errorText: errorText,
-              hintText: hint,
+              hintText: hint?.tr(),
             ),
           ),
         ),

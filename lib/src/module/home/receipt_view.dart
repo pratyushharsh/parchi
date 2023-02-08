@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,7 +37,7 @@ class ReceiptView extends StatelessWidget {
                   Expanded(
                       child: DashboardButton(
                         color: Colors.blue,
-                        label: "SALE",
+                        label: "_sale",
                         icon: const Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: FaIcon(
@@ -56,7 +57,7 @@ class ReceiptView extends StatelessWidget {
                   Expanded(
                       child: DashboardButton(
                         color: Colors.redAccent,
-                        label: "RETURN",
+                        label: "_return",
                         icon: const Icon(
                           Icons.assignment_return,
                           size: 45,
@@ -77,7 +78,7 @@ class ReceiptView extends StatelessWidget {
                   Expanded(
                       child: DashboardButton(
                         color: Colors.orangeAccent,
-                        label: "Item Search",
+                        label: "_itemSearch",
                         onTap: () {
                           BlocProvider.of<DashboardBloc>(context)
                               .add(DashboardChangeTabEvent(index: 3));
@@ -97,7 +98,7 @@ class ReceiptView extends StatelessWidget {
                   Expanded(
                       child: DashboardButton(
                         color: Colors.purple,
-                        label: "Customer Search",
+                        label: "_customerSearch",
                         onTap: () {
                           BlocProvider.of<DashboardBloc>(context)
                               .add(DashboardChangeTabEvent(index: 1));
@@ -155,15 +156,16 @@ class DashboardButton extends StatelessWidget {
                     child: icon!,
                   ),
                 Text(
-                  label.toUpperCase(),
+                  label,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: color,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     letterSpacing: 2,
+                    fontStyle: FontStyle.italic,
                   ),
-                ),
+                ).tr(),
                 const SizedBox(
                   height: 5,
                 )

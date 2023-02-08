@@ -3,6 +3,26 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/appbar_leading.dart';
 
+const _languageLocale = {
+  'en': 'English',
+  'hi': 'हिंदी',
+  'mr': 'मराठी',
+  'ar': 'العربية',
+  'bn': 'বাংলা',
+  'dn': 'Nederlands',
+  'de': 'Deutsch'
+};
+
+const _countryLocale = {
+  'en': 'English',
+  'hi': 'Hindi',
+  'mr': 'Marathi',
+  'ar': 'Arabic',
+  'bn': 'Bengali',
+  'dn': 'Dutch',
+  'de': 'German'
+};
+
 class LocaleView extends StatefulWidget {
   const LocaleView({Key? key}) : super(key: key);
 
@@ -39,7 +59,7 @@ class _LocaleViewState extends State<LocaleView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(locale.toString().tr()),
+            Text('${_languageLocale[locale.languageCode]} (${_countryLocale[locale.languageCode]})'),
             const SizedBox(
               width: 10,
             ),

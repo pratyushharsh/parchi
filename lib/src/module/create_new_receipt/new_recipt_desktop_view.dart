@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -343,7 +344,11 @@ class _TenderDisplayDesktopState extends State<TenderDisplayDesktop> {
             top: 10,
             left: 10,
             child: Text(
-              "Tender Amount ${widget.suggestedAmount != null ? "\n ${getCurrencyFormatter(context).format(widget.suggestedAmount)}" : ""}",
+              "_tenderAmount".tr(namedArgs: {
+                "amount": widget.suggestedAmount != null
+                    ? getCurrencyFormatter(context).format(widget.suggestedAmount)
+                    : ""
+              }),
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -467,7 +472,7 @@ class TenderListDisplayCard extends StatelessWidget {
     return Card(
       // shadowColor: Colors.green,
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: selected ? Colors.green : Colors.transparent),
+        side: BorderSide(color: selected ? Colors.green : Colors.transparent, width: 3),
         // borderRadius: BorderRadius.circular(12.0),
       ),
       child: InkWell(
@@ -478,6 +483,7 @@ class TenderListDisplayCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           height: 80,
           width: 120,
+          color: selected ? Colors.green[50] : Colors.transparent,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -102,13 +102,14 @@ class DialogButton extends StatelessWidget {
       // shadowColor: Colors.green,
       elevation: 4,
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: selected ? AppColor.primary : Colors.transparent),
+        side: BorderSide(color: selected ? AppColor.primary : Colors.transparent, width: 3),
         // borderRadius: BorderRadius.circular(12.0),
       ),
       child: InkWell(
         onTap: onClick,
         child: Container(
           padding: const EdgeInsets.all(12),
+          color: selected ? AppColor.color3.withOpacity(0.5) : Colors.transparent,
           height: height,
           width: width,
           child: Center(

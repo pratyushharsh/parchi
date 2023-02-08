@@ -21,7 +21,7 @@ class CustomerSearchDesktop extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: CustomTextField(
-            label: "Customer Detail",
+            label: "_customerDetail",
             onValueChange: (value) {
               BlocProvider.of<CustomerSearchBloc>(context)
                   .add(OnCustomerNameChange(name: value));

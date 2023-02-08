@@ -22,7 +22,7 @@ class CustomerSearchMobile extends StatelessWidget {
             top: 20,
             left: 16,
             child: AppBarLeading(
-              heading: "Search Customer",
+              heading: "_searchCustomer",
               icon: Icons.arrow_back,
               onTap: () {
                 Navigator.of(context).pop();
@@ -36,8 +36,8 @@ class CustomerSearchMobile extends StatelessWidget {
               bottom: 0,
               child: Column(children: [
                 CustomTextField(
-                  label: "Customer Detail",
-                  hint: "Customer name, Phone number, Email",
+                  label: "_customerDetail",
+                  hint: "_searchCustomerHint",
                   onValueChange: (value) {
                     BlocProvider.of<CustomerSearchBloc>(context)
                         .add(OnCustomerNameChange(name: value));

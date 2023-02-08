@@ -69,7 +69,7 @@ class ClientsViewWidget extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
               child: SearchBar(
                 label: "clients",
-                hintText: "Search by Name, Phone Number",
+                hintText: "_searchCustomerHint",
                 onChanged: (val) {
                   BlocProvider.of<AllCustomerBloc>(context).add(
                     SearchCustomerFilter(val),

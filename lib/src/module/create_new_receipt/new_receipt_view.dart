@@ -784,8 +784,8 @@ class NewInvoiceButtonBar extends StatelessWidget {
                     }
                     yesOrCancelDialog(
                       context,
-                      "Cancel Transaction",
-                      content: "Would you like to cancel the sale transaction?",
+                      "_cancelTransaction",
+                      content: "_cancelTransactionLabel",
                     ).then((value) => {
                           if (value != null && value)
                             {
