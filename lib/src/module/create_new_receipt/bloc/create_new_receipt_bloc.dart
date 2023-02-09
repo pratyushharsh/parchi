@@ -616,7 +616,7 @@ class CreateNewReceiptBloc
   void _onChangeSaleStep(
       OnChangeSaleStep event, Emitter<CreateNewReceiptState> emit) async {
     // @TODO Add logic to handle the change of sale step
-    if (state.amountDue <= 0 && event.step == SaleStep.complete) {
+    if (state.amountDue == 0) {
       add(OnCreateNewTransaction());
     } else {
       emit(state.copyWith(step: event.step, inProgress: true));
@@ -633,6 +633,8 @@ class CreateNewReceiptBloc
       emit(state.copyWith(step: SaleStep.payment));
     } else if (state.amountDue <= 0 && state.step != SaleStep.complete) {
       emit(state.copyWith(step: SaleStep.complete, inProgress: true));
+    } else if (state.amountDue == 0) {
+      add(OnCreateNewTransaction());
     }
   }
 

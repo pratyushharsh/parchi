@@ -25,3 +25,9 @@ class LoadSampleData extends BackgroundSyncEvent {
 }
 
 class ExportDataEvent extends BackgroundSyncEvent {}
+
+class UpdateConnectivityStatus extends BackgroundSyncEvent {
+  final ConnectivityResult connectivityResult;
+
+  UpdateConnectivityStatus(this.connectivityResult);
+}

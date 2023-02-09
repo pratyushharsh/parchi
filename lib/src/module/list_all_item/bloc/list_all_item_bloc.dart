@@ -32,7 +32,7 @@ class ListAllItemBloc extends Bloc<ListAllItemEvent, ListAllItemState>
 
   void _onInitProductSearch(
       InitProductSearch event, Emitter<ListAllItemState> emit) async {
-    add(LoadAllItems());
+    // add(LoadAllItems());
     // Load All Categories
     var brands = await productRepository.getAllProductsBrands();
     var category = await productRepository.getAllCategory();

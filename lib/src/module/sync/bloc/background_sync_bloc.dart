@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:developer' as developer;
 
 import 'package:archive/archive_io.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
@@ -23,6 +26,9 @@ class BackgroundSyncBloc
   final SyncConfigRepository syncConfigRepository;
   final InvoiceRepository invoiceRepository;
   final ProductRepository productRepository;
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  final Connectivity _connectivity = Connectivity();
 
   Timer? _timer;
   Isolate? _isolate;
@@ -47,6 +53,19 @@ class BackgroundSyncBloc
     on<LoadSampleData>(_onLoadSampleDataEvent);
     on<StopSyncEvent>(_onStopSyncEvent);
     on<ExportDataEvent>(_onExportDataEvent);
+    on<UpdateConnectivityStatus>(_onUpdateConnectivityStatus);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    initConnectivity();
+  }
+
+  void _onUpdateConnectivityStatus(
+      UpdateConnectivityStatus event, Emitter<BackgroundSyncState> emit) {
+    emit(state.copyWith(isOnline: event.connectivityResult != ConnectivityResult.none));
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    add(UpdateConnectivityStatus(result));
   }
 
   // @TODO Control Sync Using State
@@ -159,5 +178,22 @@ class BackgroundSyncBloc
 
     var encoder = ZipFileEncoder();
     encoder.zipDirectory(tmpDir, filename: '$tmpPath/log.zip');
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+
+    return _updateConnectionStatus(result);
   }
 }

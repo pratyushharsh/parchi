@@ -365,7 +365,7 @@ class _TenderDisplayDesktopState extends State<TenderDisplayDesktop> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    tenderIconMapping["OTHER"]!,
+                    selectedTender.isNotEmpty ? tenderIconMapping[selectedTender]! : tenderIconMapping["OTHER"]!,
                     const SizedBox(
                       height: 50,
                     ),

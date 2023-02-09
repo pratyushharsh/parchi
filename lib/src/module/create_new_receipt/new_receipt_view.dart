@@ -588,23 +588,23 @@ class NewLineItem extends StatelessWidget {
                 },
                 child: Container(
                   decoration: BoxDecoration(border: Border.all(width: 1)),
-                  child:
-                      (productModel != null && productModel!.imageUrl.isNotEmpty)
-                          ? CustomImage(
-                              url: productModel!.imageUrl[0],
-                            )
-                          : Image.network(
-                              "https://cdn.iconscout.com/icon/premium/png-128-thumb/no-image-2840056-2359564.png",
-                              fit: BoxFit.cover,
+                  child: (productModel != null &&
+                          productModel!.imageUrl.isNotEmpty)
+                      ? CustomImage(
+                          url: productModel!.imageUrl[0],
+                        )
+                      : Image.network(
+                          "https://cdn.iconscout.com/icon/premium/png-128-thumb/no-image-2840056-2359564.png",
+                          fit: BoxFit.cover,
+                          height: 70,
+                          width: 70,
+                          errorBuilder: (context, obj, trace) {
+                            return const SizedBox(
                               height: 70,
                               width: 70,
-                              errorBuilder: (context, obj, trace) {
-                                return const SizedBox(
-                                  height: 70,
-                                  width: 70,
-                                );
-                              },
-                            ),
+                            );
+                          },
+                        ),
                 ),
               ),
               const SizedBox(
@@ -756,6 +756,11 @@ class NewInvoiceButtonBar extends StatelessWidget {
             Navigator.of(context).popAndPushNamed(
                 RouteConfig.receiptDisplayScreen,
                 arguments: state.transSeq)
+          }
+        else if (state.step == SaleStep.complete)
+          {
+            BlocProvider.of<CreateNewReceiptBloc>(context)
+                .add(OnChangeSaleStep(SaleStep.complete))
           }
       },
       builder: (context, state) {

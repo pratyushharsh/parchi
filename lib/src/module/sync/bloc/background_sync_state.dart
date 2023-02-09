@@ -15,18 +15,24 @@ enum BackgroundSyncStatus {
 class BackgroundSyncState {
   final BackgroundSyncStatus status;
   final int? storeId;
+  final bool isOnline;
 
   const BackgroundSyncState(
-      {this.status = BackgroundSyncStatus.initial, this.storeId})
+      {this.status = BackgroundSyncStatus.initial,
+      this.storeId,
+      this.isOnline = true})
       : assert((status == BackgroundSyncStatus.started ||
                 status == BackgroundSyncStatus.inProgress ||
                 status == BackgroundSyncStatus.success)
             ? storeId != null
             : true);
 
-  BackgroundSyncState copyWith({BackgroundSyncStatus? status, int? storeId}) {
+  BackgroundSyncState copyWith(
+      {BackgroundSyncStatus? status, int? storeId, bool? isOnline}) {
     return BackgroundSyncState(
-        status: status ?? this.status, storeId: storeId ?? this.storeId);
+        status: status ?? this.status,
+        storeId: storeId ?? this.storeId,
+        isOnline: isOnline ?? this.isOnline);
   }
 
   @override

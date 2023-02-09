@@ -73,7 +73,7 @@ class OrderSummaryView extends StatelessWidget {
                   top: 20,
                   left: 16,
                   child: AppBarLeading(
-                    heading: "#$orderId",
+                    heading: "Order No: $orderId",
                     icon: Icons.arrow_back,
                     onTap: () {
                       Navigator.of(context).pop();
@@ -115,7 +115,7 @@ class CustomerAddressMobile extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       // Text('${order.customerAddress}'),
-                      Text('${order.customerPhone}'),
+                      // Text('${order.customerPhone}'),
                     ]),
               ),
             ),
@@ -126,73 +126,66 @@ class CustomerAddressMobile extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppFormatter.longDateFormatter
-                        .format(order.businessDate)),
-                    Text('Invoice #' + order.transId.toString()),
-                    Text('Sales Associate : ${order.associateName}'),
-                    const Text('Notes :'),
+                    Text('Order Date: ${AppFormatter.longDateFormatter.format(order.businessDate)}'),
+                    Text('Invoice: ${order.transId}'),
+                    Text('Sales Associate: ${order.associateName}'),
+                    const Text('Notes: '),
                   ]),
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Wrap(
-                  spacing: 10,
-                  children: [
-                    OrderSummaryButton(
-                      text: 'Print Receipt',
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          RouteConfig.receiptDisplayScreen,
-                          arguments: order.transId,
-                        );
-                      },
-                    ),
-                    OrderSummaryButton(
-                      text: 'Print Invoice',
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          RouteConfig.invoiceDisplayScreen,
-                          arguments: order.transId,
-                        );
-                      },
-                    ),
-                  ],
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: OrderSummaryButton(
+                    text: 'Print Receipt',
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        RouteConfig.receiptDisplayScreen,
+                        arguments: order.transId,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OrderSummaryButton(
+                    text: 'Print Invoice',
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        RouteConfig.invoiceDisplayScreen,
+                        arguments: order.transId,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Wrap(
-                  spacing: 10,
-                  children: [
-                    OrderSummaryButton(
-                      text: 'Email Invoice',
-                      onTap: () {},
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: Wrap(
-                        children: [
-                          OrderSummaryButton(
-                            text: 'Return Items',
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: OrderSummaryButton(
+                    text: 'Email Invoice',
+                    onTap: () {},
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OrderSummaryButton(
+                    text: 'Return Items',
+                    onTap: () {},
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
         ],

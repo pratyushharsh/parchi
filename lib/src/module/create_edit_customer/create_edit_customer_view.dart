@@ -280,7 +280,7 @@ class CreateCustomerForm extends StatelessWidget {
                   },
                 ),
                 CustomTextField(
-                  label: "GST",
+                  label: "Emirates ID",
                   textInputType: TextInputType.phone,
                   initialValue: state.gstin,
                   onValueChange: (value) {
@@ -288,15 +288,15 @@ class CreateCustomerForm extends StatelessWidget {
                         .add(OnCustomerGstinChange(gstin: value));
                   },
                 ),
-                CustomTextField(
-                  label: "PAN",
-                  textInputType: TextInputType.phone,
-                  initialValue: state.panCard,
-                  onValueChange: (value) {
-                    BlocProvider.of<CustomerFormBloc>(context)
-                        .add(OnCustomerPanCardChange(panCard: value));
-                  },
-                ),
+                // CustomTextField(
+                //   label: "PAN",
+                //   textInputType: TextInputType.phone,
+                //   initialValue: state.panCard,
+                //   onValueChange: (value) {
+                //     BlocProvider.of<CustomerFormBloc>(context)
+                //         .add(OnCustomerPanCardChange(panCard: value));
+                //   },
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -314,7 +314,7 @@ class CreateCustomerForm extends StatelessWidget {
                       width: 10,
                     ),
                     const Text(
-                      "Billing address is same as shipping address.",
+                      "Shipping address is same as billing address.",
                       style: TextStyle(color: AppColor.formInputText),
                     )
                   ],

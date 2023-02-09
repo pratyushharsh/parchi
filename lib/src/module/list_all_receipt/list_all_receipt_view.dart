@@ -109,7 +109,7 @@ class ReceiptHeaderCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    NumberFormat.simpleCurrency(
+                    NumberFormat.currency(
                             locale: receipt.storeLocale,
                             name: receipt.storeCurrency)
                         .format(receipt.total),

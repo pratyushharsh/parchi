@@ -89,6 +89,7 @@
   "_customerSearch": "البحث عن العملاء",
   "_itemSearch": "البحث عن العناصر",
   "_searchCustomerHint": "البحث عن طريق معرف العميل، الاسم، الهاتف",
+  "_searchForProductsHint": "البحث عن طريق معرف المنتج، الاسم",
   "_customerDetail": "تفاصيل العميل",
   "_searchCustomer": "البحث عن العملاء",
   "_cancelTransaction": "إلغاء المعاملة",
@@ -96,7 +97,7 @@
   "_tenderAmount": "مبلغ العطاء \n {amount}",
 
   "_taxGroupLabel": "مجموعة الضريبة: {groupId}",
-  "_receiptNoLabel": "Txn # {receiptNo}",
+  "_receiptNoLabel": "Ord : {receiptNo}",
   "_addNewBusiness": "إضافة عمل جديد",
 
   "loginHeader": "أدخل رقم هاتفك المحمول",
