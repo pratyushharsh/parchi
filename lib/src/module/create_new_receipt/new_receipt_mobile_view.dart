@@ -62,187 +62,69 @@ class NewReceiptMobileView extends StatelessWidget {
                   return Positioned(
                     top: 40,
                     left: 10,
-                    child: AppBarLeading(
-                      heading:
-                          "_receiptNoLabel".tr(namedArgs: {"receiptNo": state.transSeq}),
-                      icon: Icons.arrow_back,
-                      onTap: () {
-                        if (!state.inProgress) {
-                          Navigator.of(context).pop();
-                          return;
-                        }
-                        if (state.transactionHeader == null) {
-                          Navigator.of(context).pop();
-                          return;
-                        }
-                        if (state.step == SaleStep.payment) {
-                          BlocProvider.of<CreateNewReceiptBloc>(context)
-                              .add(OnChangeSaleStep(SaleStep.item));
-                          return;
-                        }
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Confirmation"),
-                              content: const Text(
-                                  "Would you like to cancel the sale transaction?"),
-                              actions: [
-                                SizedBox(
-                                  width: 100,
-                                  child: RejectButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    label: 'Cancel',
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 100,
-                                  child: AcceptButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(true);
-                                    },
-                                    label: 'OK',
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ).then((value) => {
-                              if (value != null && value)
-                                {
-                                  BlocProvider.of<CreateNewReceiptBloc>(context)
-                                      .add(OnCancelTransaction())
-                                }
-                            });
-                      },
-                    ),
-                  );
-                },
-              ),
-              BlocBuilder<CreateNewReceiptBloc, CreateNewReceiptState>(
-                builder: (context, state) {
-                  if (state.transactionHeader == null) return const SizedBox();
-                  return Positioned(
-                      top: 40,
-                      right: 10,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColor.primary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        height: 40,
-                        width: 40,
-                        child: PopupMenuButton<String>(
-                          position: PopupMenuPosition.under,
-                          color: AppColor.background,
-                          padding: EdgeInsets.zero,
-                          onSelected: (value) {
-                            if (value == "SUSPEND") {
-                              BlocProvider.of<CreateNewReceiptBloc>(context)
-                                  .add(OnSuspendTransaction());
-                            } else if (value == "RETURN") {
-                              showTransitiveAppPopUp(
-                                title: "Return Order",
-                                child: ReturnOrderView(
-                                  currentOrderLineItem:
-                                      BlocProvider.of<CreateNewReceiptBloc>(
-                                              context)
-                                          .state
-                                          .lineItem,
-                                ),
-                                context: context,
-                              ).then((value) => {
-                                    if (value != null)
-                                      {
-                                        BlocProvider.of<CreateNewReceiptBloc>(
-                                                context)
-                                            .add(OnReturnLineItemEvent(value))
-                                      }
-                                  });
-                            } else if (value == "CANCEL") {
-                              BlocProvider.of<CreateNewReceiptBloc>(context)
-                                  .add(OnCancelTransaction());
-                            } else if (value == "PARTIAL_PAYMENT") {
-                              BlocProvider.of<CreateNewReceiptBloc>(context)
-                                  .add(OnPartialPayment());
+                    right: 10,
+                    child: Row(
+                      children: [
+                        AppBarLeading(
+                          heading:
+                              "_receiptNoLabel".tr(namedArgs: {"receiptNo": state.transSeq}),
+                          icon: Icons.arrow_back,
+                          onTap: () {
+                            if (!state.inProgress) {
+                              Navigator.of(context).pop();
+                              return;
                             }
-                          },
-                          itemBuilder: (context) => [
-                            if (state.customer != null)
-                              PopupMenuItem(
-                                value: "PARTIAL_PAYMENT",
-                                child: Row(
-                                  children: const [
-                                    FaIcon(
-                                      FontAwesomeIcons.moneyBills,
-                                      color: AppColor.primary,
-                                    ),
+                            if (state.transactionHeader == null) {
+                              Navigator.of(context).pop();
+                              return;
+                            }
+                            if (state.step == SaleStep.payment) {
+                              BlocProvider.of<CreateNewReceiptBloc>(context)
+                                  .add(OnChangeSaleStep(SaleStep.item));
+                              return;
+                            }
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Confirmation"),
+                                  content: const Text(
+                                      "Would you like to cancel the sale transaction?"),
+                                  actions: [
                                     SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text("Partial Pay"),
-                                  ],
-                                ),
-                              ),
-                            PopupMenuItem(
-                              value: "SUSPEND",
-                              child: Row(
-                                children: const [
-                                  SizedBox(
-                                    width: 30,
-                                    child: Center(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.pause,
-                                        color: AppColor.primary,
+                                      width: 100,
+                                      child: RejectButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        label: 'Cancel',
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text("Suspend Order"),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: "RETURN",
-                              child: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.assignment_return_outlined,
-                                    color: AppColor.primary,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text("Return Order"),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: "CANCEL",
-                              child: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.cancel_sharp,
-                                    color: AppColor.primary,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text("Cancel Order"),
-                                ],
-                              ),
-                            ),
-                          ],
-                          icon: const Icon(
-                            Icons.more_vert,
-                            color: AppColor.iconColor,
-                          ),
+                                    SizedBox(
+                                      width: 100,
+                                      child: AcceptButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                        label: 'OK',
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ).then((value) => {
+                                  if (value != null && value)
+                                    {
+                                      BlocProvider.of<CreateNewReceiptBloc>(context)
+                                          .add(OnCancelTransaction())
+                                    }
+                                });
+                          },
                         ),
-                      ));
+                        const SaleMoreOption()
+                      ],
+                    ),
+                  );
                 },
               ),
               const StoreUserWidget(),
@@ -307,6 +189,138 @@ class _CashTenderState extends State<CashTender> {
               fontSize: 40, fontWeight: FontWeight.bold, letterSpacing: 1.5),
         ),
       ],
+    );
+  }
+}
+
+class SaleMoreOption extends StatelessWidget {
+  const SaleMoreOption({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CreateNewReceiptBloc, CreateNewReceiptState>(
+      builder: (context, state) {
+        if (state.transactionHeader == null) return const SizedBox();
+        return Positioned(
+            top: 40,
+            right: 10,
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.primary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 40,
+              width: 40,
+              child: PopupMenuButton<String>(
+                position: PopupMenuPosition.under,
+                color: AppColor.background,
+                padding: EdgeInsets.zero,
+                onSelected: (value) {
+                  if (value == "SUSPEND") {
+                    BlocProvider.of<CreateNewReceiptBloc>(context)
+                        .add(OnSuspendTransaction());
+                  } else if (value == "RETURN") {
+                    showTransitiveAppPopUp(
+                      title: "Return Order",
+                      child: ReturnOrderView(
+                        currentOrderLineItem:
+                        BlocProvider.of<CreateNewReceiptBloc>(
+                            context)
+                            .state
+                            .lineItem,
+                      ),
+                      context: context,
+                    ).then((value) => {
+                      if (value != null)
+                        {
+                          BlocProvider.of<CreateNewReceiptBloc>(
+                              context)
+                              .add(OnReturnLineItemEvent(value))
+                        }
+                    });
+                  } else if (value == "CANCEL") {
+                    BlocProvider.of<CreateNewReceiptBloc>(context)
+                        .add(OnCancelTransaction());
+                  } else if (value == "PARTIAL_PAYMENT") {
+                    BlocProvider.of<CreateNewReceiptBloc>(context)
+                        .add(OnPartialPayment());
+                  }
+                },
+                itemBuilder: (context) => [
+                  if (state.customer != null)
+                    PopupMenuItem(
+                      value: "PARTIAL_PAYMENT",
+                      child: Row(
+                        children: const [
+                          FaIcon(
+                            FontAwesomeIcons.moneyBills,
+                            color: AppColor.primary,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text("Partial Pay"),
+                        ],
+                      ),
+                    ),
+                  PopupMenuItem(
+                    value: "SUSPEND",
+                    child: Row(
+                      children: const [
+                        SizedBox(
+                          width: 30,
+                          child: Center(
+                            child: FaIcon(
+                              FontAwesomeIcons.pause,
+                              color: AppColor.primary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Suspend Order"),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: "RETURN",
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.assignment_return_outlined,
+                          color: AppColor.primary,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Return Order"),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: "CANCEL",
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.cancel_sharp,
+                          color: AppColor.primary,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Cancel Order"),
+                      ],
+                    ),
+                  ),
+                ],
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: AppColor.iconColor,
+                ),
+              ),
+            ));
+      },
     );
   }
 }
