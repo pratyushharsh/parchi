@@ -13,29 +13,29 @@ class ProductRepository with DatabaseProvider {
 
   ProductRepository({required this.restClient});
 
-  Future<ProductEntity?> getProductById(String productId) {
-    return db.productEntitys.getByProductId(productId);
+  Future<ItemEntity?> getProductById(String productId) {
+    return db.itemEntitys.getByProductId(productId);
   }
 
-  Future<void> createNewProduct(ProductEntity product) {
+  Future<void> createNewProduct(ItemEntity product) {
     product.lastChangedAt = DateTime.now();
     product.syncState = 0;
-    return db.writeTxn(() => db.productEntitys.putByProductId(product));
+    return db.writeTxn(() => db.itemEntitys.putByProductId(product));
   }
 
-  Future<void> updateProduct(ProductEntity product) {
+  Future<void> updateProduct(ItemEntity product) {
     if (product.id == null) {
       log.severe('Product id is null');
       return Future.value();
     }
     product.lastChangedAt = DateTime.now();
     product.syncState = 200;
-    return db.writeTxn(() => db.productEntitys.putByProductId(product));
+    return db.writeTxn(() => db.itemEntitys.putByProductId(product));
   }
 
-  Future<List<ProductEntity>> searchProductByFilter(String filter,
+  Future<List<ItemEntity>> searchProductByFilter(String filter,
       {int limit = 10}) {
-    return db.productEntitys
+    return db.itemEntitys
         .where()
         .productIdEqualTo(filter)
         .or()
@@ -44,20 +44,20 @@ class ProductRepository with DatabaseProvider {
         .findAll();
   }
 
-  Future<List<ProductEntity>> getAllProducts() async {
-    return db.productEntitys.where().findAll();
+  Future<List<ItemEntity>> getAllProducts() async {
+    return db.itemEntitys.where().findAll();
   }
 
-  Future<List<ProductEntity>> searchProducts(
+  Future<List<ItemEntity>> searchProducts(
       ProductFilterCriteria filterCriteria) async {
-    var q = db.productEntitys.where();
+    var q = db.itemEntitys.where();
 
-    QueryBuilder<ProductEntity, ProductEntity, QAfterWhereClause>? qb;
+    QueryBuilder<ItemEntity, ItemEntity, QAfterWhereClause>? qb;
     bool first = true;
 
     if (filterCriteria.filter != null && filterCriteria.filter!.isNotEmpty) {
       qb = q
-          .productIdEqualTo(filterCriteria.filter)
+          .productIdEqualTo(filterCriteria.filter!)
           .or()
           .descriptionWordsElementStartsWith(filterCriteria.filter!);
       first = false;
@@ -75,7 +75,7 @@ class ProductRepository with DatabaseProvider {
     }
 
     if (filterCriteria.categories.isNotEmpty) {
-      QueryBuilder<ProductEntity, ProductEntity, QAfterFilterCondition>? fil;
+      QueryBuilder<ItemEntity, ItemEntity, QAfterFilterCondition>? fil;
       for (var category in filterCriteria.categories) {
         if (fil == null) {
           first = false;
@@ -86,7 +86,7 @@ class ProductRepository with DatabaseProvider {
       }
 
       if (fil != null) {
-        QueryBuilder<ProductEntity, ProductEntity, QAfterSortBy>? sortBy;
+        QueryBuilder<ItemEntity, ItemEntity, QAfterSortBy>? sortBy;
         switch(filterCriteria.sortBy) {
           case ProductFilterSortByCriteria.priceLowToHigh:
             sortBy = fil.sortBySalePrice();
@@ -105,6 +105,12 @@ class ProductRepository with DatabaseProvider {
             break;
         }
 
+        List <ItemEntity> recommendation = await sortBy
+            .offset(filterCriteria.offset)
+            .limit(filterCriteria.limit)
+            .findAll();
+
+        // Find product by id
         return sortBy
             .offset(filterCriteria.offset)
             .limit(filterCriteria.limit)
@@ -113,7 +119,7 @@ class ProductRepository with DatabaseProvider {
     }
 
     if (qb != null) {
-      QueryBuilder<ProductEntity, ProductEntity, QAfterSortBy>? sortBy;
+      QueryBuilder<ItemEntity, ItemEntity, QAfterSortBy>? sortBy;
       switch(filterCriteria.sortBy) {
         case ProductFilterSortByCriteria.priceLowToHigh:
           sortBy = qb.sortBySalePrice();
@@ -137,7 +143,7 @@ class ProductRepository with DatabaseProvider {
           .findAll();
     } else {
 
-      QueryBuilder<ProductEntity, ProductEntity, QAfterSortBy>? sortBy;
+      QueryBuilder<ItemEntity, ItemEntity, QAfterSortBy>? sortBy;
       switch(filterCriteria.sortBy) {
         case ProductFilterSortByCriteria.priceLowToHigh:
           sortBy = q.sortBySalePrice();
@@ -164,13 +170,13 @@ class ProductRepository with DatabaseProvider {
   }
 
   Future<List<String>> getAllProductsBrands() async {
-    var brands = await db.productEntitys.where().distinctByBrand().findAll();
+    var brands = await db.itemEntitys.where().distinctByBrand().findAll();
     return brands.where((e) => (e.brand != null && e.brand!.isNotEmpty)).map((e) => e.brand!).toList();
   }
 
   Future<List<String>> getAllCategory() async {
     var category =
-        await db.productEntitys.where().distinctByCategory().findAll();
+        await db.itemEntitys.where().distinctByCategory().findAll();
     Set<String> set = {};
     for (var c in category) {
       set.addAll(c.category.where((element) => element.isNotEmpty));

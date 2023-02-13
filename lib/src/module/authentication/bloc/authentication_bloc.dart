@@ -121,6 +121,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       await tmp.storage.removeItem("CURRENT_STORE");
       await _deleteTheFilesFromCache();
       emit(AuthenticationState.unknown());
+      await DatabaseProvider.closeAllDatabaseExceptDefault();
     } else {
       emit(AuthenticationState.unknown());
     }

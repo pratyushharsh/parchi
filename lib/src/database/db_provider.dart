@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../entity/config/code_value_entity.dart';
-import '../entity/pos/country_entity.dart';
 import '../entity/pos/entity.dart';
 
 mixin DatabaseProvider {
@@ -39,7 +38,7 @@ mixin DatabaseProvider {
       ContactEntitySchema,
       EmployeeEntitySchema,
       EmployeeRoleEntitySchema,
-      ProductEntitySchema,
+      ItemEntitySchema,
       CollectionEntitySchema,
       SequenceEntitySchema,
       SettingEntitySchema,
@@ -50,7 +49,7 @@ mixin DatabaseProvider {
       TaxGroupEntitySchema,
       ReportConfigEntitySchema,
       CountryEntitySchema
-    ], inspector: inspector, directory: path, name: name);
+    ], inspector: inspector, directory: path, name: name, maxSizeMiB: 2048);
   }
 
   static Future<void> switchDatabase(String name) async {
@@ -60,6 +59,16 @@ mixin DatabaseProvider {
     } else {
       _dbMap[name] = await _openDatabase(name);
       _currentKey = name;
+    }
+  }
+
+  static Future<void> closeAllDatabaseExceptDefault() async {
+    log.info("Closing all database except default");
+    for (var key in _dbMap.keys) {
+      if (key != defaultDbName) {
+        await _dbMap[key]!.close(deleteFromDisk: true);
+        _dbMap.remove(key);
+      }
     }
   }
 }

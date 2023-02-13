@@ -4,17 +4,17 @@ enum ItemSearchStatus { initial, loading, success, failure }
 
 class ItemSearchState {
   final ItemSearchStatus status;
-  final List<ProductEntity> products;
+  final List<ItemEntity> products;
   final SearchFilter filter;
 
   ItemSearchState(
       {this.status = ItemSearchStatus.initial,
       this.filter = const SearchFilter(filterText: ""),
-      this.products = const <ProductEntity>[]});
+      this.products = const <ItemEntity>[]});
 
   ItemSearchState copyWith({
     ItemSearchStatus? status,
-    List<ProductEntity>? products,
+    List<ItemEntity>? products,
     SearchFilter? filter,
   }) {
     return ItemSearchState(

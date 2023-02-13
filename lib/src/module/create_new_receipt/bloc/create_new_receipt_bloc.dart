@@ -78,7 +78,7 @@ class CreateNewReceiptBloc
           await transactionRepository.getTransaction(event.transSeq!);
 
       if (transaction != null) {
-        Map<String, ProductEntity> pm = Map.from(state.productMap);
+        Map<String, ItemEntity> pm = Map.from(state.productMap);
 
         for (final lineItem in transaction.lineItems) {
           final product =
@@ -181,7 +181,7 @@ class CreateNewReceiptBloc
       newLine.grossAmount = newLine.netAmount! + taxAmount;
       newLine.unitCost = newLine.grossAmount! / newLine.quantity!;
 
-      Map<String, ProductEntity> pm = Map.from(state.productMap);
+      Map<String, ItemEntity> pm = Map.from(state.productMap);
       pm.putIfAbsent(event.product.productId!, () => event.product);
       List<TransactionLineItemEntity> newList = [...state.lineItem, newLine];
       emit(state.copyWith(
@@ -655,7 +655,7 @@ class CreateNewReceiptBloc
     int seq = state.lineItem.length;
 
     List<TransactionLineItemEntity> newList = [...state.lineItem];
-    Map<String, ProductEntity> pm = Map.from(state.productMap);
+    Map<String, ItemEntity> pm = Map.from(state.productMap);
 
     for (var line in event.returnMap.keys) {
       var returnData = event.returnMap[line];
@@ -727,7 +727,7 @@ class CreateNewReceiptBloc
 
       newList.add(returnLine);
 
-      ProductEntity? pe = await productRepository.getProductById(line.itemId!);
+      ItemEntity? pe = await productRepository.getProductById(line.itemId!);
       if (pe != null) {
         pm.putIfAbsent(line.itemId!, () => pe);
       }

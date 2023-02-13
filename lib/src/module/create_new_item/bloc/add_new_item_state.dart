@@ -19,7 +19,7 @@ class AddNewItemState {
   final List<String> category;
   final List<String> imageUrl;
   final bool priceIncludeTax;
-  final ProductEntity? existingProduct;
+  final ItemEntity? existingProduct;
   final AddNewItemStatus status;
 
 
@@ -61,7 +61,7 @@ class AddNewItemState {
     List<String>? category,
     List<String>? imageUrl,
     bool? priceIncludeTax,
-    ProductEntity? existingProduct,
+    ItemEntity? existingProduct,
     AddNewItemStatus? status,
   }) {
     return AddNewItemState(

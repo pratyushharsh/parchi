@@ -231,7 +231,7 @@ class SyncConfigRepository with DatabaseProvider {
             var productId = e[0].toString();
             int? seq;
 
-            var entity = ProductEntity(
+            var entity = ItemEntity(
               displayName: e[1].toString(),
               description: e[2].toString(),
               listPrice: e[3].toString().isNotEmpty
@@ -257,7 +257,7 @@ class SyncConfigRepository with DatabaseProvider {
               createTime: DateTime.now(),
               id: seq,
             );
-            await db.productEntitys.put(entity);
+            await db.itemEntitys.put(entity);
           }
         });
       }

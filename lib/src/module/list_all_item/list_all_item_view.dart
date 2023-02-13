@@ -118,7 +118,7 @@ class AllProductsList extends StatelessWidget {
 }
 
 class ItemCard extends StatelessWidget {
-  final ProductEntity product;
+  final ItemEntity product;
   const ItemCard({Key? key, required this.product}) : super(key: key);
 
   @override

@@ -357,7 +357,7 @@ class Address extends StatelessWidget {
 
 class OrderLine extends StatelessWidget {
   final TransactionHeaderEntity order;
-  final Map<String, ProductEntity> productMap;
+  final Map<String, ItemEntity> productMap;
   const OrderLine({Key? key, required this.order, required this.productMap})
       : super(key: key);
 
@@ -432,7 +432,7 @@ class OrderLine extends StatelessWidget {
 
 class OrderItemDetailDisplay extends StatelessWidget {
   final TransactionLineItemEntity entity;
-  final ProductEntity? product;
+  final ItemEntity? product;
   final String orderLocale;
   const OrderItemDetailDisplay(
       {Key? key, required this.entity, this.product, required this.orderLocale})

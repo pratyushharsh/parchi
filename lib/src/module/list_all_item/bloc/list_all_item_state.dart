@@ -12,7 +12,7 @@ class ListAllItemState {
   final ListAllItemStatus status;
   final List<String> brands;
   final List<String> categories;
-  final List<ProductEntity> products;
+  final List<ItemEntity> products;
   final ProductFilterCriteria filterCriteria;
   final bool end;
 
@@ -22,13 +22,13 @@ class ListAllItemState {
       this.categories = const [],
       this.filterCriteria = const ProductFilterCriteria(),
       this.end = false,
-      this.products = const <ProductEntity>[]});
+      this.products = const <ItemEntity>[]});
 
   ListAllItemState copyWith(
       {ListAllItemStatus? status,
       List<String>? brands,
       List<String>? categories,
-      List<ProductEntity>? products,
+      List<ItemEntity>? products,
       bool? end,
       ProductFilterCriteria? filterCriteria}) {
     return ListAllItemState(

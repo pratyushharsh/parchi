@@ -58,9 +58,9 @@ class ProductModel {
         imageUrl: imageUrl ?? this.imageUrl);
   }
 
-  ProductEntity toEntity() {
-    return ProductEntity(
-        productId: skuCode ?? productId,
+  ItemEntity toEntity() {
+    return ItemEntity(
+        productId: skuCode ?? productId ?? 'INVALID',
         displayName: description,
         listPrice: listPrice,
         salePrice: salePrice,

@@ -219,7 +219,7 @@ class BuildLineItem extends StatelessWidget {
   const BuildLineItem({Key? key}) : super(key: key);
 
   void onTap(BuildContext context, TransactionLineItemEntity saleLine,
-      ProductEntity? product) {
+      ItemEntity? product) {
     showTransitiveAppPopUp(
             context: context,
             title: "Modify Line Item",
@@ -562,7 +562,7 @@ class TenderLineDisplay extends StatelessWidget {
 
 class NewLineItem extends StatelessWidget {
   final TransactionLineItemEntity saleLine;
-  final ProductEntity? productModel;
+  final ItemEntity? productModel;
 
   const NewLineItem({Key? key, required this.saleLine, this.productModel})
       : super(key: key);

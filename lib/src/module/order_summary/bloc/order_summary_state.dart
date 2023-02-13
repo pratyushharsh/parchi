@@ -5,7 +5,7 @@ enum OrderSummaryStatus { initial, loading, success, failure }
 class OrderSummaryState {
   final TransactionHeaderEntity? order;
   final OrderSummaryStatus status;
-  final Map<String, ProductEntity> productMap;
+  final Map<String, ItemEntity> productMap;
 
   const OrderSummaryState(
       {this.order,
@@ -15,7 +15,7 @@ class OrderSummaryState {
   OrderSummaryState copyWith({
     TransactionHeaderEntity? order,
     OrderSummaryStatus? status,
-    Map<String, ProductEntity>? productMap,
+    Map<String, ItemEntity>? productMap,
   }) {
     return OrderSummaryState(
       order: order ?? this.order,

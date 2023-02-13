@@ -382,7 +382,7 @@ class SyncRepository with DatabaseProvider {
           ContactEntitySchema,
           EmployeeEntitySchema,
           EmployeeRoleEntitySchema,
-          ProductEntitySchema,
+          ItemEntitySchema,
           CollectionEntitySchema,
           SequenceEntitySchema,
           SettingEntitySchema,

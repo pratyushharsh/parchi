@@ -5,7 +5,7 @@ import '../../entity/pos/entity.dart';
 class PriceHelper {
   Logger log = Logger('PriceHelper');
 
-  double findPriceForItem(ProductEntity product) {
+  double findPriceForItem(ItemEntity product) {
     if (product.salePrice != null) {
       return product.salePrice!;
     } else if (product.listPrice != null) {

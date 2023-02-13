@@ -25,7 +25,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> with D
         emit(state.copyWith(status: OrderSummaryStatus.failure));
         return;
       }
-      Map<String, ProductEntity> pm = Map.from(state.productMap);
+      Map<String, ItemEntity> pm = Map.from(state.productMap);
       // order.lineItems.loadSync();
       // for (var element in order.lineItems) {
       //     await element.lineModifiers.load();
@@ -34,7 +34,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> with D
       // await order.paymentLineItems.load();
 
       for(var x in order.lineItems) {
-        ProductEntity? pe = db.productEntitys.where().productIdEqualTo(x.itemId).findFirstSync();
+        ItemEntity? pe = db.itemEntitys.where().productIdEqualTo(x.itemId!).findFirstSync();
         if (pe != null) {
           pm.putIfAbsent(x.itemId!, () => pe);
         }

@@ -4,14 +4,14 @@ import 'package:isar/isar.dart';
 //   Index(value: ['description']),
 //   Index(value: ['skuCode'], unique: true)
 // ])
-part 'product_entity.g.dart';
+part 'item_entity.g.dart';
 
 @Collection()
-class ProductEntity {
+class ItemEntity {
   Id? id;
 
   @Index(unique: true, type: IndexType.value, replace: true, name: 'product')
-  String? productId;
+  String productId;
   String? skuId;
 
   String displayName;
@@ -43,12 +43,17 @@ class ProductEntity {
   @Index(type: IndexType.value)
   int? syncState;
 
+  @Index(type: IndexType.value)
+  List<String> upc;
+
+  List<ItemImage> images = [];
+
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get descriptionWords => Isar.splitWords(displayName);
 
-  ProductEntity({
+  ItemEntity({
     this.id,
-    this.productId,
+    required this.productId,
     required this.displayName,
     this.description,
     required this.listPrice,
@@ -63,9 +68,23 @@ class ProductEntity {
     this.size,
     this.category = const [],
     this.imageUrl = const [],
+    this.upc = const [],
     required this.createTime,
     this.syncState,
     this.lastSyncAt,
     this.lastChangedAt,
+  });
+}
+
+@embedded
+class ItemImage {
+  int sort;
+  String? imageUrl;
+  String? label;
+
+  ItemImage({
+    this.sort = 0,
+    this.imageUrl,
+    this.label,
   });
 }

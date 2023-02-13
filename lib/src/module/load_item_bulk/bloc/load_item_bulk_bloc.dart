@@ -45,7 +45,7 @@ class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> with D
 
           var productId = e[0].toString();
 
-          var entity = ProductEntity(
+          var entity = ItemEntity(
             productId: productId,
             category: e[1].toString().split(",").map((e) => e).toList(),
             displayName: e[2].toString(),
@@ -79,7 +79,7 @@ class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> with D
             enable: true,
             createTime: DateTime.now(),
           );
-          await db.productEntitys.put(entity);
+          await db.itemEntitys.put(entity);
         }
       });
       log.info(resp);

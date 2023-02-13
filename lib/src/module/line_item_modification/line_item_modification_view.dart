@@ -23,7 +23,7 @@ enum DiscountCalculationMethod { percentage, amount }
 
 class LineItemModificationView extends StatefulWidget {
   final TransactionLineItemEntity lineItem;
-  final ProductEntity? productModel;
+  final ItemEntity? productModel;
   const LineItemModificationView(
       {Key? key, required this.lineItem, this.productModel})
       : super(key: key);
@@ -127,7 +127,7 @@ class _LineItemModificationViewState extends State<LineItemModificationView> {
 
 class ModifyLineItemViewCard extends StatelessWidget {
   final TransactionLineItemEntity lineItem;
-  final ProductEntity? productModel;
+  final ItemEntity? productModel;
   const ModifyLineItemViewCard(
       {Key? key, required this.lineItem, this.productModel})
       : super(key: key);

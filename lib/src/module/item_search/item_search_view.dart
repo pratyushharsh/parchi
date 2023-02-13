@@ -11,7 +11,7 @@ import 'bloc/item_search_bloc.dart';
 class SearchItemView extends StatelessWidget {
   const SearchItemView({Key? key}) : super(key: key);
 
-  Widget buildItemCard(BuildContext context, ProductEntity product) {
+  Widget buildItemCard(BuildContext context, ItemEntity product) {
     return InkWell(
       onTap: () {
         Navigator.of(context).pop(product);

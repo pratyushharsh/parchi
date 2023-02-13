@@ -1,7 +1,7 @@
 export 'base_entity.dart';
 export 'business_entity.dart';
 export 'contact_entity.dart';
-export 'product_entity.dart';
+export 'item_entity.dart';
 export 'sequence_entity.dart';
 export 'setting_entity.dart';
 export 'sku_entity.dart';

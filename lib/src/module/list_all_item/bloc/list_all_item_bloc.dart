@@ -42,8 +42,17 @@ class ListAllItemBloc extends Bloc<ListAllItemEvent, ListAllItemState>
   void _onLoadItem(LoadAllItems event, Emitter<ListAllItemState> emit) async {
     try {
       emit(state.copyWith(status: ListAllItemStatus.loading));
-      var prod = await productRepository.searchProducts(state.filterCriteria);
-      emit(state.copyWith(products: prod, status: ListAllItemStatus.success));
+      // @TODO Revisit this sort by feature and brand filter is not working.
+      if (state.filterCriteria.filter == null ||
+          state.filterCriteria.filter!.isEmpty) {
+        var prod = await productRepository.searchProducts(state.filterCriteria);
+        emit(state.copyWith(
+            products: prod, status: ListAllItemStatus.success, end: true));
+        return;
+      } else {
+        var prod = await productRepository.searchProductByFilter(state.filterCriteria.filter!);
+        emit(state.copyWith(products: prod, status: ListAllItemStatus.success));
+      }
     } catch (e, st) {
       log.severe(e, e, st);
       emit(state.copyWith(status: ListAllItemStatus.failure));

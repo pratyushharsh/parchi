@@ -28,7 +28,7 @@ class BackgroundProductSync extends BackgroundEntitySync {
 
   @override
   Future<List<Map<String, dynamic>>> exportData() async {
-    return await db.productEntitys
+    return await db.itemEntitys
         .where()
         .syncStateIsNull()
         .or()
@@ -60,7 +60,7 @@ class BackgroundProductSync extends BackgroundEntitySync {
 
     await db.writeTxn(() async {
       if (products.isNotEmpty) {
-        await db.productEntitys.importJson(products);
+        await db.itemEntitys.importJson(products);
       }
       await updateSyncEntityTimestamp(lastSyncAt);
     });
@@ -149,7 +149,7 @@ class BackgroundProductSync extends BackgroundEntitySync {
     imageSyncInProgress = true;
 
     var products =
-        await db.productEntitys.where().syncStateEqualTo(600).findAll();
+        await db.itemEntitys.where().syncStateEqualTo(600).findAll();
 
     log.info("Products Image To Sync to sync: ${products.length}");
     if (products.isNotEmpty) {
@@ -166,7 +166,7 @@ class BackgroundProductSync extends BackgroundEntitySync {
 
           await db.writeTxn(
             () async {
-              var p = await db.productEntitys.getByProductId(product.productId);
+              var p = await db.itemEntitys.getByProductId(product.productId);
               if (p != null) {
                 List<String> updatedImages = [];
                 for (var image in p.imageUrl) {
@@ -181,7 +181,7 @@ class BackgroundProductSync extends BackgroundEntitySync {
 
                 p.imageUrl = updatedImages;
                 p.syncState = 400;
-                return db.productEntitys.put(p);
+                return db.itemEntitys.put(p);
               }
             },
           );

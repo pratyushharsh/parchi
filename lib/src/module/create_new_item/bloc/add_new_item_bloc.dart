@@ -163,7 +163,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
     try {
       if (state.existingProduct != null) {
         // Update existing product
-        var product = ProductEntity(
+        var product = ItemEntity(
           id: state.existingProduct!.id,
           productId: state.existingProduct!.productId,
           displayName: state.displayName ?? state.existingProduct!.displayName,
@@ -192,7 +192,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
         var prodSeq = await sequenceRepository.getNextSequence(
             SequenceType.item);
 
-        var product = ProductEntity(
+        var product = ItemEntity(
           productId: prodSeq.nextSeq.toString(),
           displayName: state.displayName!,
           description: state.description,
@@ -219,7 +219,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
     }
   }
 
-  Future<ProductEntity> _uploadImageToStagingArea(ProductEntity product) async {
+  Future<ItemEntity> _uploadImageToStagingArea(ItemEntity product) async {
     var imageUrls = <String>[];
     for (var url in product.imageUrl) {
       if (url.startsWith('fileRaw:/')) {
