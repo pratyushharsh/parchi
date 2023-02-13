@@ -122,7 +122,6 @@ class CreateNewReceiptBloc
 
   void _onAddNewLineItem(
       AddItemToReceipt event, Emitter<CreateNewReceiptState> emit) async {
-    assert(event.product.productId != null);
 
     // @TODO Check if the header is created otherwise create new transaction header
     if (state.transactionHeader == null) {
@@ -139,6 +138,21 @@ class CreateNewReceiptBloc
     // @TODO Change the pos id also
     // @TODO Change the entry method also
     // @TODO Fetch the price from pricing module for the item and add.
+
+    // Check if item already exist then increase the quantity
+    for (final lineItem in state.lineItem) {
+      if (lineItem.itemId == event.product.productId) {
+        add(OnQuantityUpdate(
+          saleLine: lineItem,
+          quantity: lineItem.quantity! + 1,
+          reason: '',
+        ));
+        return;
+      }
+    }
+
+
+
 
     try {
       // Fetch the tax group for the item to add.
