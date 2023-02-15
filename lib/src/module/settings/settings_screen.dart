@@ -154,6 +154,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     //       BlocProvider.of<BackgroundSyncBloc>(context)
                     //           .add(SyncAllConfigDataEvent(forceSync: true));
                     //     }),
+                    SettingsItem(
+                        text: "Item Price",
+                        onTap: () async {
+
+                        }),
                   ],
                 ),
               ),
