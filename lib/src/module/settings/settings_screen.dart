@@ -23,11 +23,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
   void refresh() {
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -104,7 +101,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               .pushNamed(RouteConfig.localeScreen)
                               .then((value) {
                             if (value != null && value is Locale) {
-                              EasyLocalization.of(context)?.setLocale(value).then((value) => refresh());
+                              EasyLocalization.of(context)
+                                  ?.setLocale(value)
+                                  .then((value) => refresh());
                             }
                           });
                         }),
@@ -154,11 +153,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     //       BlocProvider.of<BackgroundSyncBloc>(context)
                     //           .add(SyncAllConfigDataEvent(forceSync: true));
                     //     }),
-                    SettingsItem(
-                        text: "Item Price",
-                        onTap: () async {
-
-                        }),
+                    SettingsItem(text: "Item Price", onTap: () async {}),
+                    SettingsItem(text: "Bulk Import", onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(RouteConfig.bulkImportScreen);
+                    }),
                   ],
                 ),
               ),

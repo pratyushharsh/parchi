@@ -96,7 +96,7 @@
   "_cancelTransactionLabel": "هل تريد إلغاء هذه المعاملة؟",
   "_tenderAmount": "مبلغ العطاء \n {amount}",
 
-  "_taxGroupLabel": "مجموعة الضريبة: {groupId}",
+  "_taxGroupLabel": "مجموعة الضريبة: {groupId} | {groupName}",
   "_receiptNoLabel": "Ord : {receiptNo}",
   "_addNewBusiness": "إضافة عمل جديد",
 

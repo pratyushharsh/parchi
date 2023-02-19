@@ -48,7 +48,8 @@ mixin DatabaseProvider {
       ReasonCodeEntitySchema,
       TaxGroupEntitySchema,
       ReportConfigEntitySchema,
-      CountryEntitySchema
+      CountryEntitySchema,
+      DealsEntitySchema
     ], inspector: inspector, directory: path, name: name, maxSizeMiB: 2048);
   }
 

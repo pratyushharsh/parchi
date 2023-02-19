@@ -105,7 +105,7 @@ class TaxGroupCardMobile extends StatelessWidget {
               const Text(
                 "_taxGroupLabel",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ).tr(namedArgs: {'groupId': taxGroup.groupId}),
+              ).tr(namedArgs: {'groupId': taxGroup.groupId, 'groupName': taxGroup.name },),
               CloudSyncIcon(
                 syncState: taxGroup.syncState ?? 0,
               ),
@@ -170,7 +170,7 @@ class TaxRuleCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
           children: [
-            Text(taxRule.ruleName!),
+            Text(taxRule.ruleName ?? ""),
             const Spacer(),
             Text("${taxRule.percent}%"),
           ],

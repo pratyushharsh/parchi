@@ -59,6 +59,7 @@ class TransactionLineItemEntity {
   /// For DropShipping Items
   String? vendorId;
   double? shippingWeight;
+  String? taxGroupId;
 
   // @Backlink(to: 'lineItems')
   // final header = IsarLink<TransactionHeaderEntity>();
@@ -112,6 +113,7 @@ class TransactionLineItemEntity {
     this.nonExchangeableFlag = false,
     this.vendorId,
     this.shippingWeight,
+    this.taxGroupId,
     this.lineModifiers = const [],
     this.taxModifiers = const [],
   });
@@ -163,6 +165,7 @@ class TransactionLineItemEntity {
           nonExchangeableFlag == other.nonExchangeableFlag &&
           vendorId == other.vendorId &&
           shippingWeight == other.shippingWeight &&
+          taxGroupId == other.taxGroupId &&
           lineModifiers == other.lineModifiers &&
           taxModifiers == other.taxModifiers;
 
@@ -210,6 +213,7 @@ class TransactionLineItemEntity {
       nonExchangeableFlag.hashCode ^
       vendorId.hashCode ^
       shippingWeight.hashCode ^
+      taxGroupId.hashCode ^
       lineModifiers.hashCode ^
       taxModifiers.hashCode;
 }

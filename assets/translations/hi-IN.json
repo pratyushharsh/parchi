@@ -79,7 +79,7 @@
     "_amountDue": "देय राशि",
     "_saleReceipt": "बिक्री रसीद",
     "_searchReceiptHint": "रसीद आईडी, ग्राहक का नाम, फोन द्वारा खोजें",
-    "_taxGroupLabel": "कर समूह: {groupId}",
+    "_taxGroupLabel": "कर समूह: {groupId} | {groupName}",
     "_receiptNoLabel": "रसीद # {receiptNo}",
     "loginHeader": "अपना मोबाइल संख्या दर्ज करे",
     "loginHeaderDescription": "हम आपको एक पुष्टिकरण कोड भेजेंगे",

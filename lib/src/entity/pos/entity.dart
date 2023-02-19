@@ -21,3 +21,4 @@ export 'employee_role_entity.dart';
 export 'collection.dart';
 export 'tax_rule_entity.dart';
 export 'country_entity.dart';
+export 'deals_entity.dart';

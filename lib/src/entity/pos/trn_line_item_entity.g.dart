@@ -209,34 +209,39 @@ const TransactionLineItemEntitySchema = Schema(
       name: r'taxAmount',
       type: IsarType.double,
     ),
-    r'taxModifiers': PropertySchema(
+    r'taxGroupId': PropertySchema(
       id: 39,
+      name: r'taxGroupId',
+      type: IsarType.string,
+    ),
+    r'taxModifiers': PropertySchema(
+      id: 40,
       name: r'taxModifiers',
       type: IsarType.objectList,
       target: r'TransactionLineItemTaxModifier',
     ),
     r'transSeq': PropertySchema(
-      id: 40,
+      id: 41,
       name: r'transSeq',
       type: IsarType.string,
     ),
     r'unitCost': PropertySchema(
-      id: 41,
+      id: 42,
       name: r'unitCost',
       type: IsarType.double,
     ),
     r'unitPrice': PropertySchema(
-      id: 42,
+      id: 43,
       name: r'unitPrice',
       type: IsarType.double,
     ),
     r'uom': PropertySchema(
-      id: 43,
+      id: 44,
       name: r'uom',
       type: IsarType.string,
     ),
     r'vendorId': PropertySchema(
-      id: 44,
+      id: 45,
       name: r'vendorId',
       type: IsarType.string,
     )
@@ -352,6 +357,12 @@ int _transactionLineItemEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.taxGroupId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.taxModifiers.length * 3;
   {
     final offsets = allOffsets[TransactionLineItemTaxModifier]!;
@@ -432,17 +443,18 @@ void _transactionLineItemEntitySerialize(
   writer.writeDouble(offsets[36], object.shippingWeight);
   writer.writeLong(offsets[37], object.storeId);
   writer.writeDouble(offsets[38], object.taxAmount);
+  writer.writeString(offsets[39], object.taxGroupId);
   writer.writeObjectList<TransactionLineItemTaxModifier>(
-    offsets[39],
+    offsets[40],
     allOffsets,
     TransactionLineItemTaxModifierSchema.serialize,
     object.taxModifiers,
   );
-  writer.writeString(offsets[40], object.transSeq);
-  writer.writeDouble(offsets[41], object.unitCost);
-  writer.writeDouble(offsets[42], object.unitPrice);
-  writer.writeString(offsets[43], object.uom);
-  writer.writeString(offsets[44], object.vendorId);
+  writer.writeString(offsets[41], object.transSeq);
+  writer.writeDouble(offsets[42], object.unitCost);
+  writer.writeDouble(offsets[43], object.unitPrice);
+  writer.writeString(offsets[44], object.uom);
+  writer.writeString(offsets[45], object.vendorId);
 }
 
 TransactionLineItemEntity _transactionLineItemEntityDeserialize(
@@ -496,18 +508,19 @@ TransactionLineItemEntity _transactionLineItemEntityDeserialize(
     shippingWeight: reader.readDoubleOrNull(offsets[36]),
     storeId: reader.readLongOrNull(offsets[37]),
     taxAmount: reader.readDoubleOrNull(offsets[38]),
+    taxGroupId: reader.readStringOrNull(offsets[39]),
     taxModifiers: reader.readObjectList<TransactionLineItemTaxModifier>(
-          offsets[39],
+          offsets[40],
           TransactionLineItemTaxModifierSchema.deserialize,
           allOffsets,
           TransactionLineItemTaxModifier(),
         ) ??
         const [],
-    transSeq: reader.readStringOrNull(offsets[40]),
-    unitCost: reader.readDoubleOrNull(offsets[41]),
-    unitPrice: reader.readDoubleOrNull(offsets[42]),
-    uom: reader.readStringOrNull(offsets[43]),
-    vendorId: reader.readStringOrNull(offsets[44]),
+    transSeq: reader.readStringOrNull(offsets[41]),
+    unitCost: reader.readDoubleOrNull(offsets[42]),
+    unitPrice: reader.readDoubleOrNull(offsets[43]),
+    uom: reader.readStringOrNull(offsets[44]),
+    vendorId: reader.readStringOrNull(offsets[45]),
   );
   return object;
 }
@@ -604,6 +617,8 @@ P _transactionLineItemEntityDeserializeProp<P>(
     case 38:
       return (reader.readDoubleOrNull(offset)) as P;
     case 39:
+      return (reader.readStringOrNull(offset)) as P;
+    case 40:
       return (reader.readObjectList<TransactionLineItemTaxModifier>(
             offset,
             TransactionLineItemTaxModifierSchema.deserialize,
@@ -611,15 +626,15 @@ P _transactionLineItemEntityDeserializeProp<P>(
             TransactionLineItemTaxModifier(),
           ) ??
           const []) as P;
-    case 40:
-      return (reader.readStringOrNull(offset)) as P;
     case 41:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 42:
       return (reader.readDoubleOrNull(offset)) as P;
     case 43:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 44:
+      return (reader.readStringOrNull(offset)) as P;
+    case 45:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -4517,6 +4532,162 @@ extension TransactionLineItemEntityQueryFilter on QueryBuilder<
         upper: upper,
         includeUpper: includeUpper,
         epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'taxGroupId',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'taxGroupId',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'taxGroupId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'taxGroupId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'taxGroupId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'taxGroupId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'taxGroupId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'taxGroupId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+          QAfterFilterCondition>
+      taxGroupIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'taxGroupId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+          QAfterFilterCondition>
+      taxGroupIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'taxGroupId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'taxGroupId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> taxGroupIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'taxGroupId',
+        value: '',
       ));
     });
   }

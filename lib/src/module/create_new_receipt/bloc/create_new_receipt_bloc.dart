@@ -184,7 +184,12 @@ class CreateNewReceiptBloc
           grossAmount: itemPrice,
           taxAmount: 0.00,
           extendedAmount: itemPrice * 1,
+          taxGroupId: event.product.taxGroupId,
           unitCost: 0.0);
+
+
+      // Find the best deals for the items.
+
 
       List<TransactionLineItemTaxModifier> taxModifiers =
           taxHelper.createSaleTaxModifiers(newLine, taxRules);

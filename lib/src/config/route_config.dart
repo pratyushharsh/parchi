@@ -20,6 +20,7 @@ import '../../src/module/tax/create_edit_tax.dart';
 
 import '../entity/pos/employee_entity.dart';
 import '../module/about/about_view.dart';
+import '../module/bulk_import/bulk_import_view.dart';
 import '../module/create_edit_customer/create_edit_customer_view.dart';
 import '../module/create_new_item/modify_line_item_screen.dart';
 import '../module/employee/employee_list_view.dart';
@@ -53,6 +54,7 @@ class RouteConfig {
   static const String employeeDetailScreen = "/employee-detail";
   static const String employeeScreen = "/employee";
   static const String sequenceConfigScreen = "/sequence-config";
+  static const String bulkImportScreen = "/bulk-import";
 
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -124,6 +126,8 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => const EmployeeView());
       case sequenceConfigScreen:
         return MaterialPageRoute(builder: (_) => const CreateEditSequenceView());
+      case bulkImportScreen:
+        return MaterialPageRoute(builder: (_) => const BulkImportView());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

@@ -81,7 +81,7 @@
   "_searchReceiptHint": "Suche nach Beleg-ID, Kundenname, Telefon",
   "_unitCost": "Kosten pro Einheit",
   "_qty": "Menge",
-  "_taxGroupLabel": "Steuergruppe: {groupId}",
+  "_taxGroupLabel": "Steuergruppe: {groupId} | {groupName}",
   "_receiptNoLabel": "Kassenbon",
   "loginHeader": "Geben Sie Ihre Mobiltelefonnummer ein",
   "loginHeaderDescription": "Wir senden Ihnen einen Bestätigungscode",

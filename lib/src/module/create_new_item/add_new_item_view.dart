@@ -473,7 +473,7 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                             value: state.taxGroupId,
                             label: '_taxGroup',
                             itemAsString: (TaxGroupEntity? value) =>
-                                value?.name ?? "",
+                                '${value?.groupId} | ${value?.name}',
                             asyncItems: (filter) async {
                               return await RepositoryProvider.of<TaxRepository>(
                                       context)

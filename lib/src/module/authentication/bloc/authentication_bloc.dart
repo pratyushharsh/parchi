@@ -173,6 +173,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         await businessRepository.getBusinessById(int.parse(event.rtlLocId));
     var userDetail = await employeeRepository.getEmployeeByStoreAndUserId(
         event.rtlLocId, user.getUsername()!);
+    StoreConfigCacheManager.init(
+      storeId: int.parse(event.rtlLocId),
+      workstationId: 1,
+      userId: user.getUsername()!,
+      userName: '${userDetail?.firstName ?? ""} ${userDetail?.lastName}',
+      userEmail: '${userDetail?.email}',);
     emit(AuthenticationState.authenticated(user, business, userDetail!));
     sync.add(StartSyncEvent(business.rtlLocId));
   }

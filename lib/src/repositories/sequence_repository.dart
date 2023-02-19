@@ -24,7 +24,7 @@ class SequenceRepository with DatabaseProvider {
         String pattern = '{uuid}';
 
         if (type == SequenceType.transaction) {
-          pattern = '{store}-{wkst}-{tbase36}';
+          pattern = '{store}-{wkst}-{counter}';
         }
 
         await db.sequenceEntitys.put(SequenceEntity(
@@ -64,7 +64,7 @@ class SequenceRepository with DatabaseProvider {
           String pattern = '{uuid}';
 
           if (type == SequenceType.transaction) {
-            pattern = '{store}-{wkst}-{tbase36}';
+            pattern = '{store}-{wkst}-{counter}';
           }
 
           var tmp = SequenceEntity(

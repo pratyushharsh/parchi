@@ -8,6 +8,7 @@ import 'src/config/cache_manager.dart';
 
 import 'src/config/route_config.dart';
 import 'src/module/authentication/bloc/authentication_bloc.dart';
+import 'src/module/bulk_import/bloc/bulk_import_bloc.dart';
 import 'src/module/business/business_view.dart';
 import 'src/module/home/home_view.dart';
 import 'src/module/landing/landing_screen.dart';
@@ -21,6 +22,7 @@ import 'src/pos/calculator/tax_calculator.dart';
 import 'src/pos/helper/discount_helper.dart';
 import 'src/pos/helper/price_helper.dart';
 import 'src/pos/helper/tax_helper.dart';
+import 'src/repositories/bulk_repositoty.dart';
 import 'src/util/helper/rest_api.dart';
 import 'src/widgets/my_loader.dart';
 import 'src/config/theme_settings.dart';
@@ -43,85 +45,82 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(lazy: false, create: (context) => restClient),
+        RepositoryProvider(lazy: false, create: (context) => CheckListHelper()),
+        RepositoryProvider(create: (context) => ContactRepository()),
+        RepositoryProvider(create: (context) => userPool),
+        RepositoryProvider(
+          create: (context) => BusinessRepository(
+            restClient: restClient,
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => SyncRepository(
+            restClient: restClient,
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => SyncConfigRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => SettingsRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          create: (context) => SequenceRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          create: (context) => TransactionRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          create: (context) => ConfigRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => ReasonCodeRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          create: (context) => TaxRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          create: (context) => EmployeeRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          create: (context) => CustomerRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          create: (context) => ProductRepository(restClient: restClient),
+        ),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) =>
+              TaxHelper(taxRepository: RepositoryProvider.of(context)),
+        ),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) => PriceHelper(),
+        ),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) => DiscountHelper(),
+        ),
+        RepositoryProvider(
+          lazy: false,
+          create: (context) => TaxModifierCalculator(
+              taxRepository: RepositoryProvider.of(context)),
+        ),
+        RepositoryProvider(
+          create: (context) => InvoiceRepository(
+            restClient: restClient,
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => BulkImportRepository(
+            restClient: restClient,
+          ),
+        ),
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider(
-              lazy: false, create: (context) => restClient),
-          RepositoryProvider(
-              lazy: false, create: (context) => CheckListHelper()),
-          RepositoryProvider(create: (context) => ContactRepository()),
-          RepositoryProvider(create: (context) => userPool),
-          RepositoryProvider(
-            create: (context) => BusinessRepository(
-              restClient: restClient,
-            ),
-          ),
-          RepositoryProvider(
-            create: (context) => SyncRepository(
-              restClient: restClient,
-            ),
-          ),
-          RepositoryProvider(
-            create: (context) => SyncConfigRepository(),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                SettingsRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                SequenceRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                TransactionRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            create: (context) => ConfigRepository(),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                ReasonCodeRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            create: (context) => TaxRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                EmployeeRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                CustomerRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            create: (context) =>
-                ProductRepository(restClient: restClient),
-          ),
-          RepositoryProvider(
-            lazy: false,
-            create: (context) =>
-                TaxHelper(taxRepository: RepositoryProvider.of(context)),
-          ),
-          RepositoryProvider(
-            lazy: false,
-            create: (context) => PriceHelper(),
-          ),
-          RepositoryProvider(
-            lazy: false,
-            create: (context) => DiscountHelper(),
-          ),
-          RepositoryProvider(
-            lazy: false,
-            create: (context) => TaxModifierCalculator(
-                taxRepository: RepositoryProvider.of(context)),
-          ),
-          RepositoryProvider(
-            create: (context) => InvoiceRepository(
-              restClient: restClient,
-            ),
-          ),
-        ],
-        child: MultiBlocProvider(providers: [
           BlocProvider(
             lazy: false,
             create: (context) => BackgroundSyncBloc(
@@ -152,7 +151,8 @@ class MyApp extends StatelessWidget {
               userPool: RepositoryProvider.of(context),
               authenticationBloc: BlocProvider.of(context),
               errorNotificationBloc: BlocProvider.of(context),
-            )..add(OnCountryChange(SettingsCacheManager().getDefaultElement(SettingsType.country))),
+            )..add(OnCountryChange(SettingsCacheManager()
+                .getDefaultElement(SettingsType.country))),
           ),
           BlocProvider(
             create: (context) => LoadItemBulkBloc(
@@ -164,7 +164,15 @@ class MyApp extends StatelessWidget {
                 employeeRepository: RepositoryProvider.of(context),
                 authenticationBloc: BlocProvider.of(context)),
           ),
-        ], child: const MyAppView()));
+          BlocProvider(
+            create: (context) => BulkImportBloc(
+              bulkImportRepository: RepositoryProvider.of(context),
+            ),
+          ),
+        ],
+        child: const MyAppView(),
+      ),
+    );
   }
 }
 
@@ -227,7 +235,7 @@ class _MyAppViewState extends State<MyAppView> {
                 case AuthenticationStatus.unauthenticated:
                   _navigator.pushAndRemoveUntil<void>(
                     LoginView.route(),
-                        (route) => false,
+                    (route) => false,
                   );
                   break;
                 case AuthenticationStatus.unknown:

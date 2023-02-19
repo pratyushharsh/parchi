@@ -145,7 +145,16 @@ class ItemCard extends StatelessWidget {
                             url: product.imageUrl[0],
                             imageDim: 200,
                           )
-                        : Container(),
+                        : const SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: Icon(
+                                Icons.image,
+                                color: AppColor.iconColor,
+                                size: 50,
+                              ),
+                            ),
+                          ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -158,25 +167,32 @@ class ItemCard extends StatelessWidget {
                           children: [
                             Text(
                               product.displayName,
-                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16),
                             ),
                             Text(
                               '${product.productId ?? product.skuCode}',
-                              style: const TextStyle(fontWeight: FontWeight.normal),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.normal),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20,),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            if (product.brand != null && product.brand!.isNotEmpty)
-                            ProductCategoryChip(
-                              category: product.brand!,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            ...product.category.map((e) => ProductCategoryChip(category: e)).toList(),
+                            if (product.brand != null &&
+                                product.brand!.isNotEmpty)
+                              ProductCategoryChip(
+                                category: product.brand!,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ...product.category
+                                .map((e) => ProductCategoryChip(category: e))
+                                .toList(),
                           ],
                         )
                       ],
@@ -186,25 +202,29 @@ class ItemCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        children: [
-                          if (product.salePrice != null && product.salePrice! > 0)
-                            Text(
-                                getCurrencyFormatter(context)
-                                    .format(product.salePrice!),
-                                style: const TextStyle(fontWeight: FontWeight.w600)),
-                          if (product.listPrice != null)
-                            Text(
-                              getCurrencyFormatter(context).format(product.listPrice!),
+                      Column(children: [
+                        if (product.salePrice != null && product.salePrice! > 0)
+                          Text(
+                              getCurrencyFormatter(context)
+                                  .format(product.salePrice!),
                               style:
-                              (product.salePrice != null && product.salePrice! > 0)
-                                  ? const TextStyle(
-                                  decoration: TextDecoration.lineThrough, fontStyle: FontStyle.italic, color: AppColor.color5)
-                                  : const TextStyle(),
-                            ),
-                        ]
-                      ),
-                      CloudSyncIcon(syncState: product.syncState ?? 0,)
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        if (product.listPrice != null)
+                          Text(
+                            getCurrencyFormatter(context)
+                                .format(product.listPrice!),
+                            style: (product.salePrice != null &&
+                                    product.salePrice! > 0)
+                                ? const TextStyle(
+                                    decoration: TextDecoration.lineThrough,
+                                    fontStyle: FontStyle.italic,
+                                    color: AppColor.color5)
+                                : const TextStyle(),
+                          ),
+                      ]),
+                      CloudSyncIcon(
+                        syncState: product.syncState ?? 0,
+                      )
                     ],
                   ),
                 ],
@@ -220,7 +240,9 @@ class ItemCard extends StatelessWidget {
 class ProductCategoryChip extends StatelessWidget {
   final String category;
   final FontWeight fontWeight;
-  const ProductCategoryChip({Key? key, required this.category, this.fontWeight = FontWeight.normal}) : super(key: key);
+  const ProductCategoryChip(
+      {Key? key, required this.category, this.fontWeight = FontWeight.normal})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +254,10 @@ class ProductCategoryChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         border: Border.all(color: color),
       ),
-      child: Text(category, style: TextStyle(fontWeight: fontWeight, color: color),),
+      child: Text(
+        category,
+        style: TextStyle(fontWeight: fontWeight, color: color),
+      ),
     );
   }
 }
