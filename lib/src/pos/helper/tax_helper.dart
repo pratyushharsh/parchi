@@ -7,13 +7,13 @@ import '../../repositories/repository.dart';
 
 class TaxHelper {
   static final log = Logger('TaxHelper');
-  final TaxRepository taxRepository;
+  // final TaxRepository taxRepository;
 
-  TaxHelper({required this.taxRepository});
+  // TaxHelper({required this.taxRepository});
 
-  Future<List<TaxRuleEntity>> getTaxRuleByGroupId(String groupId) async {
-    return await taxRepository.getTaxRulesByGroupId(groupId);
-  }
+  // Future<List<TaxRuleEntity>> getTaxRuleByGroupId(String groupId) async {
+  //   return await taxRepository.getTaxRulesByGroupId(groupId);
+  // }
 
   TransactionLineItemTaxModifier _createTaxModifierLine(
       TransactionLineItemEntity lineItem, TaxRuleEntity taxRule) {

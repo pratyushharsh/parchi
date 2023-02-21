@@ -13,3 +13,5 @@ export 'tax_repository.dart';
 export 'transaction_repository.dart';
 export 'sync_repository.dart';
 export 'sync_config_repository.dart';
+export 'bulk_repositoty.dart';
+export 'deal_repository.dart';

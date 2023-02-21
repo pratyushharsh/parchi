@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:isar/isar.dart';
 import 'src/config/cache_manager.dart';
 
 import 'src/config/route_config.dart';
@@ -18,12 +17,13 @@ import 'src/module/login/login_view.dart';
 import 'src/module/login/verify_user_device_view.dart';
 import 'src/module/login/verify_user_view.dart';
 import 'src/module/sync/bloc/background_sync_bloc.dart';
+import 'src/pos/calculator/price_calculator.dart';
 import 'src/pos/calculator/tax_calculator.dart';
+import 'src/pos/calculator/total_calculator.dart';
+import 'src/pos/helper/deals_helper.dart';
 import 'src/pos/helper/discount_helper.dart';
 import 'src/pos/helper/price_helper.dart';
 import 'src/pos/helper/tax_helper.dart';
-import 'src/repositories/bulk_repositoty.dart';
-import 'src/util/helper/rest_api.dart';
 import 'src/widgets/my_loader.dart';
 import 'src/config/theme_settings.dart';
 import 'src/module/error/bloc/error_notification_bloc.dart';
@@ -31,91 +31,43 @@ import 'src/module/error/error_notification.dart';
 import 'src/module/login/choose_create_business_view.dart';
 import 'src/module/settings/bloc/settings_bloc.dart';
 import 'src/repositories/checklist_helper.dart';
-import 'src/repositories/repository.dart';
 
 class MyApp extends StatelessWidget {
-  final CognitoUserPool userPool;
-  final RestApiClient restClient;
   const MyApp({
     Key? key,
-    required this.userPool,
-    required this.restClient,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(lazy: false, create: (context) => restClient),
-        RepositoryProvider(lazy: false, create: (context) => CheckListHelper()),
-        RepositoryProvider(create: (context) => ContactRepository()),
-        RepositoryProvider(create: (context) => userPool),
+        RepositoryProvider(create: (context) => CheckListHelper()),
         RepositoryProvider(
-          create: (context) => BusinessRepository(
-            restClient: restClient,
+          create: (context) => TaxHelper(),
+        ),
+        RepositoryProvider(
+          create: (context) => TaxModifierCalculator(
+            taxRepository: RepositoryProvider.of(context),
+            taxHelper: RepositoryProvider.of(context),
           ),
         ),
         RepositoryProvider(
-          create: (context) => SyncRepository(
-            restClient: restClient,
+          create: (context) => DealsHelper(
+            dealsRepository: RepositoryProvider.of(context),
           ),
         ),
         RepositoryProvider(
-          create: (context) => SyncConfigRepository(),
-        ),
-        RepositoryProvider(
-          create: (context) => SettingsRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          create: (context) => SequenceRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          create: (context) => TransactionRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          create: (context) => ConfigRepository(),
-        ),
-        RepositoryProvider(
-          create: (context) => ReasonCodeRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          create: (context) => TaxRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          create: (context) => EmployeeRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          create: (context) => CustomerRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          create: (context) => ProductRepository(restClient: restClient),
-        ),
-        RepositoryProvider(
-          lazy: false,
-          create: (context) =>
-              TaxHelper(taxRepository: RepositoryProvider.of(context)),
-        ),
-        RepositoryProvider(
-          lazy: false,
-          create: (context) => PriceHelper(),
-        ),
-        RepositoryProvider(
-          lazy: false,
           create: (context) => DiscountHelper(),
         ),
         RepositoryProvider(
-          lazy: false,
-          create: (context) => TaxModifierCalculator(
-              taxRepository: RepositoryProvider.of(context)),
+          create: (ctx) => PriceHelper(),
         ),
         RepositoryProvider(
-          create: (context) => InvoiceRepository(
-            restClient: restClient,
-          ),
+          create: (ctx) => TotalCalculator(),
         ),
         RepositoryProvider(
-          create: (context) => BulkImportRepository(
-            restClient: restClient,
+          create: (context) => PriceCalculator(
+            priceRepository: RepositoryProvider.of(context),
           ),
         ),
       ],

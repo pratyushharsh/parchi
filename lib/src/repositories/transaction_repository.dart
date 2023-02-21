@@ -41,6 +41,7 @@ class TransactionRepository with DatabaseProvider {
 
   Future<List<TransactionHeaderEntity>> searchTransaction(
       TransactionFilterCriteria criteria) async {
+
     DateTime start = criteria.dateRange?.start ??
         DateTime.now().subtract(const Duration(days: 60));
     DateTime end = criteria.dateRange?.end ?? DateTime.now();

@@ -7,8 +7,11 @@ import 'package:meta/meta.dart';
 import '../../../config/sequence_config.dart';
 import '../../../entity/pos/address.dart';
 import '../../../entity/pos/entity.dart';
+import '../../../pos/calculator/price_calculator.dart';
 import '../../../pos/calculator/tax_calculator.dart';
+import '../../../pos/calculator/total_calculator.dart';
 import '../../../pos/config/config.dart';
+import '../../../pos/helper/deals_helper.dart';
 import '../../../pos/helper/pos_helper.dart';
 import '../../../pos/helper/price_helper.dart';
 import '../../../repositories/repository.dart';
@@ -32,7 +35,11 @@ class CreateNewReceiptBloc
   final TaxHelper taxHelper;
   final PriceHelper priceHelper;
   final DiscountHelper discountHelper;
+  final DealsHelper dealsHelper;
+
   final TaxModifierCalculator taxModifierCalculator;
+  final PriceCalculator priceCalculator;
+  final TotalCalculator totalCalculator;
 
   CreateNewReceiptBloc(
       {required this.transactionRepository,
@@ -44,7 +51,10 @@ class CreateNewReceiptBloc
       required this.discountHelper,
       required this.sequenceRepository,
       required this.errorNotificationBloc,
-      required this.taxModifierCalculator})
+      required this.taxModifierCalculator,
+      required this.dealsHelper,
+      required this.priceCalculator,
+      required this.totalCalculator})
       : super(const CreateNewReceiptState(
             status: CreateNewReceiptStatus.initial)) {
     on<AddItemToReceipt>(_onAddNewLineItem);
@@ -140,26 +150,21 @@ class CreateNewReceiptBloc
     // @TODO Fetch the price from pricing module for the item and add.
 
     // Check if item already exist then increase the quantity
-    for (final lineItem in state.lineItem) {
-      if (lineItem.itemId == event.product.productId) {
-        add(OnQuantityUpdate(
-          saleLine: lineItem,
-          quantity: lineItem.quantity! + 1,
-          reason: '',
-        ));
-        return;
-      }
-    }
-
-
-
+    // for (final lineItem in state.lineItem) {
+    //   if (lineItem.itemId == event.product.productId) {
+    //     add(OnQuantityUpdate(
+    //       saleLine: lineItem,
+    //       quantity: lineItem.quantity! + 1,
+    //       reason: '',
+    //     ));
+    //     return;
+    //   }
+    // }
 
     try {
       // Fetch the tax group for the item to add.
-      List<TaxRuleEntity> taxRules = event.product.taxGroupId != null
-          ? await taxHelper.getTaxRuleByGroupId(event.product.taxGroupId!)
-          : [];
-      double itemPrice = priceHelper.findPriceForItem(event.product);
+
+      double itemPrice = 0.00;
 
       TransactionLineItemEntity newLine = TransactionLineItemEntity(
           storeId: authenticationBloc.state.store!.rtlLocId,
@@ -168,41 +173,43 @@ class CreateNewReceiptBloc
           currency: store.currencyId,
           transSeq: state.transSeq,
           lineItemSeq: seq + 1,
-          itemId: event.product.productId!,
+          itemId: event.product.productId,
           itemDescription: event.product.displayName,
           itemSize: event.product.size,
           itemColor: event.product.color,
           quantity: 1,
           uom: event.product.uom,
           hsn: event.product.hsn,
-          discountAmount: 0.0,
-          unitPrice: itemPrice,
-          baseUnitPrice: itemPrice,
           itemIdEntryMethod: EntryMethod.keyboard,
           priceEntryMethod: EntryMethod.keyboard,
+          unitPrice: itemPrice,
+          baseUnitPrice: itemPrice,
+          discountAmount: 0.0,
           netAmount: itemPrice * 1,
           grossAmount: itemPrice,
           taxAmount: 0.00,
           extendedAmount: itemPrice * 1,
           taxGroupId: event.product.taxGroupId,
-          unitCost: 0.0);
+          unitCost: 0.0,
+      );
 
+      List<TransactionLineItemEntity> newList = [...state.lineItem, newLine];
 
-      // Find the best deals for the items.
+      // Price Calculator
+      newList = await priceCalculator.handleLineItemEvent(newList);
 
+      // Deals Calculator
 
-      List<TransactionLineItemTaxModifier> taxModifiers =
-          taxHelper.createSaleTaxModifiers(newLine, taxRules);
-      newLine.taxModifiers = taxModifiers;
-      await taxModifierCalculator.handleLineItemEvent([newLine]);
-      double taxAmount = taxHelper.calculateTaxAmount(newLine);
-      newLine.taxAmount = taxAmount;
-      newLine.grossAmount = newLine.netAmount! + taxAmount;
-      newLine.unitCost = newLine.grossAmount! / newLine.quantity!;
+      // Discount Calculator
+
+      // Tax Calculator
+      newList = await taxModifierCalculator.handleLineItemEvent(newList);
+
+      // Total Calculator
+      newList = await totalCalculator.handleLineItemEvent(newList);
 
       Map<String, ItemEntity> pm = Map.from(state.productMap);
-      pm.putIfAbsent(event.product.productId!, () => event.product);
-      List<TransactionLineItemEntity> newList = [...state.lineItem, newLine];
+      pm.putIfAbsent(event.product.productId, () => event.product);
       emit(state.copyWith(
           lineItem: newList,
           step: SaleStep.item,

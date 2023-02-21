@@ -77,6 +77,7 @@ class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> with D
                   }).toList()
                 : [],
             enable: true,
+            upc: e[14].toString().split(","),
             createTime: DateTime.now(),
           );
           await db.itemEntitys.put(entity);

@@ -367,12 +367,10 @@ class SyncRepository with DatabaseProvider {
     );
 
     var data = await isar.transactionHeaderEntitys.where().findAll();
-    print(data);
     return 'Data';
   }
 
   static void spawnIsolate(SendPort sendPort) async {
-    print("It is present in new isolate");
     ReceivePort childReceivePort = ReceivePort();
     sendPort.send(childReceivePort.sendPort);
 
@@ -400,11 +398,9 @@ class SyncRepository with DatabaseProvider {
 
     var parsedDate = DateTime.parse('1974-03-20 00:00:00.000');
     var data = await isar.transactionHeaderEntitys.filter().lastChangedAtGreaterThan(parsedDate).findAll();
-    print(data);
 
     SendPort sPort = (await childReceivePort.first)[1];
     sPort.send("Hello");
-    print("New Isolate End");
   }
 
   Future<void> startSync(int storeId) async {

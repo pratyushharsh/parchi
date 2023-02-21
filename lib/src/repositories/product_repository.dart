@@ -34,7 +34,13 @@ class ProductRepository with DatabaseProvider {
   }
 
   Future<List<ItemEntity>> searchProductByFilter(String filter,
-      {int limit = 10}) {
+      {int limit = 10}) async {
+
+    List<ItemEntity> upcRes = await db.itemEntitys.where().upcElementEqualTo(filter).findAll();
+    if (upcRes.isNotEmpty) {
+      return upcRes;
+    }
+
     return db.itemEntitys
         .where()
         .productIdEqualTo(filter)

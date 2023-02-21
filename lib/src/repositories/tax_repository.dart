@@ -124,4 +124,15 @@ class TaxRepository with DatabaseProvider {
     return taxGroup.taxRules
         .firstWhere((element) => element.ruleName!.compareTo(ruleName) == 0);
   }
+
+  Future<TaxRuleEntity?> getTaxRulesByGroupIdAndRuleId(
+      String groupId, String ruleId) async {
+    var taxGroup = await db.taxGroupEntitys.getByGroupId(groupId);
+    if (taxGroup == null) {
+      log.severe('Tax group $groupId is not found');
+      throw Exception('Tax group $groupId is not found');
+    }
+    return taxGroup.taxRules
+        .firstWhere((element) => element.ruleId!.compareTo(ruleId) == 0);
+  }
 }

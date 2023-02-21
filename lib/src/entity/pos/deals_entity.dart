@@ -12,6 +12,7 @@ class DealsEntity {
 
   final String? description;
 
+  @Index(type: IndexType.value)
   final DateTime? startDate;
   final DateTime? endEndDate;
 

@@ -48,6 +48,9 @@ class NewReceiptView extends StatelessWidget {
             priceHelper: RepositoryProvider.of(ctx),
             discountHelper: RepositoryProvider.of(ctx),
             errorNotificationBloc: BlocProvider.of(ctx),
+            dealsHelper: RepositoryProvider.of(ctx),
+            priceCalculator: RepositoryProvider.of(ctx),
+            totalCalculator: RepositoryProvider.of(ctx),
           )..add(
               OnInitiateNewTransaction(transSeq: transId, isReturn: isReturn)),
         ),

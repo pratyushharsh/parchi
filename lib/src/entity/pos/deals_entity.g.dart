@@ -89,6 +89,19 @@ const DealsEntitySchema = CollectionSchema(
         )
       ],
     ),
+    r'startDate': IndexSchema(
+      id: 7723980484494730382,
+      name: r'startDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'startDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
     r'dealRef': IndexSchema(
       id: 2234742826148619510,
       name: r'dealRef',
@@ -342,6 +355,14 @@ extension DealsEntityQueryWhereSort
     });
   }
 
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhere> anyStartDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'startDate'),
+      );
+    });
+  }
+
   QueryBuilder<DealsEntity, DealsEntity, QAfterWhere> anyDealRefElement() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -552,6 +573,118 @@ extension DealsEntityQueryWhere
               upper: [''],
             ));
       }
+    });
+  }
+
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhereClause> startDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'startDate',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhereClause>
+      startDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'startDate',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhereClause> startDateEqualTo(
+      DateTime? startDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'startDate',
+        value: [startDate],
+      ));
+    });
+  }
+
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhereClause> startDateNotEqualTo(
+      DateTime? startDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'startDate',
+              lower: [],
+              upper: [startDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'startDate',
+              lower: [startDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'startDate',
+              lower: [startDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'startDate',
+              lower: [],
+              upper: [startDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhereClause>
+      startDateGreaterThan(
+    DateTime? startDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'startDate',
+        lower: [startDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhereClause> startDateLessThan(
+    DateTime? startDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'startDate',
+        lower: [],
+        upper: [startDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<DealsEntity, DealsEntity, QAfterWhereClause> startDateBetween(
+    DateTime? lowerStartDate,
+    DateTime? upperStartDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'startDate',
+        lower: [lowerStartDate],
+        includeLower: includeLower,
+        upper: [upperStartDate],
+        includeUpper: includeUpper,
+      ));
     });
   }
 

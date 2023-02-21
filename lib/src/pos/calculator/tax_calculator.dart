@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import '../../entity/pos/entity.dart';
 import '../../entity/pos/tax_rule_entity.dart';
 import '../../repositories/tax_repository.dart';
+import '../helper/pos_helper.dart';
 import '../tax/strategy/abstract_tax_strategy.dart';
 import '../tax/strategy/sale_tax_strategy.dart';
 import '../tax/tax_calculation_info.dart';
@@ -11,13 +12,14 @@ import 'abstract_calculator.dart';
 class TaxModifierCalculator implements AbstractCalculator {
   final log = Logger('TaxModifierCalculator');
   final TaxRepository taxRepository;
+  final TaxHelper taxHelper;
 
-  TaxModifierCalculator({required this.taxRepository});
+  TaxModifierCalculator({required this.taxRepository, required this.taxHelper});
 
   Future<TransactionLineItemEntity> calculateTaxForLineItem(TransactionLineItemEntity lineItem) async {
     for(TransactionLineItemTaxModifier mod in lineItem.taxModifiers) {
       // Check for tax override
-      TaxRuleEntity? taxRule = await taxRepository.getTaxRulesByGroupIdAndRuleName(mod.taxGroupId!, mod.taxRuleName!);
+      TaxRuleEntity? taxRule = await taxRepository.getTaxRulesByGroupIdAndRuleId(mod.taxGroupId!, mod.taxRuleId!);
 
       if (taxRule == null) {
         log.severe("Tax rule not found for group id: ${mod.taxGroupId} and rule name: ${mod.taxRuleName}");
@@ -75,7 +77,15 @@ class TaxModifierCalculator implements AbstractCalculator {
   @override
   Future<List<TransactionLineItemEntity>> handleLineItemEvent(List<TransactionLineItemEntity> lineItems) async {
     for (TransactionLineItemEntity lineItem in lineItems) {
+      // Find the tax Rules for the line item
+      if (lineItem.taxGroupId == null) {
+        continue;
+      }
+      var taxRules = await taxRepository.getTaxRulesByGroupId(lineItem.taxGroupId!);
+      List<TransactionLineItemTaxModifier> taxModifiers = taxHelper.createSaleTaxModifiers(lineItem, taxRules);
+      lineItem.taxModifiers = taxModifiers;
       await calculateTaxForLineItem(lineItem);
+      lineItem.taxAmount = taxHelper.calculateTaxAmount(lineItem);
     }
     return lineItems;
   }

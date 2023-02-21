@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:printing/printing.dart';
+import 'repo_providers.dart';
 import 'src/config/constants.dart';
 import 'src/database/db_provider.dart';
 import 'src/util/cache/custom_storage.dart';
@@ -15,7 +16,6 @@ import 'src/util/helper/rest_api.dart';
 
 import 'bloc_observer.dart';
 import 'log.dart';
-import 'my_app.dart';
 import 'src/util/cache/custom_pdf_cache.dart';
 
 final log = Logger('Main');
@@ -68,10 +68,10 @@ Future<void> main() async {
       ],
       fallbackLocale: const Locale('en', 'US'),
       // useFallbackTranslations: true,
-      child: MyApp(
+      child: MyAppRepoProviders(
         userPool: userPool,
         restClient: restClient,
-      ),
+      )
     ),
   );
 }

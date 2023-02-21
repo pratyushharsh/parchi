@@ -18,8 +18,7 @@ class TransactionLineItemEntity {
   String? itemSize;
   String? hsn;
   double? quantity; // Quantity of the item
-  double?
-      unitPrice; // Unit price of the item for the transaction it will be overridden in case of price override
+  double? unitPrice; // Unit price of the item for the transaction it will be overridden in case of price override
   double? unitCost; // Unit Cost At which item is sold.
   double? baseUnitPrice; // Unit price before any discount
   double? extendedAmount; // Unit Price * Quantity
