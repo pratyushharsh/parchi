@@ -1,4 +1,3 @@
-import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +16,7 @@ import 'src/module/login/login_view.dart';
 import 'src/module/login/verify_user_device_view.dart';
 import 'src/module/login/verify_user_view.dart';
 import 'src/module/sync/bloc/background_sync_bloc.dart';
+import 'src/pos/calculator/deals_calculator.dart';
 import 'src/pos/calculator/price_calculator.dart';
 import 'src/pos/calculator/tax_calculator.dart';
 import 'src/pos/calculator/total_calculator.dart';
@@ -68,6 +68,11 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => PriceCalculator(
             priceRepository: RepositoryProvider.of(context),
+          ),
+        ),RepositoryProvider(
+          create: (context) => DealsCalculator(
+            dealsRepository: RepositoryProvider.of(context),
+            dealsHelper: RepositoryProvider.of(context),
           ),
         ),
       ],

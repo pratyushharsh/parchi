@@ -17,4 +17,12 @@ class DealsRepository with DatabaseProvider {
     return db.dealsEntitys.where().findAll();
   }
 
+  Future<DealsEntity> getDealsById(String dealId) async {
+    DealsEntity?  res = await db.dealsEntitys.where().dealIdEqualTo(dealId).findFirst();
+    if (res == null) {
+      throw Exception('Deal not found');
+    }
+    return res;
+  }
+
 }

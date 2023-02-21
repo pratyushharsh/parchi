@@ -21,4 +21,35 @@ class DealsHelper {
     List<DealsEntity> deal = await dealsRepository.getDealsByItemId(lineItem.itemId!);
     return deal;
   }
+
+  TransactionLineItemModifierEntity createDealModifier(TransactionLineItemEntity line, DealItem deal, DealsEntity dealsEntity) {
+
+    double amount = 0.0;
+    double percent = 0.0;
+
+    if (deal.action == DealAction.percentOff) {
+      // Find the unit price * quantity
+      double unitPrice = line.unitPrice!;
+      double quantity = line.quantity!;
+      percent = deal.actionValue ?? 0;
+      amount = (unitPrice * quantity) * (percent / 100);
+    } else if (deal.action == DealAction.currencyOff) {
+      amount = deal.actionValue ?? 0;
+      double unitPrice = line.unitPrice!;
+      double quantity = line.quantity!;
+      percent = (amount / (unitPrice * quantity)) * 100;
+    }
+
+    TransactionLineItemModifierEntity dealModifier = TransactionLineItemModifierEntity(
+      amount: amount,
+      extendedAmount: amount,
+      description: dealsEntity.description,
+      dealId: dealsEntity.dealId,
+      isVoid: false,
+      percent: percent,
+      priceModifierReasonCode: 'DEAL',
+    );
+    return dealModifier;
+  }
+
 }

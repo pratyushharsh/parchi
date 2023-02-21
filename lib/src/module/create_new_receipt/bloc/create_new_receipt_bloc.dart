@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import '../../../config/sequence_config.dart';
 import '../../../entity/pos/address.dart';
 import '../../../entity/pos/entity.dart';
+import '../../../pos/calculator/deals_calculator.dart';
 import '../../../pos/calculator/price_calculator.dart';
 import '../../../pos/calculator/tax_calculator.dart';
 import '../../../pos/calculator/total_calculator.dart';
@@ -40,6 +41,7 @@ class CreateNewReceiptBloc
   final TaxModifierCalculator taxModifierCalculator;
   final PriceCalculator priceCalculator;
   final TotalCalculator totalCalculator;
+  final DealsCalculator dealsCalculator;
 
   CreateNewReceiptBloc(
       {required this.transactionRepository,
@@ -54,7 +56,8 @@ class CreateNewReceiptBloc
       required this.taxModifierCalculator,
       required this.dealsHelper,
       required this.priceCalculator,
-      required this.totalCalculator})
+      required this.totalCalculator,
+      required this.dealsCalculator})
       : super(const CreateNewReceiptState(
             status: CreateNewReceiptStatus.initial)) {
     on<AddItemToReceipt>(_onAddNewLineItem);
@@ -162,10 +165,8 @@ class CreateNewReceiptBloc
     // }
 
     try {
-      // Fetch the tax group for the item to add.
 
       double itemPrice = 0.00;
-
       TransactionLineItemEntity newLine = TransactionLineItemEntity(
           storeId: authenticationBloc.state.store!.rtlLocId,
           businessDate: DateTime.now(),
@@ -199,6 +200,7 @@ class CreateNewReceiptBloc
       newList = await priceCalculator.handleLineItemEvent(newList);
 
       // Deals Calculator
+      newList = await dealsCalculator.handleLineItemEvent(newList);
 
       // Discount Calculator
 

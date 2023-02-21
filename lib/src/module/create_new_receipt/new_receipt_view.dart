@@ -51,6 +51,7 @@ class NewReceiptView extends StatelessWidget {
             dealsHelper: RepositoryProvider.of(ctx),
             priceCalculator: RepositoryProvider.of(ctx),
             totalCalculator: RepositoryProvider.of(ctx),
+            dealsCalculator: RepositoryProvider.of(ctx),
           )..add(
               OnInitiateNewTransaction(transSeq: transId, isReturn: isReturn)),
         ),
@@ -676,8 +677,8 @@ class NewLineItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
-                  child: Container(),
                   flex: 2,
+                  child: Container(),
                 ),
                 Expanded(
                   child: Align(
