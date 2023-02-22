@@ -23,6 +23,7 @@ import '../module/about/about_view.dart';
 import '../module/bulk_import/bulk_import_view.dart';
 import '../module/create_edit_customer/create_edit_customer_view.dart';
 import '../module/create_new_item/modify_line_item_screen.dart';
+import '../module/deals/create_edit_deals.dart';
 import '../module/employee/employee_list_view.dart';
 import '../module/receipt_display/invoice_display.dart';
 import '../module/receipt_setting/invoice_setting_view.dart';
@@ -55,6 +56,7 @@ class RouteConfig {
   static const String employeeScreen = "/employee";
   static const String sequenceConfigScreen = "/sequence-config";
   static const String bulkImportScreen = "/bulk-import";
+  static const String createDealScreen = "/deals";
 
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -128,6 +130,8 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => const CreateEditSequenceView());
       case bulkImportScreen:
         return MaterialPageRoute(builder: (_) => const BulkImportView());
+      case createDealScreen:
+        return MaterialPageRoute(builder: (_) => const CreateEditDealsView());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

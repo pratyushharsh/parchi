@@ -126,7 +126,14 @@ class TaxGroupTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children:
           [
-            Text(taxGroup.description),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(taxGroup.description),
+                Text("${taxGroup.groupId} | ${taxGroup.name}"),
+              ],
+            ),
             CloudSyncIcon(
               syncState: taxGroup.syncState ?? 0,
             )
@@ -156,7 +163,14 @@ class TaxRuleTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(taxRule.ruleName!),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${taxRule.ruleName}"),
+                Text("${taxRule.ruleId} @ ${taxRule.percent?.toStringAsFixed(2)} %"),
+              ],
+            ),
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {

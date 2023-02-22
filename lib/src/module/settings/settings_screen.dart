@@ -135,6 +135,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             .pushNamed(RouteConfig.receiptSettingViewScreen);
                       },
                     ),
+                    SettingsItem(
+                      text: "_dealsConfiguration",
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(RouteConfig.createDealScreen);
+                      },
+                    ),
                   ],
                 ),
               ),

@@ -95,6 +95,7 @@
     "_cancelTransaction": "Cancel Transaction",
     "_cancelTransactionLabel": "Would you like to cancel this transaction?",
     "_tenderAmount": "Tender Amount \n {amount}",
+    "_dealsConfiguration": "Deals Configuration",
 
     "_taxGroupLabel": "Tax Group: {groupId} | {groupName}",
     "_receiptNoLabel": "Ord : {receiptNo}",
