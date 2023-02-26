@@ -47,7 +47,8 @@ class DealFieldsTest {
 
   @Enumerated(EnumType.name)
   MatchingField? matchingField;
-  String? matchingRule;
+  @Enumerated(EnumType.name)
+  MatchingRule? matchingRule;
   String? matchingRuleValue1;
   String? matchingRuleValue2;
 
@@ -93,5 +94,27 @@ enum MatchingField {
   department("DEPARTMENT");
 
   const MatchingField(this.value);
+  final String value;
+}
+
+enum MatchingRule {
+  equal("EQUAL"),
+  notEqual("NOT_EQUAL"),
+  greaterThan("GREATER_THAN"),
+  lessThan("LESS_THAN"),
+  greaterThanOrEqual("GREATER_THAN_OR_EQUAL"),
+  lessThanOrEqual("LESS_THAN_OR_EQUAL"),
+  between("BETWEEN"),
+  notBetween("NOT_BETWEEN"),
+  contains("CONTAINS"),
+  notContains("NOT_CONTAINS"),
+  startsWith("STARTS_WITH"),
+  endsWith("ENDS_WITH"),
+  notStartsWith("NOT_STARTS_WITH"),
+  notEndsWith("NOT_ENDS_WITH"),
+  empty("EMPTY"),
+  notEmpty("NOT_EMPTY");
+
+  const MatchingRule(this.value);
   final String value;
 }

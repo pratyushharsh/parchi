@@ -2342,6 +2342,7 @@ const DealFieldsTestSchema = Schema(
       id: 1,
       name: r'matchingRule',
       type: IsarType.string,
+      enumMap: _DealFieldsTestmatchingRuleEnumValueMap,
     ),
     r'matchingRuleValue1': PropertySchema(
       id: 2,
@@ -2375,7 +2376,7 @@ int _dealFieldsTestEstimateSize(
   {
     final value = object.matchingRule;
     if (value != null) {
-      bytesCount += 3 + value.length * 3;
+      bytesCount += 3 + value.name.length * 3;
     }
   }
   {
@@ -2400,7 +2401,7 @@ void _dealFieldsTestSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.matchingField?.name);
-  writer.writeString(offsets[1], object.matchingRule);
+  writer.writeString(offsets[1], object.matchingRule?.name);
   writer.writeString(offsets[2], object.matchingRuleValue1);
   writer.writeString(offsets[3], object.matchingRuleValue2);
 }
@@ -2414,7 +2415,8 @@ DealFieldsTest _dealFieldsTestDeserialize(
   final object = DealFieldsTest(
     matchingField: _DealFieldsTestmatchingFieldValueEnumMap[
         reader.readStringOrNull(offsets[0])],
-    matchingRule: reader.readStringOrNull(offsets[1]),
+    matchingRule: _DealFieldsTestmatchingRuleValueEnumMap[
+        reader.readStringOrNull(offsets[1])],
     matchingRuleValue1: reader.readStringOrNull(offsets[2]),
     matchingRuleValue2: reader.readStringOrNull(offsets[3]),
   );
@@ -2432,7 +2434,8 @@ P _dealFieldsTestDeserializeProp<P>(
       return (_DealFieldsTestmatchingFieldValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (_DealFieldsTestmatchingRuleValueEnumMap[
+          reader.readStringOrNull(offset)]) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
@@ -2449,6 +2452,42 @@ const _DealFieldsTestmatchingFieldEnumValueMap = {
 const _DealFieldsTestmatchingFieldValueEnumMap = {
   r'item': MatchingField.item,
   r'department': MatchingField.department,
+};
+const _DealFieldsTestmatchingRuleEnumValueMap = {
+  r'equal': r'equal',
+  r'notEqual': r'notEqual',
+  r'greaterThan': r'greaterThan',
+  r'lessThan': r'lessThan',
+  r'greaterThanOrEqual': r'greaterThanOrEqual',
+  r'lessThanOrEqual': r'lessThanOrEqual',
+  r'between': r'between',
+  r'notBetween': r'notBetween',
+  r'contains': r'contains',
+  r'notContains': r'notContains',
+  r'startsWith': r'startsWith',
+  r'endsWith': r'endsWith',
+  r'notStartsWith': r'notStartsWith',
+  r'notEndsWith': r'notEndsWith',
+  r'empty': r'empty',
+  r'notEmpty': r'notEmpty',
+};
+const _DealFieldsTestmatchingRuleValueEnumMap = {
+  r'equal': MatchingRule.equal,
+  r'notEqual': MatchingRule.notEqual,
+  r'greaterThan': MatchingRule.greaterThan,
+  r'lessThan': MatchingRule.lessThan,
+  r'greaterThanOrEqual': MatchingRule.greaterThanOrEqual,
+  r'lessThanOrEqual': MatchingRule.lessThanOrEqual,
+  r'between': MatchingRule.between,
+  r'notBetween': MatchingRule.notBetween,
+  r'contains': MatchingRule.contains,
+  r'notContains': MatchingRule.notContains,
+  r'startsWith': MatchingRule.startsWith,
+  r'endsWith': MatchingRule.endsWith,
+  r'notStartsWith': MatchingRule.notStartsWith,
+  r'notEndsWith': MatchingRule.notEndsWith,
+  r'empty': MatchingRule.empty,
+  r'notEmpty': MatchingRule.notEmpty,
 };
 
 extension DealFieldsTestQueryFilter
@@ -2627,7 +2666,7 @@ extension DealFieldsTestQueryFilter
 
   QueryBuilder<DealFieldsTest, DealFieldsTest, QAfterFilterCondition>
       matchingRuleEqualTo(
-    String? value, {
+    MatchingRule? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -2641,7 +2680,7 @@ extension DealFieldsTestQueryFilter
 
   QueryBuilder<DealFieldsTest, DealFieldsTest, QAfterFilterCondition>
       matchingRuleGreaterThan(
-    String? value, {
+    MatchingRule? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2657,7 +2696,7 @@ extension DealFieldsTestQueryFilter
 
   QueryBuilder<DealFieldsTest, DealFieldsTest, QAfterFilterCondition>
       matchingRuleLessThan(
-    String? value, {
+    MatchingRule? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2673,8 +2712,8 @@ extension DealFieldsTestQueryFilter
 
   QueryBuilder<DealFieldsTest, DealFieldsTest, QAfterFilterCondition>
       matchingRuleBetween(
-    String? lower,
-    String? upper, {
+    MatchingRule? lower,
+    MatchingRule? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,

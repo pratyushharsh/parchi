@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../rule_builder/rule_builder_view.dart';
+
 class DealsConfigDesktopView extends StatelessWidget {
   const DealsConfigDesktopView({Key? key}) : super(key: key);
 
@@ -47,7 +49,7 @@ class DealsConfigDesktopView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 child: Card(
                   elevation: 0,
-                  child: Container(),
+                  child: RuleBuilder(),
                 ),
               ),
             )
