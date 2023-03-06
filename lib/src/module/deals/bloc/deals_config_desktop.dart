@@ -32,7 +32,9 @@ class DealsConfigDesktopView extends StatelessWidget {
           )
         ]),
         Expanded(
-          child: Row(children: [
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -47,7 +49,7 @@ class DealsConfigDesktopView extends StatelessWidget {
               flex: 3,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Card(
+                child: const Card(
                   elevation: 0,
                   child: RuleBuilder(),
                 ),

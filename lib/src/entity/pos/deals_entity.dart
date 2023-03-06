@@ -81,6 +81,7 @@ class DealItem {
 }
 
 enum DealAction {
+  noAction("NO_ACTION"),
   newPrice("NEW_PRICE"),
   percentOff("PERCENT_OFF"),
   currencyOff("CURRENCY_OFF");
