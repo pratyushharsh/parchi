@@ -70,14 +70,14 @@ class LoadItemBulkBloc extends Bloc<LoadItemBulkEvent, LoadItemBulkState> with D
                     .where((element) => element.isNotEmpty)
                     .map((e) {
                     if (e.startsWith("http") || e.startsWith("https")) {
-                      return e;
+                      return e.trim();
                     } else {
                       return 'file:/$e';
                     }
                   }).toList()
                 : [],
             enable: true,
-            upc: e[14].toString().split(","),
+            // upc: e[14].toString().split(","),
             createTime: DateTime.now(),
           );
           await db.itemEntitys.put(entity);

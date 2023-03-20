@@ -22,24 +22,34 @@ class DealsHelper {
     return deal;
   }
 
+  double calculateTotalDealsDiscountForTransaction(List<TransactionLineItemEntity> lineItems) {
+    double totalDiscount = 0.0;
+    for (var lineItem in lineItems) {
+      totalDiscount += lineItem.lineModifiers.fold<double>(0.0, (previousValue, element) => previousValue + element.amount);
+    }
+    return totalDiscount;
+  }
+
   TransactionLineItemModifierEntity createDealModifier(TransactionLineItemEntity line, DealItem deal, DealsEntity dealsEntity) {
 
     double amount = 0.0;
     double percent = 0.0;
-
     if (deal.action == DealAction.percentOff) {
       // Find the unit price * quantity
       double unitPrice = line.unitPrice!;
       double quantity = line.quantity!;
       percent = deal.actionValue ?? 0;
       amount = (unitPrice * quantity) * (percent / 100);
+      // precise the decimal to 2 places
+      amount = double.parse(amount.toStringAsFixed(2));
     } else if (deal.action == DealAction.currencyOff) {
       amount = deal.actionValue ?? 0;
       double unitPrice = line.unitPrice!;
       double quantity = line.quantity!;
       percent = (amount / (unitPrice * quantity)) * 100;
+      // precise the decimal to 2 places
+      percent = double.parse(percent.toStringAsFixed(2));
     }
-
     TransactionLineItemModifierEntity dealModifier = TransactionLineItemModifierEntity(
       amount: amount,
       extendedAmount: amount,
@@ -51,5 +61,4 @@ class DealsHelper {
     );
     return dealModifier;
   }
-
 }

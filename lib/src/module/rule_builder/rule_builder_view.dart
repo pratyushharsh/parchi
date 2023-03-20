@@ -7,6 +7,7 @@ import '../../util/text_input_formatter/custom_formatter.dart';
 import '../../widgets/code_value_dropdown.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/widgets.dart';
+import '../deals/bloc/create_edit_deals_bloc.dart';
 import 'bloc/rule_builder_bloc.dart';
 
 class RuleBuilder extends StatelessWidget {
@@ -15,7 +16,10 @@ class RuleBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RuleBuilderBloc(),
+      create: (context) =>
+          RuleBuilderBloc(
+            dealsRepository: RepositoryProvider.of(context),
+          ),
       child: const RuleBuilderCard(),
     );
   }
@@ -26,74 +30,100 @@ class RuleBuilderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 70,
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: Row(
+    return BlocListener<CreateEditDealsBloc, CreateEditDealsState>(
+      // listenWhen: (previous, current) =>
+      //     previous.selectedDeal != current.selectedDeal || previous.newDeal != current.newDeal,
+      listener: (context, state) {
+        BlocProvider.of<RuleBuilderBloc>(context).add(
+            OnInitEvent(state.selectedDeal?.dealId, state.newDeal));
+      },
+      child: BlocBuilder<RuleBuilderBloc, RuleBuilderState>(
+        builder: (context, state) {
+
+          if (state.status == RuleBuilderStateStatus.initial) {
+            return const Center(
+              child: Text("Select a deal to edit / create"),
+            );
+          }
+
+          if (state.status == RuleBuilderStateStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: BlocBuilder<RuleBuilderBloc, RuleBuilderState>(
-                      builder: (context, state) {
-                        return CustomTextField(
-                          label: "Deal Code",
-                          initialValue: state.dealId,
-                          onValueChange: (value) {
-                            context
-                                .read<RuleBuilderBloc>()
-                                .add(DealIdChangeEvent(value));
-                          },
-                        );
-                      },
+                  Container(
+                    height: 70,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: BlocBuilder<RuleBuilderBloc, RuleBuilderState>(
+                            builder: (context, state) {
+                              return CustomTextField(
+                                label: "Deal Code",
+                                enabled: state.isNew,
+                                initialValue: state.dealId,
+                                onValueChange: (value) {
+                                  context
+                                      .read<RuleBuilderBloc>()
+                                      .add(DealIdChangeEvent(value));
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          flex: 3,
+                          child: BlocBuilder<RuleBuilderBloc, RuleBuilderState>(
+                            builder: (context, state) {
+                              return CustomTextField(
+                                label: "Deal Description",
+                                initialValue: state.dealDescription,
+                                onValueChange: (value) {
+                                  context
+                                      .read<RuleBuilderBloc>()
+                                      .add(DealDescriptionChangeEvent(value));
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    flex: 3,
-                    child: BlocBuilder<RuleBuilderBloc, RuleBuilderState>(
-                      builder: (context, state) {
-                        return CustomTextField(
-                          label: "Deal Description",
-                          initialValue: state.dealDescription,
-                          onValueChange: (value) {
-                            context
-                                .read<RuleBuilderBloc>()
-                                .add(DealDescriptionChangeEvent(value));
+                  const RuleBuilderCondition(condition: "OR"),
+                  BlocBuilder<RuleBuilderBloc, RuleBuilderState>(
+                    builder: (context, state) {
+                      if (!state.isValid) {
+                        return Container();
+                      }
+
+                      return SizedBox(
+                        width: 200,
+                        child: AcceptButton(
+                          label: "Save",
+                          onPressed: () {
+                            context.read<RuleBuilderBloc>().add(
+                                SaveDealEvent());
                           },
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
             ),
-            const RuleBuilderCondition(condition: "OR"),
-            BlocBuilder<RuleBuilderBloc, RuleBuilderState>(
-              builder: (context, state) {
-                if (!state.isValid) {
-                  return Container();
-                }
-
-                return SizedBox(
-                  width: 200,
-                  child: AcceptButton(
-                    label: "Save",
-                    onPressed: () {
-                      // context.read<RuleBuilderBloc>().add(AddConditionEvent());
-                    },
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -231,6 +261,7 @@ class ItemTest extends StatelessWidget {
 
 class ItemConditionBuilder extends StatelessWidget {
   final RuleItemCondition itemCondition;
+
   const ItemConditionBuilder({Key? key, required this.itemCondition})
       : super(key: key);
 
@@ -261,6 +292,7 @@ class ItemConditionBuilder extends StatelessWidget {
                           width: 200,
                           child: CustomDropDown<MatchingField>(
                             label: "Condition",
+                            value: itemCondition.field,
                             onChanged: (val) {
                               if (val == null) {
                                 return;
@@ -282,6 +314,7 @@ class ItemConditionBuilder extends StatelessWidget {
                           width: 300,
                           child: CustomDropDown<MatchingRule>(
                             label: "Rule",
+                            value: itemCondition.operator,
                             onChanged: (val) {
                               if (val == null) {
                                 return;
@@ -300,9 +333,10 @@ class ItemConditionBuilder extends StatelessWidget {
                         ),
                         const SizedBox(width: 16),
                         SizedBox(
-                          width: 200,
+                          width: 300,
                           child: CustomTextField(
                             label: "Value",
+                            initialValue: itemCondition.value,
                             onValueChange: (val) {
                               context.read<RuleBuilderBloc>().add(
                                   UpdateItemMatchingValueEvent(
@@ -359,7 +393,8 @@ class ItemConditionBuilder extends StatelessWidget {
                                 return;
                               }
                               context.read<RuleBuilderBloc>().add(
-                                  UpdateItemActionEvent(itemCondition.uuid, val));
+                                  UpdateItemActionEvent(
+                                      itemCondition.uuid, val));
                             },
                             value: itemCondition.action,
                             itemAsString: (item) {
@@ -376,9 +411,9 @@ class ItemConditionBuilder extends StatelessWidget {
                           child: CustomTextField(
                             label: "Value",
                             initialValue:
-                                itemCondition.action != DealAction.noAction
-                                    ? itemCondition.actionValue.toString()
-                                    : null,
+                            itemCondition.action != DealAction.noAction
+                                ? itemCondition.actionValue.toString()
+                                : null,
                             inputFormatters: [
                               CustomInputTextFormatter.positiveNumber
                             ],

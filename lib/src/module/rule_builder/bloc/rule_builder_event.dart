@@ -2,6 +2,15 @@ part of 'rule_builder_bloc.dart';
 
 abstract class RuleBuilderEvent {}
 
+class OnInitEvent extends RuleBuilderEvent {
+  final String? dealId;
+  final bool? newDeal;
+
+  OnInitEvent(this.dealId, this.newDeal);
+}
+
+class SaveDealEvent extends RuleBuilderEvent {}
+
 class DealIdChangeEvent extends RuleBuilderEvent {
   final String dealId;
 

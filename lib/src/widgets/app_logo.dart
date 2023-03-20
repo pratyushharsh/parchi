@@ -21,7 +21,8 @@ class AppLogo extends StatelessWidget {
           ),
         ),
         const Text(
-          "PARCHI",
+          "MPOS",
+          // "PARCHI",
           style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -50,7 +51,8 @@ class AppLogoPng extends StatelessWidget {
           ),
         ),
         const Text(
-          "PARCHI",
+          "MPOS",
+          // "PARCHI",
           style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,

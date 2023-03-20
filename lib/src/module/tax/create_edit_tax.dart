@@ -117,15 +117,15 @@ class TaxGroupTile extends StatelessWidget {
         );
       },
       child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(0),
-            color: selected ? AppColor.primary.withOpacity(0.2) : Colors.transparent,
-          ),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children:
-          [
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(0),
+          color:
+              selected ? AppColor.primary.withOpacity(0.2) : Colors.transparent,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +137,9 @@ class TaxGroupTile extends StatelessWidget {
             CloudSyncIcon(
               syncState: taxGroup.syncState ?? 0,
             )
-          ])),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -168,7 +170,8 @@ class TaxRuleTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("${taxRule.ruleName}"),
-                Text("${taxRule.ruleId} @ ${taxRule.percent?.toStringAsFixed(2)} %"),
+                Text(
+                    "${taxRule.ruleId} @ ${taxRule.percent?.toStringAsFixed(2)} %"),
               ],
             ),
             IconButton(

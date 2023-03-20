@@ -4,12 +4,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../entity/pos/deals_entity.dart';
+import '../../../repositories/repository.dart';
 
 part 'rule_builder_event.dart';
 part 'rule_builder_state.dart';
 
 class RuleBuilderBloc extends Bloc<RuleBuilderEvent, RuleBuilderState> {
-  RuleBuilderBloc() : super(const RuleBuilderState()) {
+
+  final DealsRepository dealsRepository;
+  final DealsEntity? dealsEntity;
+
+  RuleBuilderBloc({
+    required this.dealsRepository,
+    this.dealsEntity
+}) : super(const RuleBuilderState()) {
+    on<OnInitEvent>(_onInitEvent);
     on<DealIdChangeEvent>(_onDealIdChangeEvent);
     on<DealDescriptionChangeEvent>(_onDealDescriptionChangeEvent);
     on<AddNewTotalConditionEvent>(_onAddNewTotalConditionEvent);
@@ -26,6 +35,53 @@ class RuleBuilderBloc extends Bloc<RuleBuilderEvent, RuleBuilderState> {
     on<UpdateItemMaxQtyEvent>(_onUpdateItemMaxQtyEvent);
     on<UpdateItemActionEvent>(_onUpdateItemActionEvent);
     on<UpdateItemActionValueEvent>(_onUpdateItemActionValueEvent);
+
+    on<SaveDealEvent>(_onSaveDealEvent);
+  }
+
+  void _onInitEvent(OnInitEvent event, Emitter<RuleBuilderState> emit) async {
+    if (event.newDeal != null && event.newDeal!) {
+      emit(state.copyWith(status: RuleBuilderStateStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 30));
+      emit(const RuleBuilderState(status: RuleBuilderStateStatus.success));
+      return;
+    }
+
+    if (event.dealId != null) {
+      emit(state.copyWith(status: RuleBuilderStateStatus.loading));
+
+      // Hack for refreshing all the UI
+      await Future.delayed(const Duration(milliseconds: 30));
+      try {
+        var deal = await dealsRepository.getDealById(event.dealId!);
+
+        List<RuleTotalCondition>? totalConditions = [];
+        List<RuleItemCondition>? itemConditions = [];
+
+        for(var i = 0; i < deal.dealFields.length; i++) {
+          itemConditions.add(RuleItemCondition(
+              field: deal.dealFields[i].matchingField!,
+              operator: deal.dealFields[i].matchingRule!,
+              value: deal.dealFields[i].matchingRuleValue1,
+              minQty: deal.items[i].minQuantity,
+              maxQty: deal.items[i].maxQuantity,
+              action: deal.items[i].action!,
+              actionValue: deal.items[i].actionValue!,)
+          );
+        }
+        emit(RuleBuilderState(
+          dealId: deal.dealId,
+          dealDescription: deal.description ?? "",
+          totalConditions: totalConditions,
+          itemConditions: itemConditions,
+          status: RuleBuilderStateStatus.success,
+          isNew: false,
+        ));
+
+      } catch (e) {
+       print(e);
+      }
+    }
   }
 
   void _onDealIdChangeEvent(
@@ -173,5 +229,43 @@ class RuleBuilderBloc extends Bloc<RuleBuilderEvent, RuleBuilderState> {
     final index = newItemConditions.indexWhere((element) => element.uuid == event.uuid);
     newItemConditions[index] = newItemConditions[index].copyWith(actionValue: event.actionValue);
     emit(state.copyWith(itemConditions: newItemConditions));
+  }
+
+  void _onSaveDealEvent(SaveDealEvent event, Emitter<RuleBuilderState> emit) async {
+
+    List<DealFieldsTest> dit = [];
+    List<DealItem> di = [];
+    Set<String> dealRef = {};
+
+    for(var i = 0; i < state.itemConditions.length; i++) {
+      dit.add(DealFieldsTest(
+        matchingField: state.itemConditions[i].field,
+        matchingRule: state.itemConditions[i].operator,
+        matchingRuleValue1: state.itemConditions[i].value,
+      ));
+
+      dealRef.add("${state.itemConditions[i].field.value}#${state.itemConditions[i].value}");
+
+      di.add(DealItem(
+        action: state.itemConditions[i].action,
+        minQuantity: state.itemConditions[i].minQty,
+        maxQuantity: state.itemConditions[i].maxQty,
+        actionValue: state.itemConditions[i].actionValue,
+      ));
+    }
+
+    DealsEntity deal = DealsEntity(
+      dealId: state.dealId,
+      description: state.dealDescription,
+      dealFields: dit,
+      items: di,
+      dealRef: dealRef.toList(),
+    );
+
+    try {
+      await dealsRepository.saveDeal(deal);
+    } catch (e) {
+      print(e);
+    }
   }
 }

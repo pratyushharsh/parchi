@@ -292,6 +292,9 @@ class InvoiceConfigConstants {
       }
 
       if (taxSummary[item.hsn] == null) {
+        if (item.hsn == null) {
+          continue;
+        }
         taxSummary[item.hsn!] = [];
       }
 

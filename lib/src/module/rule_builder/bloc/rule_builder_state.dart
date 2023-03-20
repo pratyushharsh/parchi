@@ -1,5 +1,12 @@
 part of 'rule_builder_bloc.dart';
 
+enum RuleBuilderStateStatus {
+  initial,
+  loading,
+  success,
+  error,
+}
+
 enum RuleTotalConditionEnum {
   startDate("Start Date For The Promotion"),
   endDate("End Date For The Promotion"),
@@ -66,6 +73,8 @@ class RuleBuilderState {
   final String dealDescription;
   final List<RuleTotalCondition> totalConditions;
   final List<RuleItemCondition> itemConditions;
+  final RuleBuilderStateStatus status;
+  final bool isNew;
 
   bool get isHeaderConditionPresent =>
       totalConditions.length < RuleTotalConditionEnum.values.length;
@@ -79,19 +88,23 @@ class RuleBuilderState {
       {this.dealId = '',
       this.dealDescription = '',
       this.totalConditions = const [],
-      this.itemConditions = const []});
+      this.itemConditions = const [],
+        this.isNew = true,
+      this.status = RuleBuilderStateStatus.initial});
 
   RuleBuilderState copyWith(
       {String? dealId,
       String? dealDescription,
       List<RuleTotalCondition>? totalConditions,
       List<RuleItemCondition>? itemConditions,
-      bool? isHeaderConditionPresent}) {
+      RuleBuilderStateStatus? status}) {
     return RuleBuilderState(
       dealId: dealId ?? this.dealId,
       dealDescription: dealDescription ?? this.dealDescription,
       totalConditions: totalConditions ?? this.totalConditions,
       itemConditions: itemConditions ?? this.itemConditions,
+      isNew: isNew,
+      status: status ?? this.status,
     );
   }
 }

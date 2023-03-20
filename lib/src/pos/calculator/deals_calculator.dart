@@ -20,20 +20,20 @@ class DealsCalculator implements AbstractCalculator {
     Map<int, List<DealsEntity>> rawDealsMap = await dealsHelper.findTheBestDealsForTheLineItems(lineItems);
 
     // Use the algorithm to find the best deals for the line items
-    DealEngine dealEngine = DealEngine();
+    DealEngine dealEngine = DealEngine(dealsHelper: dealsHelper);
     Map<int, List<Pair<String, DealItem>>> dealsMap = dealEngine.findTheBestDealsForLineItems(lineItems, rawDealsMap);
     // Apply the best deals to the line items
-    for (var lineItem in lineItems) {
-      await calculateDealsForLineItem(lineItem, dealsMap[lineItem.lineItemSeq!]!);
-    }
+    // for (var lineItem in lineItems) {
+    //   await calculateDealsForLineItem(lineItem, dealsMap[lineItem.lineItemSeq!]!);
+    // }
     return lineItems;
   }
 
   Future<TransactionLineItemEntity> calculateDealsForLineItem(TransactionLineItemEntity lineItem, List<Pair<String, DealItem>> deals) async {
     // Apply the deal for all line items
-    List<TransactionLineItemModifierEntity> modifiers = [];
+    List<TransactionLineItemModifierEntity> modifiers = [   ];
     for (var deal in deals) {
-      DealsEntity de = await dealsRepository.getDealsById(deal.key);
+      DealsEntity de = await dealsRepository.getDealById(deal.key);
       TransactionLineItemModifierEntity dealModifier = dealsHelper.createDealModifier(lineItem, deal.value, de);
       modifiers.add(dealModifier);
     }
