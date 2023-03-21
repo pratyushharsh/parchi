@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../entity/config/code_value_entity.dart';
 import '../entity/pos/entity.dart';
+import '../entity/pos/table_entity.dart';
 
 mixin DatabaseProvider {
   static final log = Logger('DatabaseProvider');
@@ -49,7 +50,8 @@ mixin DatabaseProvider {
       TaxGroupEntitySchema,
       ReportConfigEntitySchema,
       CountryEntitySchema,
-      DealsEntitySchema
+      DealsEntitySchema,
+      TableEntitySchema,
     ], inspector: inspector, directory: path, name: name, maxSizeMiB: 2048);
   }
 

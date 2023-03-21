@@ -142,6 +142,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             .pushNamed(RouteConfig.createDealScreen);
                       },
                     ),
+                    SettingsItem(
+                      text: "_tableManagement",
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(RouteConfig.tableManagement);
+                      },
+                    ),
                   ],
                 ),
               ),

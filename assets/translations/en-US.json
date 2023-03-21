@@ -96,6 +96,9 @@
     "_cancelTransactionLabel": "Would you like to cancel this transaction?",
     "_tenderAmount": "Tender Amount \n {amount}",
     "_dealsConfiguration": "Deals Configuration",
+    "_tableManagement": "Table Management",
+    "_tableIdLabel": "Table Id: {tableId}",
+    "_numberOfSeats": "Number of Seats",
 
     "_taxGroupLabel": "Tax Group: {groupId} | {groupName}",
     "_receiptNoLabel": "Ord : {receiptNo}",

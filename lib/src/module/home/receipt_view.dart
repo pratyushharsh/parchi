@@ -36,38 +36,38 @@ class ReceiptView extends StatelessWidget {
                 children: [
                   Expanded(
                       child: DashboardButton(
+                    color: Colors.blue,
+                    label: "_sale",
+                    icon: const Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: FaIcon(
+                        FontAwesomeIcons.store,
+                        size: 35,
                         color: Colors.blue,
-                        label: "_sale",
-                        icon: const Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: FaIcon(
-                            FontAwesomeIcons.store,
-                            size: 35,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(RouteConfig.createReceiptScreen);
-                        },
-                      )),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(RouteConfig.createReceiptScreen);
+                    },
+                  )),
                   const SizedBox(
                     width: 10,
                   ),
                   Expanded(
                       child: DashboardButton(
-                        color: Colors.redAccent,
-                        label: "_return",
-                        icon: const Icon(
-                          Icons.assignment_return,
-                          size: 45,
-                          color: Colors.redAccent,
-                        ),
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(RouteConfig.createReturnReceiptScreen);
-                        },
-                      )),
+                    color: Colors.redAccent,
+                    label: "_return",
+                    icon: const Icon(
+                      Icons.assignment_return,
+                      size: 45,
+                      color: Colors.redAccent,
+                    ),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(RouteConfig.createReturnReceiptScreen);
+                    },
+                  )),
                 ],
               ),
               const SizedBox(
@@ -76,43 +76,87 @@ class ReceiptView extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                      child: DashboardButton(
-                        color: Colors.orangeAccent,
-                        label: "_itemSearch",
-                        onTap: () {
-                          BlocProvider.of<DashboardBloc>(context)
-                              .add(DashboardChangeTabEvent(index: 3));
-                        },
-                        icon: const Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: FaIcon(
-                            FontAwesomeIcons.boxesStacked,
-                            size: 35,
-                            color: Colors.orangeAccent,
-                          ),
+                    child: DashboardButton(
+                      color: Colors.orangeAccent,
+                      label: "_itemSearch",
+                      onTap: () {
+                        BlocProvider.of<DashboardBloc>(context)
+                            .add(DashboardChangeTabEvent(index: 3));
+                      },
+                      icon: const Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: FaIcon(
+                          FontAwesomeIcons.boxesStacked,
+                          size: 35,
+                          color: Colors.orangeAccent,
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: DashboardButton(
+                      color: Colors.purple,
+                      label: "_customerSearch",
+                      onTap: () {
+                        BlocProvider.of<DashboardBloc>(context)
+                            .add(DashboardChangeTabEvent(index: 1));
+                      },
+                      icon: const Icon(
+                        Icons.people_outline,
+                        size: 45,
+                        color: Colors.purple,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: DashboardButton(
+                      color: Colors.brown,
+                      label: "_table",
+                      icon: const Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: FaIcon(
+                          FontAwesomeIcons.table,
+                          size: 35,
+                          color: Colors.brown,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(RouteConfig.dineInViewScreen);
+                      },
+                    ),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
                   Expanded(
                       child: DashboardButton(
-                        color: Colors.purple,
-                        label: "_customerSearch",
-                        onTap: () {
-                          BlocProvider.of<DashboardBloc>(context)
-                              .add(DashboardChangeTabEvent(index: 1));
-                        },
-                        icon: const Icon(
-                          Icons.people_outline,
-                          size: 45,
-                          color: Colors.purple,
-                        ),
-                      )),
+                    color: Colors.green,
+                    label: "_report",
+                    icon: const Icon(
+                      Icons.bar_chart,
+                      size: 45,
+                      color: Colors.green,
+                    ),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(RouteConfig.createReturnReceiptScreen);
+                    },
+                  )),
                 ],
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
             ],
           ),
@@ -128,11 +172,12 @@ class DashboardButton extends StatelessWidget {
   final Widget? icon;
   final GestureTapCallback? onTap;
 
-  const DashboardButton({Key? key,
-    required this.label,
-    required this.color,
-    this.icon,
-    this.onTap})
+  const DashboardButton(
+      {Key? key,
+      required this.label,
+      required this.color,
+      this.icon,
+      this.onTap})
       : super(key: key);
 
   @override

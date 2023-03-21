@@ -53,53 +53,58 @@ const TransactionLineItemModifierEntitySchema = Schema(
       name: r'groupDiscountId',
       type: IsarType.string,
     ),
-    r'isVoid': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 8,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'isVoid': PropertySchema(
+      id: 9,
       name: r'isVoid',
       type: IsarType.bool,
     ),
     r'lineItemModSeq': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'lineItemModSeq',
       type: IsarType.long,
     ),
     r'lineItemSeq': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'lineItemSeq',
       type: IsarType.long,
     ),
     r'notes': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'notes',
       type: IsarType.string,
     ),
     r'percent': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'percent',
       type: IsarType.double,
     ),
     r'posId': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'posId',
       type: IsarType.long,
     ),
     r'priceModifierReasonCode': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'priceModifierReasonCode',
       type: IsarType.string,
     ),
     r'promotionId': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'promotionId',
       type: IsarType.string,
     ),
     r'storeId': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'storeId',
       type: IsarType.long,
     ),
     r'transSeq': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'transSeq',
       type: IsarType.string,
     )
@@ -187,16 +192,17 @@ void _transactionLineItemModifierEntitySerialize(
   writer.writeString(offsets[5], object.discountReasonCode);
   writer.writeDouble(offsets[6], object.extendedAmount);
   writer.writeString(offsets[7], object.groupDiscountId);
-  writer.writeBool(offsets[8], object.isVoid);
-  writer.writeLong(offsets[9], object.lineItemModSeq);
-  writer.writeLong(offsets[10], object.lineItemSeq);
-  writer.writeString(offsets[11], object.notes);
-  writer.writeDouble(offsets[12], object.percent);
-  writer.writeLong(offsets[13], object.posId);
-  writer.writeString(offsets[14], object.priceModifierReasonCode);
-  writer.writeString(offsets[15], object.promotionId);
-  writer.writeLong(offsets[16], object.storeId);
-  writer.writeString(offsets[17], object.transSeq);
+  writer.writeLong(offsets[8], object.hashCode);
+  writer.writeBool(offsets[9], object.isVoid);
+  writer.writeLong(offsets[10], object.lineItemModSeq);
+  writer.writeLong(offsets[11], object.lineItemSeq);
+  writer.writeString(offsets[12], object.notes);
+  writer.writeDouble(offsets[13], object.percent);
+  writer.writeLong(offsets[14], object.posId);
+  writer.writeString(offsets[15], object.priceModifierReasonCode);
+  writer.writeString(offsets[16], object.promotionId);
+  writer.writeLong(offsets[17], object.storeId);
+  writer.writeString(offsets[18], object.transSeq);
 }
 
 TransactionLineItemModifierEntity _transactionLineItemModifierEntityDeserialize(
@@ -214,16 +220,16 @@ TransactionLineItemModifierEntity _transactionLineItemModifierEntityDeserialize(
     discountReasonCode: reader.readStringOrNull(offsets[5]),
     extendedAmount: reader.readDoubleOrNull(offsets[6]) ?? 0,
     groupDiscountId: reader.readStringOrNull(offsets[7]),
-    isVoid: reader.readBoolOrNull(offsets[8]),
-    lineItemModSeq: reader.readLongOrNull(offsets[9]),
-    lineItemSeq: reader.readLongOrNull(offsets[10]),
-    notes: reader.readStringOrNull(offsets[11]),
-    percent: reader.readDoubleOrNull(offsets[12]),
-    posId: reader.readLongOrNull(offsets[13]),
-    priceModifierReasonCode: reader.readStringOrNull(offsets[14]),
-    promotionId: reader.readStringOrNull(offsets[15]),
-    storeId: reader.readLongOrNull(offsets[16]),
-    transSeq: reader.readStringOrNull(offsets[17]),
+    isVoid: reader.readBoolOrNull(offsets[9]),
+    lineItemModSeq: reader.readLongOrNull(offsets[10]),
+    lineItemSeq: reader.readLongOrNull(offsets[11]),
+    notes: reader.readStringOrNull(offsets[12]),
+    percent: reader.readDoubleOrNull(offsets[13]),
+    posId: reader.readLongOrNull(offsets[14]),
+    priceModifierReasonCode: reader.readStringOrNull(offsets[15]),
+    promotionId: reader.readStringOrNull(offsets[16]),
+    storeId: reader.readLongOrNull(offsets[17]),
+    transSeq: reader.readStringOrNull(offsets[18]),
   );
   return object;
 }
@@ -252,24 +258,26 @@ P _transactionLineItemModifierEntityDeserializeProp<P>(
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 9:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 10:
       return (reader.readLongOrNull(offset)) as P;
     case 11:
-      return (reader.readStringOrNull(offset)) as P;
-    case 12:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 13:
       return (reader.readLongOrNull(offset)) as P;
-    case 14:
+    case 12:
       return (reader.readStringOrNull(offset)) as P;
+    case 13:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 14:
+      return (reader.readLongOrNull(offset)) as P;
     case 15:
       return (reader.readStringOrNull(offset)) as P;
     case 16:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 17:
+      return (reader.readLongOrNull(offset)) as P;
+    case 18:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1374,6 +1382,68 @@ extension TransactionLineItemModifierEntityQueryFilter on QueryBuilder<
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'groupDiscountId',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionLineItemModifierEntity,
+      TransactionLineItemModifierEntity,
+      QAfterFilterCondition> hashCodeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionLineItemModifierEntity,
+      TransactionLineItemModifierEntity,
+      QAfterFilterCondition> hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionLineItemModifierEntity,
+      TransactionLineItemModifierEntity,
+      QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionLineItemModifierEntity,
+      TransactionLineItemModifierEntity, QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }

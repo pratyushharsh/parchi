@@ -3229,11 +3229,13 @@ P _dealItemDeserializeProp<P>(
 }
 
 const _DealItemactionEnumValueMap = {
+  r'noAction': r'noAction',
   r'newPrice': r'newPrice',
   r'percentOff': r'percentOff',
   r'currencyOff': r'currencyOff',
 };
 const _DealItemactionValueEnumMap = {
+  r'noAction': DealAction.noAction,
   r'newPrice': DealAction.newPrice,
   r'percentOff': DealAction.percentOff,
   r'currencyOff': DealAction.currencyOff,

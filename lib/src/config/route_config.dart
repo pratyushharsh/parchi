@@ -28,6 +28,8 @@ import '../module/employee/employee_list_view.dart';
 import '../module/receipt_display/invoice_display.dart';
 import '../module/receipt_setting/invoice_setting_view.dart';
 import '../module/sequence/create_edit_sequence_view.dart';
+import '../module/table/create_edit_table.dart';
+import '../module/table_layout/table_layout_view.dart';
 
 class RouteConfig {
 
@@ -57,6 +59,9 @@ class RouteConfig {
   static const String sequenceConfigScreen = "/sequence-config";
   static const String bulkImportScreen = "/bulk-import";
   static const String createDealScreen = "/deals";
+  static const String tableManagement = "/table-management";
+  static const String newTableConfig = "/new-table-config";
+  static const String dineInViewScreen = "/dine-in-view";
 
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -107,7 +112,7 @@ class RouteConfig {
         var transId = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => AppInvoiceDisplay(transactionId: transId,));
       case customerDetailScreen:
-        var contactId = settings.arguments as String;
+        var contactId = settings.arguments as String?;
         return MaterialPageRoute(builder: (_) => NewCustomerView(customerId: contactId,));
       case editSaleLineItemScreen:
         var line = settings.arguments as SaleLine;
@@ -132,6 +137,10 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => const BulkImportView());
       case createDealScreen:
         return MaterialPageRoute(builder: (_) => const CreateEditDealsView());
+      case tableManagement:
+        return MaterialPageRoute(builder: (_) => const CreateEditTableView());
+      case dineInViewScreen:
+        return MaterialPageRoute(builder: (_) => const DineInView());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

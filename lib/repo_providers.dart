@@ -1,4 +1,5 @@
 import 'package:Parchi/src/repositories/repository.dart';
+import 'package:Parchi/src/repositories/table_repository.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,6 +77,9 @@ class MyAppRepoProviders extends StatelessWidget {
         ),
         RepositoryProvider(
           create: (context) => PriceRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => TableRepository(),
         ),
       ],
       child: const MyApp(),
