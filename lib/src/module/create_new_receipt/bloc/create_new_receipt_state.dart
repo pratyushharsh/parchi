@@ -50,6 +50,7 @@ class CreateNewReceiptState extends Equatable {
   final CreateNewReceiptStatus status;
   final CustomerAddress? customerAddress;
   final SaleStep step;
+  final TableEntity? table;
 
   const CreateNewReceiptState({
     this.transSeq = '',
@@ -63,6 +64,7 @@ class CreateNewReceiptState extends Equatable {
     this.step = SaleStep.item,
     this.customer,
     this.customerAddress,
+    this.table,
   }): assert(transSeq != '' ? transactionHeader != null : true);
 
   bool get isCustomerPresent {
@@ -137,6 +139,7 @@ class CreateNewReceiptState extends Equatable {
     SaleStep? step,
     CustomerAction? customerAction,
     CustomerAddress? customerAddress,
+    TableEntity? table,
   }) {
     return CreateNewReceiptState(
       transSeq: transSeq ?? this.transSeq,
@@ -154,6 +157,7 @@ class CreateNewReceiptState extends Equatable {
       status: status ?? this.status,
       step: step ?? this.step,
       customerAddress: customerAddress ?? this.customerAddress,
+      table: table ?? this.table,
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import '../../../config/sequence_config.dart';
 import '../../../entity/pos/address.dart';
 import '../../../entity/pos/entity.dart';
+import '../../../entity/pos/table_entity.dart';
 import '../../../pos/calculator/deals_calculator.dart';
 import '../../../pos/calculator/price_calculator.dart';
 import '../../../pos/calculator/tax_calculator.dart';
@@ -16,6 +17,7 @@ import '../../../pos/helper/deals_helper.dart';
 import '../../../pos/helper/pos_helper.dart';
 import '../../../pos/helper/price_helper.dart';
 import '../../../repositories/repository.dart';
+import '../../../repositories/table_repository.dart';
 import '../../authentication/bloc/authentication_bloc.dart';
 import '../../error/bloc/error_notification_bloc.dart';
 import '../../return_order/bloc/return_order_bloc.dart';
@@ -32,6 +34,7 @@ class CreateNewReceiptBloc
   final TransactionRepository transactionRepository;
   final ProductRepository productRepository;
   final CustomerRepository customerRepository;
+  final TableRepository tableRepository;
   final ErrorNotificationBloc errorNotificationBloc;
   final TaxHelper taxHelper;
   final PriceHelper priceHelper;
@@ -48,6 +51,7 @@ class CreateNewReceiptBloc
       required this.authenticationBloc,
       required this.productRepository,
       required this.customerRepository,
+      required this.tableRepository,
       required this.taxHelper,
       required this.priceHelper,
       required this.discountHelper,
@@ -86,6 +90,8 @@ class CreateNewReceiptBloc
 
   void _onInitiateTransaction(OnInitiateNewTransaction event,
       Emitter<CreateNewReceiptState> emit) async {
+    emit(state.copyWith(table: event.table,));
+
     if (event.transSeq != null) {
       final transaction =
           await transactionRepository.getTransaction(event.transSeq!);
@@ -255,7 +261,8 @@ class CreateNewReceiptBloc
         locked: true);
 
     try {
-      return await transactionRepository.createNewSale(header);
+      TransactionHeaderEntity trn = await transactionRepository.createNewSale(header);
+      return trn;
     } catch (e, st) {
       log.severe(e, e, st);
       throw Exception("Error creating new transaction");
@@ -322,7 +329,28 @@ class CreateNewReceiptBloc
     transaction.locked = false;
 
     try {
-      return await transactionRepository.createNewSale(transaction);
+      TransactionHeaderEntity trn = await transactionRepository.createNewSale(transaction);
+      if (state.table != null) {
+        state.table!.status = TableStatus.occupied;
+        state.table!.orderId = trn.transId;
+        state.table!.associateId = trn.associateId;
+        state.table!.associateName = trn.associateName;
+        state.table!.orderTime = trn.beginDatetime;
+        state.table!.customerId = trn.customerId;
+        state.table!.customerName = trn.customerName;
+
+        if (status == TransactionStatus.completed || status == TransactionStatus.cancelled) {
+          state.table!.status = TableStatus.available;
+          state.table!.orderId = null;
+          state.table!.associateId = null;
+          state.table!.associateName = null;
+          state.table!.orderTime = null;
+          state.table!.customerId = null;
+          state.table!.customerName = null;
+        }
+        await tableRepository.reserveTable(state.table!);
+      }
+      return trn;
     } catch (e, st) {
       log.severe(e, e, st);
       throw Exception("Error creating Transaction");

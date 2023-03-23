@@ -23,4 +23,10 @@ class TableRepository with DatabaseProvider {
   Future<List<TableEntity>> getAllTables() async {
     return await db.tableEntitys.where().findAll();
   }
+
+  Future<void> reserveTable(TableEntity table) async {
+    await db.writeTxn(() async {
+      await db.tableEntitys.put(table);
+    });
+  }
 }

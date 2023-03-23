@@ -14,10 +14,27 @@ import 'clients_view.dart';
 
 typedef OnChangeTab = void Function(int index);
 
+class DashboardButtonData {
+  final String label;
+  final Color color;
+  final Widget? icon;
+  final GestureTapCallback? onTap;
+
+  DashboardButtonData(
+      {required this.label,
+      required this.color,
+      this.icon,
+      this.onTap});
+}
+
 class ReceiptView extends StatelessWidget {
   final OnChangeTab? onChangeTab;
 
   const ReceiptView({Key? key, this.onChangeTab}) : super(key: key);
+
+  static const List<DashboardButtonData> _buttons = [
+
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +49,15 @@ class ReceiptView extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+              // GridView.builder(
+              //     itemCount: images.length,
+              //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //   crossAxisCount: 3,
+              //   mainAxisSpacing: 10.0,
+              //   crossAxisSpacing: 10.0,
+              // ), itemBuilder: (BuildContext context, int index) {
+              //   return Image.network(images[index]);
+              // }),
               Row(
                 children: [
                   Expanded(

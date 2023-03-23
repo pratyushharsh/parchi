@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
 import '../../entity/pos/table_entity.dart';
 import '../../repositories/table_repository.dart';
@@ -14,8 +16,8 @@ class DineInView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) =>
-            TableLayoutBloc(tableRepository: TableRepository())..add(FetchAllTables()),
+        create: (context) => TableLayoutBloc(tableRepository: TableRepository())
+          ..add(FetchAllTables()),
         child: const DineInViewMobile());
   }
 }
@@ -35,17 +37,46 @@ class DineInViewMobile extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               Positioned(
-                child: SingleChildScrollView(
-                  child: BlocBuilder<TableLayoutBloc, TableLayoutState>(
-                    builder: (context, state) {
-                      return Column(children: [
-                        const SizedBox(
-                          height: 100,
-                        ),
-                        ...state.tables.map((e) => TableCard(table: e,)).toList(),
-                      ]);
-                    },
-                  ),
+                top: 100,
+                left: 16,
+                right: 16,
+                bottom: 16,
+                child: BlocBuilder<TableLayoutBloc, TableLayoutState>(
+                  builder: (context, state) {
+                    return LayoutBuilder(builder: (context, constraints) {
+                      int crossAxisCount = 1;
+
+                      if (constraints.maxWidth > 1800) {
+                        crossAxisCount = 6;
+                      } else if (constraints.maxWidth > 1000) {
+                        crossAxisCount = 4;
+                      } else if (constraints.maxWidth > 700) {
+                        crossAxisCount = 3;
+                      } else if (constraints.maxWidth > 500) {
+                        crossAxisCount = 1;
+                      }
+
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          BlocProvider.of<TableLayoutBloc>(context)
+                              .add(FetchAllTables());
+                        },
+                        child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              mainAxisSpacing: 10.0,
+                              crossAxisSpacing: 10.0,
+                            ),
+                            itemCount: state.tables.length,
+                            itemBuilder: (context, index) {
+                              return TableCard(
+                                table: state.tables[index],
+                              );
+                            }),
+                      );
+                    });
+                  },
                 ),
               ),
               Positioned(
@@ -79,48 +110,122 @@ class TableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        // color: Colors.redAccent,
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 1), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Table No: ${table.tableId}",
-                  style: const TextStyle(
-                    // color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(RouteConfig.createRestaurantOrder, arguments: table);
+      },
+      child: Card(
+        child: Container(
+          // color: Colors.redAccent,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: const Offset(0, 1), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Table No: ${table.tableId}",
+                      style: const TextStyle(
+                        // color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TableStatusChip(status: table.status),
+                  ],
                 ),
-                TableStatusChip(status: table.status),
-              ],
-            ),
-            const Divider(
-              height: 1,
-              color: Colors.grey,
-            ),
-            const SizedBox(height: 8.0),
-            Text("Customer Name: ${table.customerName ?? "N/A"}"),
-            Text("Waiter Name: ${table.associateName ?? "N/A"}"),
-            const SizedBox(height: 8.0),
-          ],
+              ),
+              const Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Order No: ",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  Text(
+                    table.orderId ?? '',
+                    style: const TextStyle(
+                      // color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Customer Name: ",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  Text(
+                    table.customerId ?? '',
+                    style: const TextStyle(
+                      // color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Associate Name: ",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  Text(
+                    table.associateName ?? '',
+                    style: const TextStyle(
+                      // color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+            ],
+          ),
         ),
       ),
     );
@@ -136,35 +241,47 @@ class TableStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (status) {
       case TableStatus.available:
-        return const Chip(
-          label: Text(
+        return Chip(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          label: const Text(
             "_available",
             style: TextStyle(color: Colors.white),
-          ),
+          ).tr(),
           backgroundColor: Colors.green,
         );
       case TableStatus.occupied:
-        return const Chip(
-          label: Text(
+        return Chip(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          label: const Text(
             "_occupied",
             style: TextStyle(color: Colors.white),
-          ),
+          ).tr(),
           backgroundColor: Colors.red,
         );
       case TableStatus.reserved:
-        return const Chip(
-          label: Text(
+        return Chip(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          label: const Text(
             "_reserved",
             style: TextStyle(color: Colors.white),
-          ),
+          ).tr(),
           backgroundColor: Colors.blue,
         );
       case TableStatus.dirty:
-        return const Chip(
-          label: Text(
+        return Chip(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          label: const Text(
             "_dirty",
             style: TextStyle(color: Colors.white),
-          ),
+          ).tr(),
           backgroundColor: Colors.orange,
         );
     }

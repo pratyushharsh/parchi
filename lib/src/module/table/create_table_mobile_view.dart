@@ -17,13 +17,11 @@ class NewTableButtonMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (Platform.isIOS || Platform.isAndroid) {
-          showTransitiveAppPopUp(
-            context: context,
-            child: const NewTableForm(),
-            title: '_createNewTaxGroup',
-          ).then((value) => {});
-        }
+        showTransitiveAppPopUp(
+          context: context,
+          child: const NewTableForm(),
+          title: '_createNewTaxGroup',
+        ).then((value) => {});
       },
       child: Container(
         padding: const EdgeInsets.all(16),

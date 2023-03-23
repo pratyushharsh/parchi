@@ -32,7 +32,7 @@ class BackgroundSyncBloc
 
   Timer? _timer;
   Isolate? _isolate;
-  bool isSyncEnabled = false;
+  bool isSyncEnabled = true;
 
   @override
   Future<void> close() async {

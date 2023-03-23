@@ -28,8 +28,9 @@ class OnUnitPriceUpdate extends CreateNewReceiptEvent {
 class OnInitiateNewTransaction extends CreateNewReceiptEvent {
   final String? transSeq;
   final bool isReturn;
+  final TableEntity? table;
 
-  OnInitiateNewTransaction({this.transSeq, this.isReturn = false});
+  OnInitiateNewTransaction({this.transSeq, this.isReturn = false, this.table});
 }
 
 class OnCreateNewTransaction extends CreateNewReceiptEvent {}

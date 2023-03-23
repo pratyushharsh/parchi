@@ -19,6 +19,7 @@ import '../../src/module/splash_screen/splash_screen_view.dart';
 import '../../src/module/tax/create_edit_tax.dart';
 
 import '../entity/pos/employee_entity.dart';
+import '../entity/pos/table_entity.dart';
 import '../module/about/about_view.dart';
 import '../module/bulk_import/bulk_import_view.dart';
 import '../module/create_edit_customer/create_edit_customer_view.dart';
@@ -43,6 +44,7 @@ class RouteConfig {
   static const String allCustomerScreen = "/all-customer";
   static const String loadItemsInBulkScreen = "/load-in-bulk";
   static const String createReceiptScreen = "/create-receipt";
+  static const String createRestaurantOrder = "/create-restaurant-order";
   static const String createReturnReceiptScreen = "/return-receipt";
   static const String receiptDisplayScreen = "/receipt-display";
   static const String invoiceDisplayScreen = "/invoice-display";
@@ -89,6 +91,9 @@ class RouteConfig {
       case createReceiptScreen:
         var transId = settings.arguments as String?;
         return MaterialPageRoute(builder: (_) => NewReceiptView(transId: transId,));
+      case createRestaurantOrder:
+        var te = settings.arguments as TableEntity?;
+        return MaterialPageRoute(builder: (_) => NewReceiptView(tableEntity: te, transId: te?.orderId,));
       case createReturnReceiptScreen:
         var transId = settings.arguments as String?;
         return MaterialPageRoute(builder: (_) => const NewReceiptView(isReturn: true,));

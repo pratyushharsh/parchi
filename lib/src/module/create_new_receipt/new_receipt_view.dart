@@ -9,6 +9,7 @@ import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
 import '../../entity/pos/address.dart';
 import '../../entity/pos/entity.dart';
+import '../../entity/pos/table_entity.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_dialog.dart';
 import '../../widgets/custom_image.dart';
@@ -28,7 +29,8 @@ import 'sale_complete_dialog.dart';
 class NewReceiptView extends StatelessWidget {
   final String? transId;
   final bool isReturn;
-  const NewReceiptView({Key? key, this.transId, this.isReturn = false})
+  final TableEntity? tableEntity;
+  const NewReceiptView({Key? key, this.transId, this.isReturn = false, this.tableEntity})
       : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class NewReceiptView extends StatelessWidget {
             transactionRepository: RepositoryProvider.of(ctx),
             productRepository: RepositoryProvider.of(ctx),
             customerRepository: RepositoryProvider.of(ctx),
+            tableRepository: RepositoryProvider.of(ctx),
             taxHelper: RepositoryProvider.of(ctx),
             taxModifierCalculator: RepositoryProvider.of(ctx),
             priceHelper: RepositoryProvider.of(ctx),
@@ -53,7 +56,7 @@ class NewReceiptView extends StatelessWidget {
             totalCalculator: RepositoryProvider.of(ctx),
             dealsCalculator: RepositoryProvider.of(ctx),
           )..add(
-              OnInitiateNewTransaction(transSeq: transId, isReturn: isReturn)),
+              OnInitiateNewTransaction(transSeq: transId, isReturn: isReturn, table: tableEntity)),
         ),
         BlocProvider(
           create: (ctx) => CustomerSearchBloc(
