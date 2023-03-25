@@ -86,6 +86,7 @@ class CreateNewReceiptBloc
     on<OnLineItemVoid>(_onLineItemVoid);
     on<OnTenderLineVoid>(_onTenderLineVoid);
     on<OnPartialPayment>(_onPartialPayment);
+    on<OnAdditionalLineModifierChange>(_onAdditionalLineModifierChange);
   }
 
   void _onInitiateTransaction(OnInitiateNewTransaction event,
@@ -844,6 +845,31 @@ class CreateNewReceiptBloc
     emit(state.copyWith(
         tenderLine: newList,
         status: CreateNewReceiptStatus.success,
+        inProgress: true));
+  }
+
+  void _onAdditionalLineModifierChange(
+      OnAdditionalLineModifierChange event,
+      Emitter<CreateNewReceiptState> emit) async {
+    emit(state.copyWith(status: CreateNewReceiptStatus.modifierUpdate));
+    // Find the transaction line and update the modifier
+    List<TransactionLineItemEntity> newList = [];
+    for (var line in state.lineItem) {
+      if (line == event.saleLine) {
+        TransactionLineItemEntity newLine = line;
+        // Filter modifier with 0 quantity;
+        List<TransactionAdditionalLineItemModifier> modifierList =
+            event.modifier.where((element) => element.quantity != 0).toList();
+
+        newLine.additionalModifier = modifierList;
+        newList.add(newLine);
+      } else {
+        newList.add(line);
+      }
+    }
+    emit(state.copyWith(
+        lineItem: newList,
+        status: CreateNewReceiptStatus.inProgress,
         inProgress: true));
   }
 }

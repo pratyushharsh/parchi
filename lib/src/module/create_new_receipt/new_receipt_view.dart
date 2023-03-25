@@ -716,6 +716,35 @@ class NewLineItem extends StatelessWidget {
               ],
             );
           }),
+          ...saleLine.additionalModifier
+              .map(
+                (e) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8, top: 4),
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.black,
+                        size: 16,
+                      ),
+                    ),
+                    Text(e.name ?? ""),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 60),
+                  child: Text(
+                    '${getCurrencyFormatter(context).format(e.price)}  x  ${e.quantity}',
+                    style: NewLineItem.textStyle,
+                  ),
+                ),
+              ],
+            ),
+          )
+              .toList(),
           ...saleLine.lineModifiers
               .map(
                 (e) => Row(

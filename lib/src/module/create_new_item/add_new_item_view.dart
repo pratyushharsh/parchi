@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../config/route_config.dart';
 import '../../config/theme_settings.dart';
@@ -11,12 +12,13 @@ import '../../repositories/tax_repository.dart';
 import '../../widgets/appbar_leading.dart';
 import '../../widgets/code_value_dropdown.dart';
 import '../../widgets/custom_button.dart';
-import '../../widgets/custom_checkbox.dart';
+// import '../../widgets/custom_checkbox.dart';
 import '../../widgets/custom_image.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/loading.dart';
 import '../../widgets/store_user_widget.dart';
 import 'bloc/add_new_item_bloc.dart';
+import 'item_modifier_view.dart';
 import 'product_field_validator.dart';
 
 enum NewItemScreenState { editItem, createItem }
@@ -38,7 +40,9 @@ class AddNewItemScreen extends StatelessWidget {
           )..add(LoadExistingProduct(productId)),
         )
       ],
-      child: AddNewItemForm(editable: productId == null,),
+      child: const AddNewItemForm(
+        editable: true,
+      ),
     );
   }
 }
@@ -46,7 +50,10 @@ class AddNewItemScreen extends StatelessWidget {
 class AddNewItemForm extends StatefulWidget {
   final NewItemScreenState status;
   final bool editable;
-  const AddNewItemForm({Key? key, this.status = NewItemScreenState.createItem, this.editable = true})
+  const AddNewItemForm(
+      {Key? key,
+      this.status = NewItemScreenState.createItem,
+      this.editable = true})
       : super(key: key);
 
   @override
@@ -112,13 +119,27 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
               body: Stack(
                 fit: StackFit.expand,
                 children: [
-                  NewItemDetailForm(editable: widget.editable,),
+                  Column(
+                    children: const [
+                      StoreUserWidget(),
+                    ],
+                  ),
+                  Positioned(
+                    top: 80,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: ItemTabs(
+                    editable: widget.editable,
+                  ),),
+                  // NewItemDetailForm(editable: widget.editable,),
                   Positioned(
                     top: 40,
                     left: 16,
                     child: AppBarLeading(
                       heading: state.existingProduct != null
-                          ? (state.existingProduct!.skuCode ?? state.existingProduct!.productId)
+                          ? (state.existingProduct!.skuCode ??
+                              state.existingProduct!.productId)
                           : "_newProduct",
                       icon: Icons.arrow_back,
                       onTap: () {
@@ -129,7 +150,8 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                   // if (!_inEditMode)
                   BlocBuilder<AddNewItemBloc, AddNewItemState>(
                     builder: (context, state) {
-                      if(state.status == AddNewItemStatus.existingProduct || !widget.editable) return Container();
+                      if (state.status == AddNewItemStatus.existingProduct ||
+                          !widget.editable) return Container();
                       return Positioned(
                         top: 20,
                         right: 16,
@@ -155,40 +177,83 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                     },
                   ),
                   if (widget.editable)
-                  Positioned(
-                    bottom: 10,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RejectButton(
-                                label: "_cancel", onPressed: () {}),
-                          ),
-                          const SizedBox(
-                            width: 12,
-                          ),
-                          Expanded(
-                              child: AcceptButton(
-                            label: state.existingProduct != null
-                                ? "_update"
-                                : "_save",
-                            onPressed: () {
-                              BlocProvider.of<AddNewItemBloc>(context)
-                                  .add(SaveProductEvent());
-                            },
-                          ))
-                        ],
+                    Positioned(
+                      bottom: 10,
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RejectButton(
+                                  label: "_cancel", onPressed: () {}),
+                            ),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                                child: AcceptButton(
+                              label: state.existingProduct != null
+                                  ? "_update"
+                                  : "_save",
+                              onPressed: () {
+                                BlocProvider.of<AddNewItemBloc>(context)
+                                    .add(SaveProductEvent());
+                              },
+                            ))
+                          ],
+                        ),
                       ),
-                    ),
-                  )
+                    )
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class ItemTabs extends StatelessWidget {
+  final bool editable;
+  const ItemTabs({Key? key, required this.editable}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          const TabBar(
+            indicatorColor: AppColor.primary,
+            unselectedLabelColor: AppColor.subtitleColorPrimary,
+            labelColor: AppColor.primary,
+            tabs: [
+              Tab(
+                  icon: FaIcon(
+                    FontAwesomeIcons.productHunt,
+                  ),
+                  iconMargin: EdgeInsets.only(bottom: 6, top: 15),
+                  text: "Item Detail"),
+              Tab(
+                  icon: FaIcon(FontAwesomeIcons.calculator),
+                  iconMargin: EdgeInsets.only(bottom: 6, top: 15),
+                  text: "Item Modifier"),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                NewItemDetailForm(
+                  editable: editable,
+                ),
+                const ItemModifierView(),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -272,9 +337,9 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
         return SingleChildScrollView(
           child: Column(
             children: [
-              const StoreUserWidget(),
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -480,7 +545,8 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
                                   .getAllTaxGroups();
                             },
                             onChanged: _onSelectedTaxGroupChanged,
-                            validator: NewProductFieldValidator.validateTaxGroup,
+                            validator:
+                                NewProductFieldValidator.validateTaxGroup,
                             enabled: widget.editable,
                           ),
                         ),
@@ -503,7 +569,9 @@ class _NewItemDetailFormState extends State<NewItemDetailForm> {
 class ProductItemsImage extends StatefulWidget {
   final List<String> imageUrl;
   final bool editable;
-  const ProductItemsImage({Key? key, required this.imageUrl, required this.editable}) : super(key: key);
+  const ProductItemsImage(
+      {Key? key, required this.imageUrl, required this.editable})
+      : super(key: key);
   @override
   State<ProductItemsImage> createState() => _ProductItemsImageState();
 }
@@ -570,7 +638,7 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
                       ))
                   .toList(),
               if (widget.editable)
-              const AddNewItemImage(height: 100, width: 100)
+                const AddNewItemImage(height: 100, width: 100)
             ],
           ),
         ),
@@ -585,30 +653,30 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
       children: [
         selectedUrl.isNotEmpty
             ? GestureDetector(
-              onHorizontalDragEnd: (details) {
-                if (details.primaryVelocity! > 0) {
-                  int index = widget.imageUrl.indexOf(selectedUrl);
-                  if (index > 0) {
-                    setState(() {
-                      selectedUrl = widget.imageUrl[index - 1];
-                    });
+                onHorizontalDragEnd: (details) {
+                  if (details.primaryVelocity! > 0) {
+                    int index = widget.imageUrl.indexOf(selectedUrl);
+                    if (index > 0) {
+                      setState(() {
+                        selectedUrl = widget.imageUrl[index - 1];
+                      });
+                    }
+                  } else {
+                    int index = widget.imageUrl.indexOf(selectedUrl);
+                    if (index < widget.imageUrl.length - 1) {
+                      setState(() {
+                        selectedUrl = widget.imageUrl[index + 1];
+                      });
+                    }
                   }
-                } else {
-                  int index = widget.imageUrl.indexOf(selectedUrl);
-                  if (index < widget.imageUrl.length - 1) {
-                    setState(() {
-                      selectedUrl = widget.imageUrl[index + 1];
-                    });
-                  }
-                }
-              },
-              child: CustomImage(
+                },
+                child: CustomImage(
                   url: selectedUrl,
                   height: width * 0.8,
                   width: width,
                   imageDim: 600,
                 ),
-            )
+              )
             : Container(),
         const SizedBox(
           height: 10,
@@ -634,8 +702,7 @@ class _ProductItemsImageState extends State<ProductItemsImage> {
                         ),
                       ))
                   .toList(),
-              if (widget.editable)
-              const AddNewItemImage()
+              if (widget.editable) const AddNewItemImage()
             ],
           ),
         ),

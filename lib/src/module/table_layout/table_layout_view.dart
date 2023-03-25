@@ -191,7 +191,7 @@ class TableCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    table.customerId ?? '',
+                    table.customerName ?? '',
                     style: const TextStyle(
                       // color: Colors.white,
                       fontSize: 20,

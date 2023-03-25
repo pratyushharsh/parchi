@@ -42,6 +42,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
     on<RemoveImageUrlsEvent>(_onRemoveImageUrlsEvent);
     on<PriceIncludeTaxChangedEvent>(_onPriceIncludeTaxChangedEvent);
     on<SaveProductEvent>(_onSaveProductEvent);
+    on<AddNewItemModifier>(_onAddNewItemModifier);
   }
 
   void _onLoadExistingProduct(
@@ -72,6 +73,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
         status: AddNewItemStatus.existingProduct,
         color: product.color,
         size: product.size,
+        modifiers: product.modifiers,
       ));
     }
   }
@@ -181,6 +183,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
           category: state.category,
           imageUrl: state.imageUrl,
           createTime: state.existingProduct!.createTime,
+          modifiers: state.modifiers,
           lastChangedAt: DateTime.now(),
         );
         product = await _uploadImageToStagingArea(product);
@@ -206,6 +209,7 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
           taxGroupId: state.taxGroupId?.groupId,
           category: state.category,
           imageUrl: state.imageUrl,
+          modifiers: state.modifiers,
           createTime: DateTime.now(),
         );
         product = await _uploadImageToStagingArea(product);
@@ -239,5 +243,13 @@ class AddNewItemBloc extends Bloc<AddNewItemEvent, AddNewItemState> {
     }
     product.imageUrl = imageUrls;
     return product;
+  }
+
+  void _onAddNewItemModifier(
+      AddNewItemModifier event, Emitter<AddNewItemState> emit) async {
+    List<ItemModifier> modifiers = [...state.modifiers];
+    event.modifier.uuid ??= uuid.v1();
+    modifiers.add(event.modifier);
+    emit(state.copyWith(modifiers: modifiers, status: AddNewItemStatus.modifying));
   }
 }

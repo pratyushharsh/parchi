@@ -64,6 +64,7 @@ class TransactionLineItemEntity {
   // final header = IsarLink<TransactionHeaderEntity>();
   List<TransactionLineItemModifierEntity> lineModifiers;
   List<TransactionLineItemTaxModifier> taxModifiers;
+  List<TransactionAdditionalLineItemModifier> additionalModifier;
 
   // final lineModifiers = IsarLinks<TransactionLineItemModifierEntity>();
 
@@ -115,6 +116,7 @@ class TransactionLineItemEntity {
     this.taxGroupId,
     this.lineModifiers = const [],
     this.taxModifiers = const [],
+    this.additionalModifier = const [],
   });
 
   @override
@@ -221,4 +223,19 @@ class ItemIdEntryMethod extends EntryMethod {}
 
 class EntryMethod {
   static const keyboard = "KEYBOARD";
+}
+
+@embedded
+class TransactionAdditionalLineItemModifier {
+  String? uuid;
+  String? name;
+  double? price;
+  double? quantity;
+
+  TransactionAdditionalLineItemModifier({
+    this.uuid,
+    this.name,
+    this.price,
+    this.quantity,
+  });
 }

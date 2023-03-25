@@ -14,6 +14,8 @@ enum CreateNewReceiptStatus {
   priceUpdate,
   discountUpdate,
 
+  modifierUpdate,
+
   loading,
   success,
   error

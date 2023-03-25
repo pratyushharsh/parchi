@@ -20,6 +20,7 @@ class AddNewItemState {
   final List<String> imageUrl;
   final bool priceIncludeTax;
   final ItemEntity? existingProduct;
+  final List<ItemModifier> modifiers;
   final AddNewItemStatus status;
 
 
@@ -41,6 +42,7 @@ class AddNewItemState {
     this.imageUrl = const [],
     this.priceIncludeTax = false,
     this.existingProduct,
+    this.modifiers = const [],
     this.status = AddNewItemStatus.initial,
   });
 
@@ -62,6 +64,7 @@ class AddNewItemState {
     List<String>? imageUrl,
     bool? priceIncludeTax,
     ItemEntity? existingProduct,
+    List<ItemModifier>? modifiers,
     AddNewItemStatus? status,
   }) {
     return AddNewItemState(
@@ -82,6 +85,7 @@ class AddNewItemState {
       imageUrl: imageUrl ?? this.imageUrl,
       priceIncludeTax: priceIncludeTax ?? this.priceIncludeTax,
       existingProduct: existingProduct ?? this.existingProduct,
+      modifiers: modifiers ?? this.modifiers,
       status: status ?? this.status,
     );
   }

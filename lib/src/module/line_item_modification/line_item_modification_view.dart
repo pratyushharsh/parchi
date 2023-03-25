@@ -10,12 +10,13 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/custom_image.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/extension/retail_extension.dart';
+import '../create_new_item/item_modifier_view.dart';
 import '../create_new_receipt/bloc/create_new_receipt_bloc.dart';
 import '../create_new_receipt/sale_complete_dialog.dart';
 import 'bloc/line_item_modification_bloc.dart';
 import 'line_item_tax_modification.dart';
 
-enum LineItemModificationType { price, quantity, discount, tax }
+enum LineItemModificationType { modifier, price, quantity, discount, tax }
 
 enum TaxCalculationMethod { percentage, amount }
 
@@ -34,7 +35,7 @@ class LineItemModificationView extends StatefulWidget {
 }
 
 class _LineItemModificationViewState extends State<LineItemModificationView> {
-  LineItemModificationType selectedType = LineItemModificationType.price;
+  LineItemModificationType selectedType = LineItemModificationType.modifier;
 
   Widget _getCorrespondingData() {
     switch (selectedType) {
@@ -46,6 +47,13 @@ class _LineItemModificationViewState extends State<LineItemModificationView> {
         return const LineItemDiscountModifyView();
       case LineItemModificationType.tax:
         return const LineItemTaxModifyView();
+      case LineItemModificationType.modifier:
+        if (widget.productModel == null) {
+          return const Center(child: Text("Invalid Item"));
+        }
+        return AdditionItemModifiersView(
+          item: widget.productModel!,
+        );
       default:
         return const Center(child: Text("Select An Operation"));
     }
@@ -63,6 +71,15 @@ class _LineItemModificationViewState extends State<LineItemModificationView> {
           ),
           Wrap(
             children: [
+              DialogButton(
+                label: "Item Modifier",
+                onClick: () {
+                  setState(() {
+                    selectedType = LineItemModificationType.modifier;
+                  });
+                },
+                selected: selectedType == LineItemModificationType.modifier,
+              ),
               DialogButton(
                 label: "Price",
                 onClick: () {
@@ -487,6 +504,185 @@ class _LineItemDiscountModifyViewState
           ],
         )
       ],
+    );
+  }
+}
+
+class AdditionItemModifiersView extends StatefulWidget {
+  final ItemEntity item;
+  const AdditionItemModifiersView({Key? key, required this.item})
+      : super(key: key);
+
+  @override
+  State<AdditionItemModifiersView> createState() =>
+      _AdditionItemModifiersViewState();
+}
+
+class _AdditionItemModifiersViewState extends State<AdditionItemModifiersView> {
+  late List<TransactionAdditionalLineItemModifier> modifiers;
+
+  @override
+  void initState() {
+    super.initState();
+    modifiers = widget.item.modifiers
+        .map((e) => TransactionAdditionalLineItemModifier(
+              uuid: e.uuid,
+              name: e.name,
+              price: e.price,
+              quantity: 0,
+            ))
+        .toList();
+  }
+
+  changeQuantity(String uuid, double qty) {
+    setState(() {
+      for (var i = 0; i < modifiers.length; i++) {
+        if (modifiers[i].uuid == uuid) {
+          modifiers[i].quantity = qty;
+          break;
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: Column(
+            children: widget.item.modifiers
+                .map((e) => ItemModifierLine(
+                      modifier: e,
+                      onQuantityChange: changeQuantity,
+                    ))
+                .toList(),
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: RejectButton(
+                label: "Cancel",
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: AcceptButton(
+                label: "Add Modifiers",
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                    OnAdditionalLineModifierChange(
+                      modifier: modifiers,
+                      saleLine:
+                          BlocProvider.of<LineItemModificationBloc>(context)
+                              .lineItem,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class ItemModifierLine extends StatefulWidget {
+  final ItemModifier modifier;
+  final Function(String, double) onQuantityChange;
+  const ItemModifierLine(
+      {Key? key, required this.modifier, required this.onQuantityChange})
+      : super(key: key);
+
+  @override
+  State<ItemModifierLine> createState() => _ItemModifierLineState();
+}
+
+class _ItemModifierLineState extends State<ItemModifierLine> {
+  late int quantity;
+
+  @override
+  void initState() {
+    super.initState();
+    quantity = 0;
+  }
+
+  int increaseQuantity() {
+    setState(() {
+      quantity++;
+    });
+    widget.onQuantityChange(widget.modifier.uuid ?? "", quantity.toDouble());
+    return quantity;
+  }
+
+  int decreaseQuantity() {
+    setState(() {
+      quantity--;
+      if (quantity < 0) {
+        quantity = 0;
+      }
+    });
+    widget.onQuantityChange(widget.modifier.uuid ?? "", quantity.toDouble());
+    return quantity;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.modifier.name ?? ''),
+                  Text(widget.modifier.price.toString()),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    increaseQuantity();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: const Icon(Icons.add),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(quantity.toString()),
+                const SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
+                    decreaseQuantity();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: const Icon(Icons.remove),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

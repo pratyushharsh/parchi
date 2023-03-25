@@ -13,235 +13,241 @@ const TransactionLineItemEntitySchema = Schema(
   name: r'TransactionLineItemEntity',
   id: 2685623274292399999,
   properties: {
-    r'baseUnitPrice': PropertySchema(
+    r'additionalModifier': PropertySchema(
       id: 0,
+      name: r'additionalModifier',
+      type: IsarType.objectList,
+      target: r'TransactionAdditionalLineItemModifier',
+    ),
+    r'baseUnitPrice': PropertySchema(
+      id: 1,
       name: r'baseUnitPrice',
       type: IsarType.double,
     ),
     r'businessDate': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'businessDate',
       type: IsarType.dateTime,
     ),
     r'category': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'category',
       type: IsarType.string,
     ),
     r'currency': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'currency',
       type: IsarType.string,
     ),
     r'discountAmount': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'discountAmount',
       type: IsarType.double,
     ),
     r'extendedAmount': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'extendedAmount',
       type: IsarType.double,
     ),
     r'grossAmount': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'grossAmount',
       type: IsarType.double,
     ),
     r'hashCode': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'hashCode',
       type: IsarType.long,
     ),
     r'hsn': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'hsn',
       type: IsarType.string,
     ),
     r'isVoid': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'isVoid',
       type: IsarType.bool,
     ),
     r'itemColor': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'itemColor',
       type: IsarType.string,
     ),
     r'itemDescription': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'itemDescription',
       type: IsarType.string,
     ),
     r'itemId': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'itemId',
       type: IsarType.string,
     ),
     r'itemIdEntryMethod': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'itemIdEntryMethod',
       type: IsarType.string,
     ),
     r'itemSize': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'itemSize',
       type: IsarType.string,
     ),
     r'lineItemSeq': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'lineItemSeq',
       type: IsarType.long,
     ),
     r'lineModifiers': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'lineModifiers',
       type: IsarType.objectList,
       target: r'TransactionLineItemModifierEntity',
     ),
     r'netAmount': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'netAmount',
       type: IsarType.double,
     ),
     r'nonExchangeableFlag': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'nonExchangeableFlag',
       type: IsarType.bool,
     ),
     r'nonReturnableFlag': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'nonReturnableFlag',
       type: IsarType.bool,
     ),
     r'originalBusinessDate': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'originalBusinessDate',
       type: IsarType.dateTime,
     ),
     r'originalLineItemSeq': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'originalLineItemSeq',
       type: IsarType.long,
     ),
     r'originalPosId': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'originalPosId',
       type: IsarType.long,
     ),
     r'originalTransSeq': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'originalTransSeq',
       type: IsarType.string,
     ),
     r'posId': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'posId',
       type: IsarType.long,
     ),
     r'priceEntryMethod': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'priceEntryMethod',
       type: IsarType.string,
     ),
     r'priceOverride': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'priceOverride',
       type: IsarType.bool,
     ),
     r'priceOverrideAmount': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'priceOverrideAmount',
       type: IsarType.double,
     ),
     r'priceOverrideReason': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'priceOverrideReason',
       type: IsarType.string,
     ),
     r'quantity': PropertySchema(
-      id: 29,
+      id: 30,
       name: r'quantity',
       type: IsarType.double,
     ),
     r'returnComment': PropertySchema(
-      id: 30,
+      id: 31,
       name: r'returnComment',
       type: IsarType.string,
     ),
     r'returnFlag': PropertySchema(
-      id: 31,
+      id: 32,
       name: r'returnFlag',
       type: IsarType.bool,
     ),
     r'returnReasonCode': PropertySchema(
-      id: 32,
+      id: 33,
       name: r'returnReasonCode',
       type: IsarType.string,
     ),
     r'returnTypeCode': PropertySchema(
-      id: 33,
+      id: 34,
       name: r'returnTypeCode',
       type: IsarType.string,
     ),
     r'returnedQuantity': PropertySchema(
-      id: 34,
+      id: 35,
       name: r'returnedQuantity',
       type: IsarType.double,
     ),
     r'serialNumber': PropertySchema(
-      id: 35,
+      id: 36,
       name: r'serialNumber',
       type: IsarType.string,
     ),
     r'shippingWeight': PropertySchema(
-      id: 36,
+      id: 37,
       name: r'shippingWeight',
       type: IsarType.double,
     ),
     r'storeId': PropertySchema(
-      id: 37,
+      id: 38,
       name: r'storeId',
       type: IsarType.long,
     ),
     r'taxAmount': PropertySchema(
-      id: 38,
+      id: 39,
       name: r'taxAmount',
       type: IsarType.double,
     ),
     r'taxGroupId': PropertySchema(
-      id: 39,
+      id: 40,
       name: r'taxGroupId',
       type: IsarType.string,
     ),
     r'taxModifiers': PropertySchema(
-      id: 40,
+      id: 41,
       name: r'taxModifiers',
       type: IsarType.objectList,
       target: r'TransactionLineItemTaxModifier',
     ),
     r'transSeq': PropertySchema(
-      id: 41,
+      id: 42,
       name: r'transSeq',
       type: IsarType.string,
     ),
     r'unitCost': PropertySchema(
-      id: 42,
+      id: 43,
       name: r'unitCost',
       type: IsarType.double,
     ),
     r'unitPrice': PropertySchema(
-      id: 43,
+      id: 44,
       name: r'unitPrice',
       type: IsarType.double,
     ),
     r'uom': PropertySchema(
-      id: 44,
+      id: 45,
       name: r'uom',
       type: IsarType.string,
     ),
     r'vendorId': PropertySchema(
-      id: 45,
+      id: 46,
       name: r'vendorId',
       type: IsarType.string,
     )
@@ -258,6 +264,15 @@ int _transactionLineItemEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.additionalModifier.length * 3;
+  {
+    final offsets = allOffsets[TransactionAdditionalLineItemModifier]!;
+    for (var i = 0; i < object.additionalModifier.length; i++) {
+      final value = object.additionalModifier[i];
+      bytesCount += TransactionAdditionalLineItemModifierSchema.estimateSize(
+          value, offsets, allOffsets);
+    }
+  }
   {
     final value = object.category;
     if (value != null) {
@@ -399,62 +414,68 @@ void _transactionLineItemEntitySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.baseUnitPrice);
-  writer.writeDateTime(offsets[1], object.businessDate);
-  writer.writeString(offsets[2], object.category);
-  writer.writeString(offsets[3], object.currency);
-  writer.writeDouble(offsets[4], object.discountAmount);
-  writer.writeDouble(offsets[5], object.extendedAmount);
-  writer.writeDouble(offsets[6], object.grossAmount);
-  writer.writeLong(offsets[7], object.hashCode);
-  writer.writeString(offsets[8], object.hsn);
-  writer.writeBool(offsets[9], object.isVoid);
-  writer.writeString(offsets[10], object.itemColor);
-  writer.writeString(offsets[11], object.itemDescription);
-  writer.writeString(offsets[12], object.itemId);
-  writer.writeString(offsets[13], object.itemIdEntryMethod);
-  writer.writeString(offsets[14], object.itemSize);
-  writer.writeLong(offsets[15], object.lineItemSeq);
+  writer.writeObjectList<TransactionAdditionalLineItemModifier>(
+    offsets[0],
+    allOffsets,
+    TransactionAdditionalLineItemModifierSchema.serialize,
+    object.additionalModifier,
+  );
+  writer.writeDouble(offsets[1], object.baseUnitPrice);
+  writer.writeDateTime(offsets[2], object.businessDate);
+  writer.writeString(offsets[3], object.category);
+  writer.writeString(offsets[4], object.currency);
+  writer.writeDouble(offsets[5], object.discountAmount);
+  writer.writeDouble(offsets[6], object.extendedAmount);
+  writer.writeDouble(offsets[7], object.grossAmount);
+  writer.writeLong(offsets[8], object.hashCode);
+  writer.writeString(offsets[9], object.hsn);
+  writer.writeBool(offsets[10], object.isVoid);
+  writer.writeString(offsets[11], object.itemColor);
+  writer.writeString(offsets[12], object.itemDescription);
+  writer.writeString(offsets[13], object.itemId);
+  writer.writeString(offsets[14], object.itemIdEntryMethod);
+  writer.writeString(offsets[15], object.itemSize);
+  writer.writeLong(offsets[16], object.lineItemSeq);
   writer.writeObjectList<TransactionLineItemModifierEntity>(
-    offsets[16],
+    offsets[17],
     allOffsets,
     TransactionLineItemModifierEntitySchema.serialize,
     object.lineModifiers,
   );
-  writer.writeDouble(offsets[17], object.netAmount);
-  writer.writeBool(offsets[18], object.nonExchangeableFlag);
-  writer.writeBool(offsets[19], object.nonReturnableFlag);
-  writer.writeDateTime(offsets[20], object.originalBusinessDate);
-  writer.writeLong(offsets[21], object.originalLineItemSeq);
-  writer.writeLong(offsets[22], object.originalPosId);
-  writer.writeString(offsets[23], object.originalTransSeq);
-  writer.writeLong(offsets[24], object.posId);
-  writer.writeString(offsets[25], object.priceEntryMethod);
-  writer.writeBool(offsets[26], object.priceOverride);
-  writer.writeDouble(offsets[27], object.priceOverrideAmount);
-  writer.writeString(offsets[28], object.priceOverrideReason);
-  writer.writeDouble(offsets[29], object.quantity);
-  writer.writeString(offsets[30], object.returnComment);
-  writer.writeBool(offsets[31], object.returnFlag);
-  writer.writeString(offsets[32], object.returnReasonCode);
-  writer.writeString(offsets[33], object.returnTypeCode);
-  writer.writeDouble(offsets[34], object.returnedQuantity);
-  writer.writeString(offsets[35], object.serialNumber);
-  writer.writeDouble(offsets[36], object.shippingWeight);
-  writer.writeLong(offsets[37], object.storeId);
-  writer.writeDouble(offsets[38], object.taxAmount);
-  writer.writeString(offsets[39], object.taxGroupId);
+  writer.writeDouble(offsets[18], object.netAmount);
+  writer.writeBool(offsets[19], object.nonExchangeableFlag);
+  writer.writeBool(offsets[20], object.nonReturnableFlag);
+  writer.writeDateTime(offsets[21], object.originalBusinessDate);
+  writer.writeLong(offsets[22], object.originalLineItemSeq);
+  writer.writeLong(offsets[23], object.originalPosId);
+  writer.writeString(offsets[24], object.originalTransSeq);
+  writer.writeLong(offsets[25], object.posId);
+  writer.writeString(offsets[26], object.priceEntryMethod);
+  writer.writeBool(offsets[27], object.priceOverride);
+  writer.writeDouble(offsets[28], object.priceOverrideAmount);
+  writer.writeString(offsets[29], object.priceOverrideReason);
+  writer.writeDouble(offsets[30], object.quantity);
+  writer.writeString(offsets[31], object.returnComment);
+  writer.writeBool(offsets[32], object.returnFlag);
+  writer.writeString(offsets[33], object.returnReasonCode);
+  writer.writeString(offsets[34], object.returnTypeCode);
+  writer.writeDouble(offsets[35], object.returnedQuantity);
+  writer.writeString(offsets[36], object.serialNumber);
+  writer.writeDouble(offsets[37], object.shippingWeight);
+  writer.writeLong(offsets[38], object.storeId);
+  writer.writeDouble(offsets[39], object.taxAmount);
+  writer.writeString(offsets[40], object.taxGroupId);
   writer.writeObjectList<TransactionLineItemTaxModifier>(
-    offsets[40],
+    offsets[41],
     allOffsets,
     TransactionLineItemTaxModifierSchema.serialize,
     object.taxModifiers,
   );
-  writer.writeString(offsets[41], object.transSeq);
-  writer.writeDouble(offsets[42], object.unitCost);
-  writer.writeDouble(offsets[43], object.unitPrice);
-  writer.writeString(offsets[44], object.uom);
-  writer.writeString(offsets[45], object.vendorId);
+  writer.writeString(offsets[42], object.transSeq);
+  writer.writeDouble(offsets[43], object.unitCost);
+  writer.writeDouble(offsets[44], object.unitPrice);
+  writer.writeString(offsets[45], object.uom);
+  writer.writeString(offsets[46], object.vendorId);
 }
 
 TransactionLineItemEntity _transactionLineItemEntityDeserialize(
@@ -464,63 +485,71 @@ TransactionLineItemEntity _transactionLineItemEntityDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TransactionLineItemEntity(
-    baseUnitPrice: reader.readDoubleOrNull(offsets[0]),
-    businessDate: reader.readDateTimeOrNull(offsets[1]),
-    category: reader.readStringOrNull(offsets[2]),
-    currency: reader.readStringOrNull(offsets[3]),
-    discountAmount: reader.readDoubleOrNull(offsets[4]),
-    extendedAmount: reader.readDoubleOrNull(offsets[5]),
-    grossAmount: reader.readDoubleOrNull(offsets[6]),
-    hsn: reader.readStringOrNull(offsets[8]),
-    isVoid: reader.readBoolOrNull(offsets[9]) ?? false,
-    itemColor: reader.readStringOrNull(offsets[10]),
-    itemDescription: reader.readStringOrNull(offsets[11]),
-    itemId: reader.readStringOrNull(offsets[12]),
-    itemIdEntryMethod: reader.readStringOrNull(offsets[13]),
-    itemSize: reader.readStringOrNull(offsets[14]),
-    lineItemSeq: reader.readLongOrNull(offsets[15]),
+    additionalModifier:
+        reader.readObjectList<TransactionAdditionalLineItemModifier>(
+              offsets[0],
+              TransactionAdditionalLineItemModifierSchema.deserialize,
+              allOffsets,
+              TransactionAdditionalLineItemModifier(),
+            ) ??
+            const [],
+    baseUnitPrice: reader.readDoubleOrNull(offsets[1]),
+    businessDate: reader.readDateTimeOrNull(offsets[2]),
+    category: reader.readStringOrNull(offsets[3]),
+    currency: reader.readStringOrNull(offsets[4]),
+    discountAmount: reader.readDoubleOrNull(offsets[5]),
+    extendedAmount: reader.readDoubleOrNull(offsets[6]),
+    grossAmount: reader.readDoubleOrNull(offsets[7]),
+    hsn: reader.readStringOrNull(offsets[9]),
+    isVoid: reader.readBoolOrNull(offsets[10]) ?? false,
+    itemColor: reader.readStringOrNull(offsets[11]),
+    itemDescription: reader.readStringOrNull(offsets[12]),
+    itemId: reader.readStringOrNull(offsets[13]),
+    itemIdEntryMethod: reader.readStringOrNull(offsets[14]),
+    itemSize: reader.readStringOrNull(offsets[15]),
+    lineItemSeq: reader.readLongOrNull(offsets[16]),
     lineModifiers: reader.readObjectList<TransactionLineItemModifierEntity>(
-          offsets[16],
+          offsets[17],
           TransactionLineItemModifierEntitySchema.deserialize,
           allOffsets,
           TransactionLineItemModifierEntity(),
         ) ??
         const [],
-    netAmount: reader.readDoubleOrNull(offsets[17]),
-    nonExchangeableFlag: reader.readBoolOrNull(offsets[18]) ?? false,
-    nonReturnableFlag: reader.readBoolOrNull(offsets[19]) ?? false,
-    originalBusinessDate: reader.readDateTimeOrNull(offsets[20]),
-    originalLineItemSeq: reader.readLongOrNull(offsets[21]),
-    originalPosId: reader.readLongOrNull(offsets[22]),
-    originalTransSeq: reader.readStringOrNull(offsets[23]),
-    posId: reader.readLongOrNull(offsets[24]),
-    priceEntryMethod: reader.readStringOrNull(offsets[25]),
-    priceOverride: reader.readBoolOrNull(offsets[26]) ?? false,
-    priceOverrideAmount: reader.readDoubleOrNull(offsets[27]),
-    priceOverrideReason: reader.readStringOrNull(offsets[28]),
-    quantity: reader.readDoubleOrNull(offsets[29]),
-    returnComment: reader.readStringOrNull(offsets[30]),
-    returnFlag: reader.readBoolOrNull(offsets[31]) ?? false,
-    returnReasonCode: reader.readStringOrNull(offsets[32]),
-    returnTypeCode: reader.readStringOrNull(offsets[33]),
-    returnedQuantity: reader.readDoubleOrNull(offsets[34]),
-    serialNumber: reader.readStringOrNull(offsets[35]),
-    shippingWeight: reader.readDoubleOrNull(offsets[36]),
-    storeId: reader.readLongOrNull(offsets[37]),
-    taxAmount: reader.readDoubleOrNull(offsets[38]),
-    taxGroupId: reader.readStringOrNull(offsets[39]),
+    netAmount: reader.readDoubleOrNull(offsets[18]),
+    nonExchangeableFlag: reader.readBoolOrNull(offsets[19]) ?? false,
+    nonReturnableFlag: reader.readBoolOrNull(offsets[20]) ?? false,
+    originalBusinessDate: reader.readDateTimeOrNull(offsets[21]),
+    originalLineItemSeq: reader.readLongOrNull(offsets[22]),
+    originalPosId: reader.readLongOrNull(offsets[23]),
+    originalTransSeq: reader.readStringOrNull(offsets[24]),
+    posId: reader.readLongOrNull(offsets[25]),
+    priceEntryMethod: reader.readStringOrNull(offsets[26]),
+    priceOverride: reader.readBoolOrNull(offsets[27]) ?? false,
+    priceOverrideAmount: reader.readDoubleOrNull(offsets[28]),
+    priceOverrideReason: reader.readStringOrNull(offsets[29]),
+    quantity: reader.readDoubleOrNull(offsets[30]),
+    returnComment: reader.readStringOrNull(offsets[31]),
+    returnFlag: reader.readBoolOrNull(offsets[32]) ?? false,
+    returnReasonCode: reader.readStringOrNull(offsets[33]),
+    returnTypeCode: reader.readStringOrNull(offsets[34]),
+    returnedQuantity: reader.readDoubleOrNull(offsets[35]),
+    serialNumber: reader.readStringOrNull(offsets[36]),
+    shippingWeight: reader.readDoubleOrNull(offsets[37]),
+    storeId: reader.readLongOrNull(offsets[38]),
+    taxAmount: reader.readDoubleOrNull(offsets[39]),
+    taxGroupId: reader.readStringOrNull(offsets[40]),
     taxModifiers: reader.readObjectList<TransactionLineItemTaxModifier>(
-          offsets[40],
+          offsets[41],
           TransactionLineItemTaxModifierSchema.deserialize,
           allOffsets,
           TransactionLineItemTaxModifier(),
         ) ??
         const [],
-    transSeq: reader.readStringOrNull(offsets[41]),
-    unitCost: reader.readDoubleOrNull(offsets[42]),
-    unitPrice: reader.readDoubleOrNull(offsets[43]),
-    uom: reader.readStringOrNull(offsets[44]),
-    vendorId: reader.readStringOrNull(offsets[45]),
+    transSeq: reader.readStringOrNull(offsets[42]),
+    unitCost: reader.readDoubleOrNull(offsets[43]),
+    unitPrice: reader.readDoubleOrNull(offsets[44]),
+    uom: reader.readStringOrNull(offsets[45]),
+    vendorId: reader.readStringOrNull(offsets[46]),
   );
   return object;
 }
@@ -533,27 +562,33 @@ P _transactionLineItemEntityDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readObjectList<TransactionAdditionalLineItemModifier>(
+            offset,
+            TransactionAdditionalLineItemModifierSchema.deserialize,
+            allOffsets,
+            TransactionAdditionalLineItemModifier(),
+          ) ??
+          const []) as P;
     case 1:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readDoubleOrNull(offset)) as P;
     case 6:
       return (reader.readDoubleOrNull(offset)) as P;
     case 7:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 9:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 10:
       return (reader.readStringOrNull(offset)) as P;
+    case 10:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 11:
       return (reader.readStringOrNull(offset)) as P;
     case 12:
@@ -563,8 +598,10 @@ P _transactionLineItemEntityDeserializeProp<P>(
     case 14:
       return (reader.readStringOrNull(offset)) as P;
     case 15:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 16:
+      return (reader.readLongOrNull(offset)) as P;
+    case 17:
       return (reader.readObjectList<TransactionLineItemModifierEntity>(
             offset,
             TransactionLineItemModifierEntitySchema.deserialize,
@@ -572,53 +609,53 @@ P _transactionLineItemEntityDeserializeProp<P>(
             TransactionLineItemModifierEntity(),
           ) ??
           const []) as P;
-    case 17:
-      return (reader.readDoubleOrNull(offset)) as P;
     case 18:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 19:
       return (reader.readBoolOrNull(offset) ?? false) as P;
     case 20:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 21:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 22:
       return (reader.readLongOrNull(offset)) as P;
     case 23:
-      return (reader.readStringOrNull(offset)) as P;
-    case 24:
       return (reader.readLongOrNull(offset)) as P;
+    case 24:
+      return (reader.readStringOrNull(offset)) as P;
     case 25:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 26:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 27:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 28:
-      return (reader.readStringOrNull(offset)) as P;
-    case 29:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 30:
-      return (reader.readStringOrNull(offset)) as P;
-    case 31:
       return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 32:
+    case 28:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 29:
       return (reader.readStringOrNull(offset)) as P;
+    case 30:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 31:
+      return (reader.readStringOrNull(offset)) as P;
+    case 32:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 33:
       return (reader.readStringOrNull(offset)) as P;
     case 34:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 35:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 36:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 37:
-      return (reader.readLongOrNull(offset)) as P;
-    case 38:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 39:
       return (reader.readStringOrNull(offset)) as P;
+    case 37:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 38:
+      return (reader.readLongOrNull(offset)) as P;
+    case 39:
+      return (reader.readDoubleOrNull(offset)) as P;
     case 40:
+      return (reader.readStringOrNull(offset)) as P;
+    case 41:
       return (reader.readObjectList<TransactionLineItemTaxModifier>(
             offset,
             TransactionLineItemTaxModifierSchema.deserialize,
@@ -626,15 +663,15 @@ P _transactionLineItemEntityDeserializeProp<P>(
             TransactionLineItemTaxModifier(),
           ) ??
           const []) as P;
-    case 41:
-      return (reader.readStringOrNull(offset)) as P;
     case 42:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 43:
       return (reader.readDoubleOrNull(offset)) as P;
     case 44:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 45:
+      return (reader.readStringOrNull(offset)) as P;
+    case 46:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -643,6 +680,95 @@ P _transactionLineItemEntityDeserializeProp<P>(
 
 extension TransactionLineItemEntityQueryFilter on QueryBuilder<
     TransactionLineItemEntity, TransactionLineItemEntity, QFilterCondition> {
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> additionalModifierLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'additionalModifier',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> additionalModifierIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'additionalModifier',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> additionalModifierIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'additionalModifier',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> additionalModifierLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'additionalModifier',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> additionalModifierLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'additionalModifier',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+      QAfterFilterCondition> additionalModifierLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'additionalModifier',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
       QAfterFilterCondition> baseUnitPriceIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -5422,6 +5548,15 @@ extension TransactionLineItemEntityQueryObject on QueryBuilder<
     TransactionLineItemEntity, TransactionLineItemEntity, QFilterCondition> {
   QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
           QAfterFilterCondition>
+      additionalModifierElement(
+          FilterQuery<TransactionAdditionalLineItemModifier> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'additionalModifier');
+    });
+  }
+
+  QueryBuilder<TransactionLineItemEntity, TransactionLineItemEntity,
+          QAfterFilterCondition>
       lineModifiersElement(FilterQuery<TransactionLineItemModifierEntity> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'lineModifiers');
@@ -5436,3 +5571,652 @@ extension TransactionLineItemEntityQueryObject on QueryBuilder<
     });
   }
 }
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+
+const TransactionAdditionalLineItemModifierSchema = Schema(
+  name: r'TransactionAdditionalLineItemModifier',
+  id: 7424407946601152870,
+  properties: {
+    r'name': PropertySchema(
+      id: 0,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'price': PropertySchema(
+      id: 1,
+      name: r'price',
+      type: IsarType.double,
+    ),
+    r'quantity': PropertySchema(
+      id: 2,
+      name: r'quantity',
+      type: IsarType.double,
+    ),
+    r'uuid': PropertySchema(
+      id: 3,
+      name: r'uuid',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _transactionAdditionalLineItemModifierEstimateSize,
+  serialize: _transactionAdditionalLineItemModifierSerialize,
+  deserialize: _transactionAdditionalLineItemModifierDeserialize,
+  deserializeProp: _transactionAdditionalLineItemModifierDeserializeProp,
+);
+
+int _transactionAdditionalLineItemModifierEstimateSize(
+  TransactionAdditionalLineItemModifier object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.name;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.uuid;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _transactionAdditionalLineItemModifierSerialize(
+  TransactionAdditionalLineItemModifier object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.name);
+  writer.writeDouble(offsets[1], object.price);
+  writer.writeDouble(offsets[2], object.quantity);
+  writer.writeString(offsets[3], object.uuid);
+}
+
+TransactionAdditionalLineItemModifier
+    _transactionAdditionalLineItemModifierDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = TransactionAdditionalLineItemModifier(
+    name: reader.readStringOrNull(offsets[0]),
+    price: reader.readDoubleOrNull(offsets[1]),
+    quantity: reader.readDoubleOrNull(offsets[2]),
+    uuid: reader.readStringOrNull(offsets[3]),
+  );
+  return object;
+}
+
+P _transactionAdditionalLineItemModifierDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readStringOrNull(offset)) as P;
+    case 1:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 2:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension TransactionAdditionalLineItemModifierQueryFilter on QueryBuilder<
+    TransactionAdditionalLineItemModifier,
+    TransactionAdditionalLineItemModifier,
+    QFilterCondition> {
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier, QAfterFilterCondition> nameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier, QAfterFilterCondition> nameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+          TransactionAdditionalLineItemModifier, QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+          TransactionAdditionalLineItemModifier, QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> priceIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'price',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> priceIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'price',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> priceEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'price',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> priceGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'price',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> priceLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'price',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> priceBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'price',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> quantityIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'quantity',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> quantityIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'quantity',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> quantityEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'quantity',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> quantityGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'quantity',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> quantityLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'quantity',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> quantityBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'quantity',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'uuid',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'uuid',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier, QAfterFilterCondition> uuidEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uuid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'uuid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'uuid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier, QAfterFilterCondition> uuidBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'uuid',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'uuid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'uuid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+          TransactionAdditionalLineItemModifier, QAfterFilterCondition>
+      uuidContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'uuid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionAdditionalLineItemModifier,
+          TransactionAdditionalLineItemModifier, QAfterFilterCondition>
+      uuidMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'uuid',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uuid',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<
+      TransactionAdditionalLineItemModifier,
+      TransactionAdditionalLineItemModifier,
+      QAfterFilterCondition> uuidIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'uuid',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension TransactionAdditionalLineItemModifierQueryObject on QueryBuilder<
+    TransactionAdditionalLineItemModifier,
+    TransactionAdditionalLineItemModifier,
+    QFilterCondition> {}

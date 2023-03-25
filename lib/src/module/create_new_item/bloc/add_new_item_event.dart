@@ -117,3 +117,9 @@ class ColorChangedEvent extends AddNewItemEvent {
 }
 
 class SaveProductEvent extends AddNewItemEvent {}
+
+class AddNewItemModifier extends AddNewItemEvent {
+  final ItemModifier modifier;
+
+  AddNewItemModifier(this.modifier);
+}

@@ -122,3 +122,9 @@ class OnTenderLineVoid extends CreateNewReceiptEvent {
 class OnPartialPayment extends CreateNewReceiptEvent {}
 
 class InitiateReturn extends CreateNewReceiptEvent {}
+
+class OnAdditionalLineModifierChange extends CreateNewReceiptEvent {
+  final TransactionLineItemEntity saleLine;
+  final List<TransactionAdditionalLineItemModifier> modifier;
+  OnAdditionalLineModifierChange({required this.saleLine, required this.modifier});
+}

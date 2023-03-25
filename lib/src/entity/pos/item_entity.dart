@@ -48,6 +48,8 @@ class ItemEntity {
 
   List<ItemImage> images = [];
 
+  List<ItemModifier> modifiers = [];
+
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get descriptionWords => Isar.splitWords(displayName);
 
@@ -68,6 +70,7 @@ class ItemEntity {
     this.size,
     this.category = const [],
     this.imageUrl = const [],
+    this.modifiers = const [],
     this.upc = const [],
     required this.createTime,
     this.syncState,
@@ -86,5 +89,18 @@ class ItemImage {
     this.sort = 0,
     this.imageUrl,
     this.label,
+  });
+}
+
+@embedded
+class ItemModifier {
+  String? uuid;
+  String? name;
+  double? price;
+
+  ItemModifier({
+    this.uuid,
+    this.name,
+    this.price,
   });
 }

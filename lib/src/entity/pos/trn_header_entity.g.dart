@@ -332,6 +332,8 @@ const TransactionHeaderEntitySchema = CollectionSchema(
     r'TransactionLineItemModifierEntity':
         TransactionLineItemModifierEntitySchema,
     r'TransactionLineItemTaxModifier': TransactionLineItemTaxModifierSchema,
+    r'TransactionAdditionalLineItemModifier':
+        TransactionAdditionalLineItemModifierSchema,
     r'TransactionPaymentLineItemEntity': TransactionPaymentLineItemEntitySchema
   },
   getId: _transactionHeaderEntityGetId,

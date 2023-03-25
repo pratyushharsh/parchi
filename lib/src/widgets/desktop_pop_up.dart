@@ -22,7 +22,7 @@ Future<T?> showTransitiveAppPopUp<T>(
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           width: MediaQuery.of(context).size.width * 0.5,
-          child: DesktopDialogView(child: child, title: title ?? ''),
+          child: DesktopDialogView(title: title ?? '', child: child),
         ),
       );
     },

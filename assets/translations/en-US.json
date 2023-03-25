@@ -110,6 +110,7 @@
     "_taxGroupLabel": "Tax Group: {groupId} | {groupName}",
     "_receiptNoLabel": "Ord : {receiptNo}",
     "_addNewBusiness": "Add New Business",
+    "_createNewModifier": "Create New Modifier",
 
     "loginHeader": "Enter your mobile number",
     "loginHeaderDescription": "We will send you a confirmation code",
