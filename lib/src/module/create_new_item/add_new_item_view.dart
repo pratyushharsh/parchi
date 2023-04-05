@@ -176,35 +176,35 @@ class _AddNewItemFormState extends State<AddNewItemForm> {
                       );
                     },
                   ),
-                  if (widget.editable)
-                    Positioned(
-                      bottom: 10,
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: RejectButton(
-                                  label: "_cancel", onPressed: () {}),
-                            ),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            Expanded(
-                                child: AcceptButton(
-                              label: state.existingProduct != null
-                                  ? "_update"
-                                  : "_save",
-                              onPressed: () {
-                                BlocProvider.of<AddNewItemBloc>(context)
-                                    .add(SaveProductEvent());
-                              },
-                            ))
-                          ],
-                        ),
-                      ),
-                    )
+                  // if (widget.editable)
+                  //   Positioned(
+                  //     bottom: 10,
+                  //     child: Container(
+                  //       padding: const EdgeInsets.all(16),
+                  //       width: MediaQuery.of(context).size.width,
+                  //       child: Row(
+                  //         children: [
+                  //           Expanded(
+                  //             child: RejectButton(
+                  //                 label: "_cancel", onPressed: () {}),
+                  //           ),
+                  //           const SizedBox(
+                  //             width: 12,
+                  //           ),
+                  //           Expanded(
+                  //               child: AcceptButton(
+                  //             label: state.existingProduct != null
+                  //                 ? "_update"
+                  //                 : "_save",
+                  //             onPressed: () {
+                  //               BlocProvider.of<AddNewItemBloc>(context)
+                  //                   .add(SaveProductEvent());
+                  //             },
+                  //           ))
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   )
                 ],
               ),
             ),
@@ -246,7 +246,7 @@ class ItemTabs extends StatelessWidget {
             child: TabBarView(
               children: [
                 NewItemDetailForm(
-                  editable: editable,
+                  editable: false,
                 ),
                 const ItemModifierView(),
               ],

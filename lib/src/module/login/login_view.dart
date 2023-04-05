@@ -124,6 +124,7 @@ class LoginForm extends StatelessWidget with LoginThemeConfig {
               ).tr(),
             ),
             const Padding(
+              key: Key("phoneOrEmailWidget"),
               padding: EdgeInsets.all(16.0),
               child: PhoneOrEmailWidget(),
             ),
@@ -142,6 +143,7 @@ class LoginForm extends StatelessWidget with LoginThemeConfig {
                           )
                         : Row(children: [
                             Expanded(
+                              key: const Key("signInButton"),
                               child: AcceptButton(
                                 label: "Sign In",
                                 onPressed: (state.validation.isEmpty &&

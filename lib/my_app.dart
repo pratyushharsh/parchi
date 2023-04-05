@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('build MyApp');
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => CheckListHelper()),
@@ -163,6 +164,7 @@ class _MyAppViewState extends State<MyAppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
       theme: ThemeData.light().copyWith(
         primaryColor: AppColor.primary,

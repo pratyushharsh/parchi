@@ -37,7 +37,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const LoginView(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const LoginView(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
@@ -70,7 +71,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
               if (index == 2) {
                 return Page3(onPageChange: () {
-                  Navigator.pushReplacement(context, _createRoute(),);
+                  Navigator.pushReplacement(
+                    context,
+                    _createRoute(),
+                  );
                 });
               }
               return Container();
@@ -130,8 +134,8 @@ class Page1 extends StatelessWidget {
             children: [
               Expanded(child: Image.asset("assets/image/UI_Mobile_Shop.webp")),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColor.primary,
@@ -141,32 +145,11 @@ class Page1 extends StatelessWidget {
                       color: Colors.black.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset:
-                          const Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),
-                child: InkWell(
-                  onTap: () {
-                    onPageChange();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        "Get Started",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
-                ),
+                child: Page1Button(onPageChange: onPageChange),
               ),
               const Padding(
                 padding: EdgeInsets.all(20.0),
@@ -189,6 +172,36 @@ class Page1 extends StatelessWidget {
   }
 }
 
+class Page1Button extends StatelessWidget {
+  final Function onPageChange;
+  const Page1Button({Key? key, required this.onPageChange}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onPageChange();
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          Text(
+            "Get Started",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios_outlined,
+            color: Colors.white,
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class Page2 extends StatelessWidget {
   final Function onPageChange;
   const Page2({Key? key, required this.onPageChange}) : super(key: key);
@@ -203,8 +216,8 @@ class Page2 extends StatelessWidget {
             children: [
               Expanded(child: Image.asset("assets/image/p3.png")),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColor.primary,
@@ -214,12 +227,12 @@ class Page2 extends StatelessWidget {
                       color: Colors.black.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset:
-                      const Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),
                 child: InkWell(
+                  key: const Key("Page2Button"),
                   onTap: () {
                     onPageChange();
                   },
@@ -276,8 +289,8 @@ class Page3 extends StatelessWidget {
             children: [
               Expanded(child: Image.asset("assets/image/p2.png")),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColor.primary,
@@ -287,12 +300,12 @@ class Page3 extends StatelessWidget {
                       color: Colors.black.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset:
-                      const Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),
                 child: InkWell(
+                  key: const Key("Page3Button"),
                   onTap: () {
                     onPageChange();
                   },

@@ -210,6 +210,7 @@ class _VerifyOtpFormState extends State<VerifyOtpForm> with LoginThemeConfig {
                               width: 16,
                             ),
                             Expanded(
+                              key: const Key('verifyOtpButton'),
                                 child: AcceptButton(
                               onPressed: state.validOtp
                                   ? () {

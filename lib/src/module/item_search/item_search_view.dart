@@ -8,10 +8,13 @@ import '../../entity/pos/entity.dart';
 import '../../widgets/custom_text_field.dart';
 import 'bloc/item_search_bloc.dart';
 
-class SearchItemView extends StatelessWidget {
-  const SearchItemView({Key? key}) : super(key: key);
 
-  Widget buildItemCard(BuildContext context, ItemEntity product) {
+class SearchItemResultCard extends StatelessWidget {
+  final ItemEntity product;
+  const SearchItemResultCard({Key? key, required this.product}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.of(context).pop(product);
@@ -37,6 +40,11 @@ class SearchItemView extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class SearchItemView extends StatelessWidget {
+  const SearchItemView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +80,7 @@ class SearchItemView extends StatelessWidget {
                     return SingleChildScrollView(
                       child: Column(
                         children: state.products
-                            .map((e) => buildItemCard(context, e))
+                            .map((e) => SearchItemResultCard(product: e))
                             .toList(),
                       ),
                     );
@@ -93,6 +101,7 @@ class SearchSaleProductBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomTextField(
+      key: const Key("searchSaleProductBar"),
       label: "_searchForProducts",
       hint: "_searchForProductsHint",
       onValueChange: (val) {

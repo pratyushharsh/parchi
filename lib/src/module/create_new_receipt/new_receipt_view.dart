@@ -388,6 +388,7 @@ class SearchAndAddItem extends StatelessWidget {
                 });
       },
       child: Container(
+        key: const Key("searchAndAddItem"),
         padding: const EdgeInsets.symmetric(vertical: 10),
         color: AppColor.headerBackground.withOpacity(0.5),
         child: Row(
@@ -843,6 +844,7 @@ class NewInvoiceButtonBar extends StatelessWidget {
               ),
               if (state.step == SaleStep.item || state.step == SaleStep.payment)
                 Expanded(
+                  key: const Key('saleInvoiceProceedToPay'),
                   child: AcceptButton(
                     onPressed: state.transSeq.isNotEmpty &&
                             state.lineItem.isNotEmpty

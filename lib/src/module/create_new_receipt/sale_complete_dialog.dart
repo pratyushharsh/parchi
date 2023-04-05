@@ -60,7 +60,9 @@ class SaleCompleteDialog extends StatelessWidget {
                   Navigator.of(context).pop("EMAIL");
                 }, label: 'Email Invoice'),),
                 const SizedBox(width: 8,),
-                Expanded(child: AcceptButton(onPressed: () {
+                Expanded(
+                  key: const Key("printInvoiceButton"),
+                  child: AcceptButton(onPressed: () {
                   Navigator.of(context).pop("PRINT");
                 }, label: 'Print Invoice'),),
               ],

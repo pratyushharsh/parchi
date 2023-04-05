@@ -28,6 +28,7 @@ import '../module/deals/create_edit_deals.dart';
 import '../module/employee/employee_list_view.dart';
 import '../module/receipt_display/invoice_display.dart';
 import '../module/receipt_setting/invoice_setting_view.dart';
+import '../module/report/report_view.dart';
 import '../module/sequence/create_edit_sequence_view.dart';
 import '../module/table/create_edit_table.dart';
 import '../module/table_layout/table_layout_view.dart';
@@ -64,6 +65,7 @@ class RouteConfig {
   static const String tableManagement = "/table-management";
   static const String newTableConfig = "/new-table-config";
   static const String dineInViewScreen = "/dine-in-view";
+  static const String reportViewScreen = "/report-view";
 
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -146,6 +148,8 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => const CreateEditTableView());
       case dineInViewScreen:
         return MaterialPageRoute(builder: (_) => const DineInView());
+      case reportViewScreen:
+        return MaterialPageRoute(builder: (_) => const ReportView());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

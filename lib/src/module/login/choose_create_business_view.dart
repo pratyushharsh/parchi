@@ -220,6 +220,7 @@ class _ChooseCreateBusinessFormState extends State<ChooseCreateBusinessForm>
                     if (state.status !=
                         AuthenticationStatus.chooseBusinessLoading)
                       Expanded(
+                        key: const Key("chooseBusinessButton"),
                         child: AcceptButton(
                           label: "Continue",
                           onPressed: _selectedBusiness != null

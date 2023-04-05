@@ -403,6 +403,7 @@ class _TenderDisplayDesktopState extends State<TenderDisplayDesktop> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: AcceptButton(
+                    key: const Key("acceptPayment"),
                     onPressed: validAmount() > 0
                         ? () {
                             if (widget.onTender != null) {

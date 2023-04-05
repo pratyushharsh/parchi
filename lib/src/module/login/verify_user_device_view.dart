@@ -244,6 +244,7 @@ class _VerifyUserDeviceFormState extends State<VerifyUserDeviceForm> with LoginT
                       )),
                     if (state.status != LoginStatus.verifyDeviceLoading)
                       Expanded(
+                        key: const Key('removeDeviceButton'),
                         child: AcceptButton(
                           label: "Continue",
                           onPressed: state.deviceList
