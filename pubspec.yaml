@@ -63,7 +63,7 @@ dependencies:
   blurrycontainer: ^1.0.2
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
-  archive: ^3.3.2
+  archive: ^3.3.0
   easy_localization: ^3.0.1
   dropdown_search: ^5.0.3
   image_picker: ^0.8.6
