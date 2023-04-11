@@ -21,3 +21,19 @@ class ChangeTableCapacity extends CreateEditTableEvent {
 }
 
 class OnSaveTable extends CreateEditTableEvent {}
+
+class CreateNewFloorLayout extends CreateEditTableEvent {
+  final String floorName;
+  final String floorId;
+  final double floorWidth;
+  final double floorHeight;
+
+  CreateNewFloorLayout({
+    required this.floorName,
+    required this.floorId,
+    required this.floorWidth,
+    required this.floorHeight,
+  });
+}
+
+class FetchAllFloors extends CreateEditTableEvent {}

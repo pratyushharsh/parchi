@@ -143,45 +143,45 @@ class ReceiptView extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: DashboardButton(
-              //         color: Colors.brown,
-              //         label: "_table",
-              //         icon: const Padding(
-              //           padding: EdgeInsets.only(bottom: 10),
-              //           child: FaIcon(
-              //             FontAwesomeIcons.table,
-              //             size: 35,
-              //             color: Colors.brown,
-              //           ),
-              //         ),
-              //         onTap: () {
-              //           Navigator.of(context)
-              //               .pushNamed(RouteConfig.dineInViewScreen);
-              //         },
-              //       ),
-              //     ),
-              //     const SizedBox(
-              //       width: 10,
-              //     ),
-              //     Expanded(
-              //         child: DashboardButton(
-              //       color: Colors.green,
-              //       label: "_report",
-              //       icon: const Icon(
-              //         Icons.bar_chart,
-              //         size: 45,
-              //         color: Colors.green,
-              //       ),
-              //       onTap: () {
-              //         Navigator.of(context)
-              //             .pushNamed(RouteConfig.reportViewScreen);
-              //       },
-              //     )),
-              //   ],
-              // ),
+              Row(
+                children: [
+                  Expanded(
+                    child: DashboardButton(
+                      color: Colors.brown,
+                      label: "_table",
+                      icon: const Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: FaIcon(
+                          FontAwesomeIcons.table,
+                          size: 35,
+                          color: Colors.brown,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(RouteConfig.dineInViewScreen);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: DashboardButton(
+                    color: Colors.green,
+                    label: "_report",
+                    icon: const Icon(
+                      Icons.bar_chart,
+                      size: 45,
+                      color: Colors.green,
+                    ),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(RouteConfig.reportViewScreen);
+                    },
+                  )),
+                ],
+              ),
               const SizedBox(
                 height: 20,
               ),

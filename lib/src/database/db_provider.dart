@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../entity/config/code_value_entity.dart';
 import '../entity/pos/entity.dart';
+import '../entity/pos/floor_entity.dart';
 import '../entity/pos/table_entity.dart';
 
 mixin DatabaseProvider {
@@ -52,6 +53,7 @@ mixin DatabaseProvider {
       CountryEntitySchema,
       DealsEntitySchema,
       TableEntitySchema,
+      FloorEntitySchema,
     ], inspector: inspector, directory: path, name: name, maxSizeMiB: 2048);
   }
 

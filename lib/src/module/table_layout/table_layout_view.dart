@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import '../../repositories/table_repository.dart';
 import '../../widgets/appbar_leading.dart';
 import '../../widgets/store_user_widget.dart';
 import 'bloc/table_layout_bloc.dart';
+import 'layout_designer.dart';
 
 class DineInView extends StatelessWidget {
   const DineInView({Key? key}) : super(key: key);
@@ -43,39 +46,21 @@ class DineInViewMobile extends StatelessWidget {
                 bottom: 16,
                 child: BlocBuilder<TableLayoutBloc, TableLayoutState>(
                   builder: (context, state) {
-                    return LayoutBuilder(builder: (context, constraints) {
-                      int crossAxisCount = 1;
 
-                      if (constraints.maxWidth > 1800) {
-                        crossAxisCount = 6;
-                      } else if (constraints.maxWidth > 1000) {
-                        crossAxisCount = 4;
-                      } else if (constraints.maxWidth > 700) {
-                        crossAxisCount = 3;
-                      } else if (constraints.maxWidth > 500) {
-                        crossAxisCount = 1;
-                      }
+                    // return const TableLayoutDesigner();
 
-                      return RefreshIndicator(
+                    return RefreshIndicator(
                         onRefresh: () async {
                           BlocProvider.of<TableLayoutBloc>(context)
                               .add(FetchAllTables());
                         },
-                        child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              mainAxisSpacing: 10.0,
-                              crossAxisSpacing: 10.0,
-                            ),
-                            itemCount: state.tables.length,
-                            itemBuilder: (context, index) {
-                              return TableCard(
-                                table: state.tables[index],
-                              );
-                            }),
-                      );
-                    });
+                        child: Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          children: state.tables
+                              .map((e) => TableIcon(table: e))
+                              .toList(),
+                        ));
                   },
                 ),
               ),
@@ -285,5 +270,54 @@ class TableStatusChip extends StatelessWidget {
           backgroundColor: Colors.orange,
         );
     }
+  }
+}
+
+class TableIcon extends StatelessWidget {
+  final TableEntity table;
+  const TableIcon({Key? key, required this.table}) : super(key: key);
+
+  List<Widget> _buildSeats(int capacity) {
+    List<Widget> seats = [];
+    int cap = capacity ~/ 2;
+    for (int i = 0; i < cap; i++) {
+      seats.add(Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        height: 180,
+        width: 80,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.grey,
+        ),
+      ));
+    }
+    return seats;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: _buildSeats(table.tableCapacity),
+        ),
+        Container(
+          height: 130,
+          constraints: BoxConstraints(
+              minWidth: 160,
+              maxWidth: max(160, table.tableCapacity ~/ 2 * 100.0)),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30.0),
+            color: Colors.grey,
+            border: Border.all(
+              color: Colors.white,
+              width: 4.0,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

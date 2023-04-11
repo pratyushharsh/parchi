@@ -37,29 +37,34 @@ const TableEntitySchema = CollectionSchema(
       name: r'customerName',
       type: IsarType.string,
     ),
-    r'orderId': PropertySchema(
+    r'floorId': PropertySchema(
       id: 4,
+      name: r'floorId',
+      type: IsarType.string,
+    ),
+    r'orderId': PropertySchema(
+      id: 5,
       name: r'orderId',
       type: IsarType.string,
     ),
     r'orderTime': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'orderTime',
       type: IsarType.dateTime,
     ),
     r'status': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'status',
       type: IsarType.string,
       enumMap: _TableEntitystatusEnumValueMap,
     ),
     r'tableCapacity': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'tableCapacity',
       type: IsarType.long,
     ),
     r'tableId': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'tableId',
       type: IsarType.string,
     )
@@ -123,6 +128,12 @@ int _tableEntityEstimateSize(
     }
   }
   {
+    final value = object.floorId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.orderId;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -143,11 +154,12 @@ void _tableEntitySerialize(
   writer.writeString(offsets[1], object.associateName);
   writer.writeString(offsets[2], object.customerId);
   writer.writeString(offsets[3], object.customerName);
-  writer.writeString(offsets[4], object.orderId);
-  writer.writeDateTime(offsets[5], object.orderTime);
-  writer.writeString(offsets[6], object.status.name);
-  writer.writeLong(offsets[7], object.tableCapacity);
-  writer.writeString(offsets[8], object.tableId);
+  writer.writeString(offsets[4], object.floorId);
+  writer.writeString(offsets[5], object.orderId);
+  writer.writeDateTime(offsets[6], object.orderTime);
+  writer.writeString(offsets[7], object.status.name);
+  writer.writeLong(offsets[8], object.tableCapacity);
+  writer.writeString(offsets[9], object.tableId);
 }
 
 TableEntity _tableEntityDeserialize(
@@ -161,13 +173,14 @@ TableEntity _tableEntityDeserialize(
     associateName: reader.readStringOrNull(offsets[1]),
     customerId: reader.readStringOrNull(offsets[2]),
     customerName: reader.readStringOrNull(offsets[3]),
-    orderId: reader.readStringOrNull(offsets[4]),
-    orderTime: reader.readDateTimeOrNull(offsets[5]),
+    floorId: reader.readStringOrNull(offsets[4]),
+    orderId: reader.readStringOrNull(offsets[5]),
+    orderTime: reader.readDateTimeOrNull(offsets[6]),
     status:
-        _TableEntitystatusValueEnumMap[reader.readStringOrNull(offsets[6])] ??
+        _TableEntitystatusValueEnumMap[reader.readStringOrNull(offsets[7])] ??
             TableStatus.available,
-    tableCapacity: reader.readLong(offsets[7]),
-    tableId: reader.readString(offsets[8]),
+    tableCapacity: reader.readLong(offsets[8]),
+    tableId: reader.readString(offsets[9]),
   );
   object.id = id;
   return object;
@@ -191,13 +204,15 @@ P _tableEntityDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 7:
       return (_TableEntitystatusValueEnumMap[reader.readStringOrNull(offset)] ??
           TableStatus.available) as P;
-    case 7:
-      return (reader.readLong(offset)) as P;
     case 8:
+      return (reader.readLong(offset)) as P;
+    case 9:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1126,6 +1141,158 @@ extension TableEntityQueryFilter
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      floorIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'floorId',
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      floorIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'floorId',
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> floorIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'floorId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      floorIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'floorId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> floorIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'floorId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> floorIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'floorId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      floorIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'floorId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> floorIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'floorId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> floorIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'floorId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> floorIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'floorId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      floorIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'floorId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      floorIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'floorId',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1804,6 +1971,18 @@ extension TableEntityQuerySortBy
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByFloorId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'floorId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByFloorIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'floorId', Sort.desc);
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByOrderId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'orderId', Sort.asc);
@@ -1918,6 +2097,18 @@ extension TableEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByFloorId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'floorId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByFloorIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'floorId', Sort.desc);
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -2023,6 +2214,13 @@ extension TableEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QDistinct> distinctByFloorId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'floorId', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QDistinct> distinctByOrderId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2086,6 +2284,12 @@ extension TableEntityQueryProperty
   QueryBuilder<TableEntity, String?, QQueryOperations> customerNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'customerName');
+    });
+  }
+
+  QueryBuilder<TableEntity, String?, QQueryOperations> floorIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'floorId');
     });
   }
 

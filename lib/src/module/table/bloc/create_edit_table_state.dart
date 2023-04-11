@@ -14,6 +14,7 @@ class CreateEditTableState {
   final int tableCapacity;
   final CreateEditTableStatus status;
   final String error;
+  final List<FloorEntity> floors;
 
   bool get isValid => tableId.isNotEmpty && tableCapacity > 0;
 
@@ -23,6 +24,7 @@ class CreateEditTableState {
     this.tableCapacity = 0,
     this.status = CreateEditTableStatus.initial,
     this.error = '',
+    this.floors = const [],
   });
 
   CreateEditTableState copyWith({
@@ -31,6 +33,7 @@ class CreateEditTableState {
     int? tableCapacity,
     CreateEditTableStatus? status,
     String? error,
+    List<FloorEntity>? floors,
   }) {
     return CreateEditTableState(
       tableId: tableId ?? this.tableId,
@@ -38,6 +41,7 @@ class CreateEditTableState {
       tableCapacity: tableCapacity ?? this.tableCapacity,
       status: status ?? this.status,
       error: error ?? this.error,
+      floors: floors ?? this.floors,
     );
   }
 }

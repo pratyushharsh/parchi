@@ -156,3 +156,46 @@ class CustomDropDown<T> extends StatelessWidget {
     );
   }
 }
+
+class CustomDropdownButton<T> extends StatelessWidget {
+  final List<DropdownMenuItem<T>>? items;
+  final T? value;
+  final ValueChanged<T?>? onChanged;
+  final String? label;
+  const CustomDropdownButton({Key? key, this.items, this.value, this.onChanged, this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (label != null && label!.isNotEmpty)
+          Text(
+            label!,
+            style: const TextStyle(
+                fontWeight: FontWeight.w400, color: Color(0xFF6B7281)),
+          ).tr(),
+        const SizedBox(
+          height: 1,
+        ),
+        DropdownButtonFormField<T>(
+          value: value,
+          items: items,
+          isDense: true,
+          isExpanded: true,decoration: const InputDecoration(
+            errorStyle: TextStyle(height: 1, overflow: TextOverflow.fade),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFB1B4E6), width: 2.0),
+            ),
+            contentPadding: EdgeInsets.all(12),
+            border: OutlineInputBorder(),
+            isDense: true,
+          ),
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+}
+

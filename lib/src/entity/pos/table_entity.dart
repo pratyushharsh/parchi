@@ -12,6 +12,8 @@ class TableEntity {
 
   @Enumerated(EnumType.name)
   TableStatus status;
+
+  String? floorId;
   String? associateId;
   String? associateName;
   String? customerId;
@@ -23,6 +25,7 @@ class TableEntity {
     required this.tableId,
     required this.tableCapacity,
     this.status = TableStatus.available,
+    this.floorId,
     this.associateId,
     this.associateName,
     this.customerId,

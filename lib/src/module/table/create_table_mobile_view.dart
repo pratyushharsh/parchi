@@ -8,6 +8,7 @@ import '../../config/theme_settings.dart';
 import '../../entity/pos/table_entity.dart';
 import '../../repositories/table_repository.dart';
 import '../../widgets/desktop_pop_up.dart';
+import '../table_layout/layout_designer.dart';
 import 'new_table_form.dart';
 
 class NewTableButtonMobile extends StatelessWidget {
@@ -52,33 +53,7 @@ class TableConfigMobileView extends StatelessWidget {
       onRefresh: () async {
         // BlocProvider.of<TableBloc>(context).add(TableEvent.fetch());
       },
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const NewTableButtonMobile(),
-            FutureBuilder<List<TableEntity>>(
-              future: RepositoryProvider.of<TableRepository>(context)
-                  .getAllTables(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      for (var i = 0; i < snapshot.data!.length; i++)
-                        TableCardMobile(
-                          tableEntity: snapshot.data![i],
-                        ),
-                    ],
-                  );
-                }
-                return Container();
-              },
-            ),
-            const SizedBox(
-              height: 100,
-            )
-          ],
-        ),
-      ),
+      child: const TableLayoutDesigner(),
     );
   }
 }

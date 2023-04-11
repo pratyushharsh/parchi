@@ -107,7 +107,7 @@ class BackgroundSyncBloc
     emit(state.copyWith(
         storeId: event.storeId, status: BackgroundSyncStatus.started));
     log.info("Start Sync Event");
-    _timer = Timer.periodic(const Duration(seconds: 60), (t) async {
+    _timer = Timer.periodic(const Duration(seconds: 600), (t) async {
       sendPort.send({
         'storeId': event.storeId,
         'sendPort': responsePort.sendPort,

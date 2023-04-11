@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 
 import '../database/db_provider.dart';
+import '../entity/pos/floor_entity.dart';
 import '../entity/pos/table_entity.dart';
 
 class TableRepository with DatabaseProvider {
@@ -28,5 +29,15 @@ class TableRepository with DatabaseProvider {
     await db.writeTxn(() async {
       await db.tableEntitys.put(table);
     });
+  }
+
+  Future<void> createANewFloorPlan(FloorEntity floor) async {
+    await db.writeTxn(() async {
+      await db.floorEntitys.put(floor);
+    });
+  }
+
+  Future<List<FloorEntity>> getAllFloorPlans() async {
+    return await db.floorEntitys.where().findAll();
   }
 }
