@@ -8,7 +8,9 @@ class TableRepository with DatabaseProvider {
 
   // Crud Operations for TableEntity
   Future<void> insertTable(TableEntity table) async {
-    await db.tableEntitys.put(table);
+    await db.writeTxn(() async {
+      await db.tableEntitys.put(table);
+    });
   }
 
   Future<void> updateTable(TableEntity table) async {
@@ -25,6 +27,10 @@ class TableRepository with DatabaseProvider {
     return await db.tableEntitys.where().findAll();
   }
 
+  Future<List<TableEntity>> getTableByFloorId(String floorId) async {
+    return await db.tableEntitys.where().floorIdEqualTo(floorId).findAll();
+  }
+
   Future<void> reserveTable(TableEntity table) async {
     await db.writeTxn(() async {
       await db.tableEntitys.put(table);
@@ -39,5 +45,11 @@ class TableRepository with DatabaseProvider {
 
   Future<List<FloorEntity>> getAllFloorPlans() async {
     return await db.floorEntitys.where().findAll();
+  }
+
+  Future<void> saveTableLayoutPlan(List<TableEntity> floor) async {
+    await db.writeTxn(() async {
+      await db.tableEntitys.putAll(floor);
+    });
   }
 }

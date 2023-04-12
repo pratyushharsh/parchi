@@ -1071,21 +1071,15 @@ class _CustomerWidgetState extends State<CustomerWidget> {
             onTap: !state.isCustomerPresent
                 ? () {
                     if (Platform.isMacOS || Platform.isWindows) {
-                      showDialog(
+                      showTransitiveAppPopUp(
                         context: context,
-                        barrierDismissible: true,
-                        builder: (ctx) => Dialog(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.8,
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: const CustomerSearch(),
-                          ),
-                        ),
+                        title: 'Customer Search',
+                        child: const CustomerSearch(),
                       ).then((value) => {
-                            if (value != null && value is OnCustomerSelect)
+                            if (value != null && value is ContactEntity)
                               {
                                 BlocProvider.of<CreateNewReceiptBloc>(context)
-                                    .add(value)
+                                    .add(OnCustomerSelect(value))
                               }
                           });
                     } else {

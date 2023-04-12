@@ -53,7 +53,7 @@ class TableConfigMobileView extends StatelessWidget {
       onRefresh: () async {
         // BlocProvider.of<TableBloc>(context).add(TableEvent.fetch());
       },
-      child: const TableLayoutDesigner(),
+      child: Container(),
     );
   }
 }

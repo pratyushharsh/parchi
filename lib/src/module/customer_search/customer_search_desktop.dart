@@ -12,21 +12,18 @@ class CustomerSearchDesktop extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 10),
-        const Text(
-          "Search Customer",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: CustomTextField(
-            label: "_customerDetail",
-            onValueChange: (value) {
-              BlocProvider.of<CustomerSearchBloc>(context)
-                  .add(OnCustomerNameChange(name: value));
-            },
-          ),
+        // const SizedBox(height: 10),
+        // const Text(
+        //   "Search Customer",
+        //   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        // ),
+        // const Divider(),
+        CustomTextField(
+          label: "_customerDetail",
+          onValueChange: (value) {
+            BlocProvider.of<CustomerSearchBloc>(context)
+                .add(OnCustomerNameChange(name: value));
+          },
         ),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),

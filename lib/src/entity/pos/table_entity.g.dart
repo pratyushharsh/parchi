@@ -52,21 +52,41 @@ const TableEntitySchema = CollectionSchema(
       name: r'orderTime',
       type: IsarType.dateTime,
     ),
-    r'status': PropertySchema(
+    r'rotation': PropertySchema(
       id: 7,
+      name: r'rotation',
+      type: IsarType.double,
+    ),
+    r'scale': PropertySchema(
+      id: 8,
+      name: r'scale',
+      type: IsarType.double,
+    ),
+    r'status': PropertySchema(
+      id: 9,
       name: r'status',
       type: IsarType.string,
       enumMap: _TableEntitystatusEnumValueMap,
     ),
     r'tableCapacity': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'tableCapacity',
       type: IsarType.long,
     ),
     r'tableId': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'tableId',
       type: IsarType.string,
+    ),
+    r'x': PropertySchema(
+      id: 12,
+      name: r'x',
+      type: IsarType.double,
+    ),
+    r'y': PropertySchema(
+      id: 13,
+      name: r'y',
+      type: IsarType.double,
     )
   },
   estimateSize: _tableEntityEstimateSize,
@@ -79,10 +99,23 @@ const TableEntitySchema = CollectionSchema(
       id: 519297262500120396,
       name: r'tableId',
       unique: true,
-      replace: false,
+      replace: true,
       properties: [
         IndexPropertySchema(
           name: r'tableId',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'floorId': IndexSchema(
+      id: -5614466107289224596,
+      name: r'floorId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'floorId',
           type: IndexType.value,
           caseSensitive: true,
         )
@@ -157,9 +190,13 @@ void _tableEntitySerialize(
   writer.writeString(offsets[4], object.floorId);
   writer.writeString(offsets[5], object.orderId);
   writer.writeDateTime(offsets[6], object.orderTime);
-  writer.writeString(offsets[7], object.status.name);
-  writer.writeLong(offsets[8], object.tableCapacity);
-  writer.writeString(offsets[9], object.tableId);
+  writer.writeDouble(offsets[7], object.rotation);
+  writer.writeDouble(offsets[8], object.scale);
+  writer.writeString(offsets[9], object.status.name);
+  writer.writeLong(offsets[10], object.tableCapacity);
+  writer.writeString(offsets[11], object.tableId);
+  writer.writeDouble(offsets[12], object.x);
+  writer.writeDouble(offsets[13], object.y);
 }
 
 TableEntity _tableEntityDeserialize(
@@ -176,11 +213,15 @@ TableEntity _tableEntityDeserialize(
     floorId: reader.readStringOrNull(offsets[4]),
     orderId: reader.readStringOrNull(offsets[5]),
     orderTime: reader.readDateTimeOrNull(offsets[6]),
+    rotation: reader.readDoubleOrNull(offsets[7]) ?? 0,
+    scale: reader.readDoubleOrNull(offsets[8]) ?? 1,
     status:
-        _TableEntitystatusValueEnumMap[reader.readStringOrNull(offsets[7])] ??
+        _TableEntitystatusValueEnumMap[reader.readStringOrNull(offsets[9])] ??
             TableStatus.available,
-    tableCapacity: reader.readLong(offsets[8]),
-    tableId: reader.readString(offsets[9]),
+    tableCapacity: reader.readLong(offsets[10]),
+    tableId: reader.readString(offsets[11]),
+    x: reader.readDoubleOrNull(offsets[12]) ?? 0.0,
+    y: reader.readDoubleOrNull(offsets[13]) ?? 0.0,
   );
   object.id = id;
   return object;
@@ -208,12 +249,20 @@ P _tableEntityDeserializeProp<P>(
     case 6:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 7:
+      return (reader.readDoubleOrNull(offset) ?? 0) as P;
+    case 8:
+      return (reader.readDoubleOrNull(offset) ?? 1) as P;
+    case 9:
       return (_TableEntitystatusValueEnumMap[reader.readStringOrNull(offset)] ??
           TableStatus.available) as P;
-    case 8:
+    case 10:
       return (reader.readLong(offset)) as P;
-    case 9:
+    case 11:
       return (reader.readString(offset)) as P;
+    case 12:
+      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
+    case 13:
+      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -312,6 +361,14 @@ extension TableEntityQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'tableId'),
+      );
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhere> anyFloorId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'floorId'),
       );
     });
   }
@@ -516,6 +573,163 @@ extension TableEntityQueryWhere
             ))
             .addWhereClause(IndexWhereClause.lessThan(
               indexName: r'tableId',
+              upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'floorId',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'floorId',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdEqualTo(
+      String? floorId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'floorId',
+        value: [floorId],
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdNotEqualTo(
+      String? floorId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'floorId',
+              lower: [],
+              upper: [floorId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'floorId',
+              lower: [floorId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'floorId',
+              lower: [floorId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'floorId',
+              lower: [],
+              upper: [floorId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdGreaterThan(
+    String? floorId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'floorId',
+        lower: [floorId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdLessThan(
+    String? floorId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'floorId',
+        lower: [],
+        upper: [floorId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdBetween(
+    String? lowerFloorId,
+    String? upperFloorId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'floorId',
+        lower: [lowerFloorId],
+        includeLower: includeLower,
+        upper: [upperFloorId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdStartsWith(
+      String FloorIdPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'floorId',
+        lower: [FloorIdPrefix],
+        upper: ['$FloorIdPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause> floorIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'floorId',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterWhereClause>
+      floorIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'floorId',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'floorId',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'floorId',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'floorId',
               upper: [''],
             ));
       }
@@ -1588,6 +1802,133 @@ extension TableEntityQueryFilter
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> rotationEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'rotation',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      rotationGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'rotation',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      rotationLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'rotation',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> rotationBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'rotation',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> scaleEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'scale',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition>
+      scaleGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'scale',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> scaleLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'scale',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> scaleBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'scale',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> statusEqualTo(
     TableStatus value, {
     bool caseSensitive = true,
@@ -1911,6 +2252,130 @@ extension TableEntityQueryFilter
       ));
     });
   }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> xEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'x',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> xGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'x',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> xLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'x',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> xBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'x',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> yEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'y',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> yGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'y',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> yLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'y',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterFilterCondition> yBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'y',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
 }
 
 extension TableEntityQueryObject
@@ -2007,6 +2472,30 @@ extension TableEntityQuerySortBy
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByRotation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rotation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByRotationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rotation', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByScale() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'scale', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByScaleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'scale', Sort.desc);
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
@@ -2041,6 +2530,30 @@ extension TableEntityQuerySortBy
   QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByTableIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tableId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByX() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'x', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByXDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'x', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByY() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'y', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> sortByYDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'y', Sort.desc);
     });
   }
 }
@@ -2145,6 +2658,30 @@ extension TableEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByRotation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rotation', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByRotationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rotation', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByScale() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'scale', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByScaleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'scale', Sort.desc);
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
@@ -2179,6 +2716,30 @@ extension TableEntityQuerySortThenBy
   QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByTableIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tableId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByX() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'x', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByXDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'x', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByY() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'y', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QAfterSortBy> thenByYDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'y', Sort.desc);
     });
   }
 }
@@ -2234,6 +2795,18 @@ extension TableEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<TableEntity, TableEntity, QDistinct> distinctByRotation() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'rotation');
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QDistinct> distinctByScale() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'scale');
+    });
+  }
+
   QueryBuilder<TableEntity, TableEntity, QDistinct> distinctByStatus(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2251,6 +2824,18 @@ extension TableEntityQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tableId', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QDistinct> distinctByX() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'x');
+    });
+  }
+
+  QueryBuilder<TableEntity, TableEntity, QDistinct> distinctByY() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'y');
     });
   }
 }
@@ -2305,6 +2890,18 @@ extension TableEntityQueryProperty
     });
   }
 
+  QueryBuilder<TableEntity, double, QQueryOperations> rotationProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'rotation');
+    });
+  }
+
+  QueryBuilder<TableEntity, double, QQueryOperations> scaleProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'scale');
+    });
+  }
+
   QueryBuilder<TableEntity, TableStatus, QQueryOperations> statusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'status');
@@ -2320,6 +2917,18 @@ extension TableEntityQueryProperty
   QueryBuilder<TableEntity, String, QQueryOperations> tableIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'tableId');
+    });
+  }
+
+  QueryBuilder<TableEntity, double, QQueryOperations> xProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'x');
+    });
+  }
+
+  QueryBuilder<TableEntity, double, QQueryOperations> yProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'y');
     });
   }
 }

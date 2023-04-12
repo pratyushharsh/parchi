@@ -7,69 +7,105 @@ import '../../config/theme_settings.dart';
 import '../../entity/pos/table_entity.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../table_layout/table_layout_view.dart';
 import 'bloc/create_edit_table_bloc.dart';
 
-class NewTableForm extends StatelessWidget {
+class NewTableForm extends StatefulWidget {
   const NewTableForm({Key? key}) : super(key: key);
 
   @override
+  State<NewTableForm> createState() => _NewTableFormState();
+}
+
+class _NewTableFormState extends State<NewTableForm> {
+  late TextEditingController _tableIdController;
+  late TextEditingController _numberOfSeatsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tableIdController = TextEditingController();
+    _numberOfSeatsController = TextEditingController();
+    _tableIdController.addListener(() {
+      setState(() {});
+    });
+    _numberOfSeatsController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _tableIdController.dispose();
+    _numberOfSeatsController.dispose();
+    super.dispose();
+  }
+
+  bool get _isValid {
+    return _tableIdController.text.isNotEmpty &&
+        _numberOfSeatsController.text.isNotEmpty;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          CreateEditTableBloc(tableRepository: RepositoryProvider.of(context)),
-      child: BlocBuilder<CreateEditTableBloc, CreateEditTableState>(
-        builder: (context, state) {
-          return SingleChildScrollView(
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 CustomTextField(
                   label: '_tableId',
-                  onValueChange: (value) {
-                    BlocProvider.of<CreateEditTableBloc>(context).add(
-                      ChangeTableId(value),
-                    );
-                  },
+                  controller: _tableIdController,
+                  onValueChange: (value) {},
                 ),
                 CustomTextField(
                   label: '_numberOfSeats',
-                  onValueChange: (value) {
-                    BlocProvider.of<CreateEditTableBloc>(context).add(
-                      ChangeTableCapacity(int.parse(value)),
-                    );
-                  },
+                  controller: _numberOfSeatsController,
+                  onValueChange: (value) {},
                   textInputType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                BlocBuilder<CreateEditTableBloc, CreateEditTableState>(
-                  builder: (context, state) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: AcceptButton(
-                              label: "Save",
-                              onPressed: state.isValid
-                                  ? () {
-                                BlocProvider.of<CreateEditTableBloc>(context)
-                                    .add(
-                                  OnSaveTable(),
-                                );
-                              }
-                                  : null),
-                        ),
-                      ],
-                    );
-                  },
-                )
+                const SizedBox(height: 40),
+                if (_isValid)
+                Center(
+                  child: TableIcon(
+                    table: TableEntity(
+                      tableId: _tableIdController.text,
+                      tableCapacity: int.tryParse(_numberOfSeatsController.text) ?? 2
+                  ),
+                ))
               ],
             ),
-          );
-        },
-      ),
+          ),
+        ),
+        Row(children: [
+          Expanded(
+            child: RejectButton(
+              label: "_cancel",
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: AcceptButton(
+              label: "_createNewFloorPlan",
+              onPressed: _isValid
+                  ? () {
+                      Navigator.pop(context, [
+                        _tableIdController.text,
+                        _numberOfSeatsController.text
+                      ]);
+                    }
+                  : null,
+            ),
+          ),
+        ])
+      ],
     );
   }
 }

@@ -14,49 +14,35 @@ class CreateEditTableBloc extends Bloc<CreateEditTableEvent, CreateEditTableStat
   static final log = Logger('CreateEditTableBloc');
 
   final TableRepository tableRepository;
-  final String? tableId;
 
-  CreateEditTableBloc({required this.tableRepository, this.tableId}) : super(CreateEditTableState()) {
-    on<ChangeTableId>(_onTableIdChanged);
-    on<ChangeTableName>(_onTableNameChanged);
-    on<ChangeTableCapacity>(_onTableCapacityChanged);
-    on<OnSaveTable>(_onSaveTable);
+  CreateEditTableBloc({required this.tableRepository }) : super(CreateEditTableState()) {
     on<CreateNewFloorLayout>(_onCreateNewFloorLayout);
     on<FetchAllFloors>(_onFetchAllFloors);
+    on<SelectFloorLayout>(_onSelectFloorLayout);
+    on<SaveTableEvent>(_onSaveTable);
+    on<SaveTableLayout>(_onSaveTableLayout);
   }
 
-  void _onTableIdChanged(ChangeTableId event, Emitter<CreateEditTableState> emit) {
-    emit(state.copyWith(tableId: event.tableId));
-  }
-
-  void _onTableNameChanged(ChangeTableName event, Emitter<CreateEditTableState> emit) {
-    emit(state.copyWith(tableName: event.tableName));
-  }
-
-  void _onTableCapacityChanged(ChangeTableCapacity event, Emitter<CreateEditTableState> emit) {
-    emit(state.copyWith(tableCapacity: event.tableCapacity));
-  }
-
-  void _onSaveTable(OnSaveTable event, Emitter<CreateEditTableState> emit) async {
-    emit(state.copyWith(status: CreateEditTableStatus.loading));
-    try {
-      if (tableId != null) {
-        await tableRepository.insertTable(TableEntity(
-          tableId: state.tableId,
-          tableCapacity: state.tableCapacity,
-        ));
-      } else {
-        await tableRepository.updateTable(TableEntity(
-          tableId: state.tableId,
-          tableCapacity: state.tableCapacity,
-        ));
-      }
-      emit(state.copyWith(status: CreateEditTableStatus.success));
-    } catch (e) {
-      print(e);
-      emit(state.copyWith(status: CreateEditTableStatus.failure));
-    }
-  }
+  // void _onSaveTable(OnSaveTable event, Emitter<CreateEditTableState> emit) async {
+  //   emit(state.copyWith(status: CreateEditTableStatus.loading));
+  //   try {
+  //     if (tableId != null) {
+  //       await tableRepository.insertTable(TableEntity(
+  //         tableId: state.tableId,
+  //         tableCapacity: state.tableCapacity,
+  //       ));
+  //     } else {
+  //       await tableRepository.updateTable(TableEntity(
+  //         tableId: state.tableId,
+  //         tableCapacity: state.tableCapacity,
+  //       ));
+  //     }
+  //     emit(state.copyWith(status: CreateEditTableStatus.success));
+  //   } catch (e) {
+  //     print(e);
+  //     emit(state.copyWith(status: CreateEditTableStatus.failure));
+  //   }
+  // }
 
   void _onCreateNewFloorLayout(CreateNewFloorLayout event, Emitter<CreateEditTableState> emit) async {
     emit(state.copyWith(status: CreateEditTableStatus.loading));
@@ -82,6 +68,41 @@ class CreateEditTableBloc extends Bloc<CreateEditTableEvent, CreateEditTableStat
       emit(state.copyWith(status: CreateEditTableStatus.success, floors: floors));
     } catch (e, trace) {
       log.severe(e, 'FETCH_ALL_FLOORS_ERROR', trace);
+      emit(state.copyWith(status: CreateEditTableStatus.failure));
+    }
+  }
+
+  void _onSelectFloorLayout(SelectFloorLayout event, Emitter<CreateEditTableState> emit) async {
+    emit(state.copyWith(status: CreateEditTableStatus.loading));
+    await Future.delayed(const Duration(milliseconds: 500));
+    var tables = await tableRepository.getTableByFloorId(event.floorEntity.floorId);
+    emit(state.copyWith(selectedFloor: event.floorEntity, tables: tables, status: CreateEditTableStatus.success));
+  }
+
+  void _onSaveTable(SaveTableEvent event, Emitter<CreateEditTableState> emit) async {
+    emit(state.copyWith(status: CreateEditTableStatus.loading));
+    try {
+      await tableRepository.insertTable(TableEntity(
+        tableId: event.tableId,
+        tableCapacity: event.tableCapacity,
+        floorId: event.floorId,
+      ));
+      emit(state.copyWith(status: CreateEditTableStatus.success));
+      add(SelectFloorLayout(state.selectedFloor!));
+    } catch (e, trace) {
+      log.severe(e, 'SAVE_TABLE_ERROR', trace);
+      emit(state.copyWith(status: CreateEditTableStatus.failure));
+    }
+  }
+
+  void _onSaveTableLayout(SaveTableLayout event, Emitter<CreateEditTableState> emit) async {
+    emit(state.copyWith(status: CreateEditTableStatus.loading));
+    try {
+      await tableRepository.saveTableLayoutPlan(event.tables);
+      emit(state.copyWith(status: CreateEditTableStatus.success));
+      add(SelectFloorLayout(state.selectedFloor!));
+    } catch (e, trace) {
+      log.severe(e, 'SAVE_TABLE_LAYOUT_ERROR', trace);
       emit(state.copyWith(status: CreateEditTableStatus.failure));
     }
   }

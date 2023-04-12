@@ -35,7 +35,7 @@ class CustomerSearchList extends StatelessWidget {
             ...state.customerSuggestion
                 .map((e) => InkWell(
               onTap: () {
-                Navigator.of(context).pop(OnCustomerSelect(e));
+                Navigator.of(context).pop(e);
               },
               child: CustomerSearchEntity(contactEntity: e,),
             ))
@@ -47,7 +47,7 @@ class CustomerSearchList extends StatelessWidget {
             ...state.phoneBookSuggestion
                 .map((e) => InkWell(
               onTap: () {
-                Navigator.of(context).pop(OnCustomerSelect(e));
+                Navigator.of(context).pop(e);
               },
               child: CustomerSearchEntity(
                 contactEntity: e,
