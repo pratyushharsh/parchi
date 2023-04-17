@@ -22,7 +22,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthenticationBloc authenticationBloc;
   final ErrorNotificationBloc errorNotificationBloc;
 
-  LoginBloc({required this.userPool, required this.authenticationBloc, required this.errorNotificationBloc}) : super(LoginState()) {
+  LoginBloc({required this.userPool, required this.authenticationBloc, required this.errorNotificationBloc}) : super(const LoginState()) {
     on<LoginUserWithPhone>(_onLoginUserWithPhone);
     on<VerifyUserOtp>(_onVerifyUserOtp);
     on<RemoveDevice>(_onRemoveDeviceEvent);
@@ -47,6 +47,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _onLoginUserWithPhone(
       LoginUserWithPhone event, Emitter<LoginState> emit) async {
     emit(state.copyWith(status: LoginStatus.loadingLogin));
+
+    CognitoUser? cognitoUser;
     try {
       // userPool.getCurrentUser()
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -68,10 +70,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
       log.info("Logging to $deviceName}");
 
-      final cognitoUser = CognitoUser(event.phoneNumber, userPool, deviceName: deviceName);
+      cognitoUser = CognitoUser(event.phoneNumber, userPool, deviceName: deviceName);
       cognitoUser.setAuthenticationFlowType('CUSTOM_AUTH');
       emit(state.copyWith(user: cognitoUser));
-      await cognitoUser.initiateAuth(AuthenticationDetails(authParameters: List.empty()));
+      var userSession = await cognitoUser.initiateAuth(AuthenticationDetails(authParameters: List.empty()));
+      log.info(userSession);
     } on CognitoUserCustomChallengeException catch(e) {
       Map<String, dynamic> challengeParameters = e.challengeParameters;
       String? challengeStep = challengeParameters['challenge_step'];

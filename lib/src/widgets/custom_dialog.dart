@@ -18,7 +18,7 @@ Future<T?> yesOrCancelDialog<T>(BuildContext context, String title,
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              label: '_cancel'.tr(),
+              label: (cancelText ?? '_cancel').tr(),
             ),
           ),
           SizedBox(
@@ -27,7 +27,7 @@ Future<T?> yesOrCancelDialog<T>(BuildContext context, String title,
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              label: '_ok'.tr(),
+              label: (yesText ?? '_ok').tr(),
             ),
           ),
         ],

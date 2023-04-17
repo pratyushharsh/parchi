@@ -8,6 +8,7 @@ import '../entity/config/code_value_entity.dart';
 import '../entity/pos/entity.dart';
 import '../entity/pos/floor_entity.dart';
 import '../entity/pos/table_entity.dart';
+import '../entity/pos/table_reservation_entity.dart';
 
 mixin DatabaseProvider {
   static final log = Logger('DatabaseProvider');

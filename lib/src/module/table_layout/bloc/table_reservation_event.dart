@@ -34,8 +34,22 @@ class ChangeSelectedTable extends TableReservationEvent {
   ChangeSelectedTable(this.table);
 }
 
+class ChangeCustomerName extends TableReservationEvent {
+  final String name;
+
+  ChangeCustomerName(this.name);
+}
+
+class ChangeCustomerPhone extends TableReservationEvent {
+  final String phone;
+
+  ChangeCustomerPhone(this.phone);
+}
+
 class ChangeCustomer extends TableReservationEvent {
   final ContactEntity customer;
 
   ChangeCustomer(this.customer);
 }
+
+class CreateNewTableReservation extends TableReservationEvent {}

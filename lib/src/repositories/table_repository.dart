@@ -1,8 +1,11 @@
 import 'package:isar/isar.dart';
 
 import '../database/db_provider.dart';
+import '../entity/pos/employee_entity.dart';
 import '../entity/pos/floor_entity.dart';
 import '../entity/pos/table_entity.dart';
+import '../entity/pos/table_reservation_entity.dart';
+import '../model/api/get_employee_response.dart';
 
 class TableRepository with DatabaseProvider {
 
@@ -50,6 +53,52 @@ class TableRepository with DatabaseProvider {
   Future<void> saveTableLayoutPlan(List<TableEntity> floor) async {
     await db.writeTxn(() async {
       await db.tableEntitys.putAll(floor);
+    });
+  }
+
+  Future<void> createNewTableReservation(TableReservationEntity table) async {
+    await db.writeTxn(() async {
+      await db.tableReservationEntitys.put(table);
+    });
+  }
+
+  Future<List<TableReservationEntity>> getAllConfirmedReservation() async {
+    return await db.tableReservationEntitys.where().statusEqualTo(TableReservationStatus.confirmed).findAll();
+  }
+
+  Future<List<TableReservationEntity>> getAllUpcomingReservation() async {
+    return await db.tableReservationEntitys.where().statusEqualTo(TableReservationStatus.pending).findAll();
+  }
+
+  Future<void> confirmReservation(TableReservationEntity table, EmployeeEntity emp) async {
+    await db.writeTxn(() async {
+      table.status = TableReservationStatus.confirmed;
+      // Get the tableEntity and update the status
+      if (table.tableId != null) {
+        final tableEntity = await db.tableEntitys.where().tableIdEqualTo(table.tableId!).findFirst();
+        tableEntity!.status = TableStatus.occupied;
+        tableEntity.customerName = table.customerName;
+        tableEntity.associateName = '${emp.firstName} ${emp.lastName}';
+        tableEntity.associateId = emp.employeeId;
+        await db.tableEntitys.put(tableEntity);
+      }
+      await db.tableReservationEntitys.put(table);
+    });
+  }
+
+  Future<void> completeReservation(TableReservationEntity table) async {
+    await db.writeTxn(() async {
+      table.status = TableReservationStatus.completed;
+      // Get the tableEntity and update the status
+      if (table.tableId != null) {
+        final tableEntity = await db.tableEntitys.where().tableIdEqualTo(table.tableId!).findFirst();
+        tableEntity!.status = TableStatus.available;
+        tableEntity.customerName = '';
+        tableEntity.associateName = '';
+        tableEntity.associateId = '';
+        await db.tableEntitys.put(tableEntity);
+      }
+      await db.tableReservationEntitys.put(table);
     });
   }
 }

@@ -6,9 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/theme_settings.dart';
 import '../../entity/pos/table_entity.dart';
+import '../../entity/pos/table_reservation_entity.dart';
 import '../../repositories/table_repository.dart';
 import '../../widgets/appbar_leading.dart';
 import '../../widgets/custom_button.dart';
+import '../../widgets/custom_dialog.dart';
 import '../../widgets/desktop_pop_up.dart';
 import '../../widgets/my_loader.dart';
 import '../../widgets/store_user_widget.dart';
@@ -16,13 +18,16 @@ import 'bloc/table_layout_bloc.dart';
 import 'layout_designer.dart';
 import 'new_reservation_form.dart';
 
+DateFormat timeFormatter = DateFormat('hh:mm');
+DateFormat amFormatter = DateFormat('a');
+
 class DineInView extends StatelessWidget {
   const DineInView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => TableLayoutBloc(tableRepository: TableRepository())
+        create: (context) => TableLayoutBloc(tableRepository: RepositoryProvider.of(context), authenticationBloc: BlocProvider.of(context))
           ..add(FetchAllTables()),
         child: const DineInViewMobile());
   }
@@ -70,7 +75,13 @@ class DineInViewMobile extends StatelessWidget {
                         title: "New Reservation",
                         child: const TableReservation(),
                         context: context,
-                      ).then((value) => {});
+                      ).then((value) => {
+                            if (value != null && value == true)
+                              {
+                                BlocProvider.of<TableLayoutBloc>(context)
+                                    .add(RefreshReservation())
+                              }
+                          });
                     },
                     label: '+ New Reservation',
                   ),
@@ -155,7 +166,6 @@ class TableReservationDashboard extends StatelessWidget {
                       child: InteractiveViewer(
                         minScale: 0.4,
                         child: FittedBox(
-                          
                           child: TableLayoutDesigner(
                             tables: state.tables,
                             floor: state.floor!,
@@ -287,6 +297,32 @@ class _TableIconState extends State<TableIcon> {
     return seats;
   }
 
+  Color _tableColorByStatus(TableStatus status) {
+    switch (status) {
+      case TableStatus.available:
+        return Colors.greenAccent;
+      case TableStatus.occupied:
+        return Colors.lightBlueAccent.shade100;
+      case TableStatus.reserved:
+        return Colors.orangeAccent;
+      case TableStatus.dirty:
+        return Colors.brown;
+    }
+  }
+
+  String _statusBasedOnStatusCode(TableStatus status) {
+    switch (status) {
+      case TableStatus.available:
+        return "Vacant";
+      case TableStatus.occupied:
+        return "Occupied";
+      case TableStatus.reserved:
+        return "Reserved";
+      case TableStatus.dirty:
+        return "Not Available";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -319,11 +355,11 @@ class _TableIconState extends State<TableIcon> {
                             minWidth: 160,
                             maxWidth: max(
                                 160, widget.table.tableCapacity ~/ 2 * 100.0)),
-                        decoration: const BoxDecoration(
-                          color: Colors.grey,
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey,
                           border: Border(
                             right: BorderSide(
-                              color: Colors.orangeAccent,
+                              color: _tableColorByStatus(widget.table.status),
                               width: 18,
                             ),
                           ),
@@ -334,12 +370,14 @@ class _TableIconState extends State<TableIcon> {
                   Positioned(
                     left: 15,
                     top: 35,
+                    right: 22,
                     child: Text(
-                      widget.table.tableId,
+                      '${widget.table.tableId} | ${widget.table.associateName ?? ''}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
@@ -347,7 +385,7 @@ class _TableIconState extends State<TableIcon> {
                     bottom: 60,
                     left: 15,
                     child: Text(
-                      'Pratyush Harsh',
+                      widget.table.customerName ?? '',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -360,9 +398,9 @@ class _TableIconState extends State<TableIcon> {
                     bottom: 35,
                     left: 15,
                     child: Text(
-                      'Occupied',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      _statusBasedOnStatusCode(widget.table.status),
+                      style: TextStyle(
+                        color: _tableColorByStatus(widget.table.status),
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -413,54 +451,32 @@ class TableReservationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: const [
-            TableCategoryHeader(
-              count: 20,
-              label: "SEATED",
-            ),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            SizedBox(
-              height: 10,
-            ),
-            TableCategoryHeader(
-              count: 10,
-              label: "Upcoming",
-            ),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-            ReservedCustomerTableCard(),
-          ],
-        ),
-      ),
+    return BlocBuilder<TableLayoutBloc, TableLayoutState>(
+      builder: (context, state) {
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              TableCategoryHeader(
+                count: state.numberOfGuest,
+                label: "SEATED",
+              ),
+              ...state.currentReservation.map((e) => ReservedCustomerTableCard(
+                    reservation: e,
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+              const TableCategoryHeader(
+                count: 10,
+                label: "Upcoming",
+              ),
+              ...state.upcoming.map((e) => ReservedCustomerTableCard(
+                    reservation: e,
+                  )),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -474,41 +490,70 @@ class TableCategoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label.toUpperCase(),
-            style: const TextStyle(
-              letterSpacing: 2,
-              fontWeight: FontWeight.bold,
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: const TextStyle(
+            letterSpacing: 2,
+            fontWeight: FontWeight.bold,
           ),
-          Row(
-            children: [
-              const Icon(Icons.person),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(count.toString(),
-                  style: const TextStyle(
-                      letterSpacing: 2, fontWeight: FontWeight.bold))
-            ],
-          )
-        ],
-      ),
+        ),
+        Row(
+          children: [
+            const Icon(Icons.person),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(count.toString(),
+                style: const TextStyle(
+                    letterSpacing: 2, fontWeight: FontWeight.bold))
+          ],
+        )
+      ],
     );
   }
 }
 
 class ReservedCustomerTableCard extends StatelessWidget {
-  const ReservedCustomerTableCard({Key? key}) : super(key: key);
+  final TableReservationEntity reservation;
+  const ReservedCustomerTableCard({Key? key, required this.reservation})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+
+        if (reservation.status == TableReservationStatus.pending) {
+          yesOrCancelDialog(context, "Confirmation",
+              content: "Have customer arrived?",
+              yesText: "Yes",
+              cancelText: "No")
+              .then((value) => {
+            if (value != null && value)
+              {
+                context.read<TableLayoutBloc>().add(
+                  ConfirmReservation(reservation: reservation),
+                )
+              }
+          });
+        } else if (reservation.status == TableReservationStatus.confirmed) {
+          yesOrCancelDialog(context, "Confirmation",
+              content: "Have customer left?",
+              yesText: "Yes",
+              cancelText: "No")
+              .then((value) => {
+            if (value != null && value)
+              {
+                context.read<TableLayoutBloc>().add(
+                  CompleteReservation(reservation: reservation),
+                )
+              }
+          });
+        }
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -519,63 +564,72 @@ class ReservedCustomerTableCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  color: Colors.orangeAccent,
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColor.formInputBorder,
+                  ),
                   child: Column(
                     children: [
                       Text(
-                        "6:00",
-                        style: TextStyle(
+                        reservation.reservationTime != null
+                            ? timeFormatter.format(reservation.reservationTime!)
+                            : '',
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
-                      Text("PM")
+                      Text(
+                        reservation.reservationTime != null
+                            ? amFormatter.format(reservation.reservationTime!)
+                            : '',
+                      )
                     ],
                   ),
                 ),
                 const SizedBox(
                   width: 8,
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Pratyush Harsh",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text("9430123120"),
-                      const SizedBox(
-                        height: 6,
-                      ),
-                      Text("3 Guest / Ground")
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      reservation.customerName,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(reservation.customerPhone),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                        "${reservation.numberOfGuest} Guest / ${reservation.tableId}")
+                  ],
                 )
               ],
             ),
-            Container(
-              width: 70,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(
-                  color: Colors.green,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  'T4',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            if (reservation.tableId != null)
+              Container(
+                width: 70,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
                     color: Colors.green,
                   ),
                 ),
+                child: Center(
+                  child: Text(
+                    reservation.tableId!,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
               ),
-            ),
           ],
         ),
       ),

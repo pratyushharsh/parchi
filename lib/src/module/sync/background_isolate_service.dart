@@ -32,7 +32,8 @@ class BackgroundSyncServiceFromIso with DatabaseProvider {
   String imageDir;
 
   static const String _baseUrl =
-      'https://mr4f4gk1n3.execute-api.ap-south-1.amazonaws.com/dev';
+      // 'https://mr4f4gk1n3.execute-api.ap-south-1.amazonaws.com/dev';
+  'https://habs4w19yh.execute-api.ap-south-1.amazonaws.com/DEV';
 
   List<String> toSyncEntity = [
     transactionSync,
